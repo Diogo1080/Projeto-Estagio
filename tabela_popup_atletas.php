@@ -2,11 +2,12 @@
 	include 'ligacao.php';
 	//Inicia as variaveis com os valores.
 		$num_pagina = $_POST['num_pagina'];
-		$procura="%".$_POST['procura']."%";
+		$procura = "%{$_POST['procura']}%";
 		$registos_por_pagina = 20;
 		$offset = ($num_pagina-1) * $registos_por_pagina;
+
 	//Busca o total de registos que existem com os valores dados
-		$total_registos=$con->prepare("SELECT * FROM `contribuintes` WHERE `nome` like ? OR cc like ? OR nif like ? AND tipo_contribuinte='Atleta'");
+		$total_registos=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_atleta WHERE `nome` like ? OR cc like ? OR nif like ? AND tipo_contribuinte='Atleta' AND `id_enc_edu`=null ");
 		$total_registos->bind_param("sss",$procura,$procura,$procura);
 		$total_registos->execute();
 
@@ -21,7 +22,7 @@
 
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		$atletas=$con->prepare("SELECT * FROM `contribuintes` WHERE `nome` like ? OR cc like ? OR nif like ? AND tipo_contribuinte='Atleta' LIMIT $offset, $registos_por_pagina");
+		$atletas=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_atleta WHERE `nome` like ? OR `cc` like ? OR `nif` like ? AND tipo_contribuinte='Atleta' AND `id_enc_edu`=null ");
 		$atletas->bind_param("sss",$procura,$procura,$procura);
 		$atletas->execute();
 		$resultado=$atletas->get_result();
@@ -37,7 +38,7 @@
 						</tr>
 					</thead>
 					<tbody>';
-					if ($atletas->num_rows()==0) {
+					if ($resultado->num_rows==0) {
 						echo '
 							<tr>
 								<td colspan="100%">Nenhum registo encontrado.</td>
@@ -51,7 +52,7 @@
 								<td>'.$linha['cc'].'</td>
 								<td>'.$linha['nif'].'</td>
 								<td>
-									<button></button>
+									<button onclick="esconder_modal();selecionar_atleta(\''.$linha['id_contribuinte'].'\',\''.$linha['nome'].'\',\''.$linha['cc'].'\');">Selecionar</button>
 								</td>
 							</tr>
 							';
