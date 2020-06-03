@@ -292,7 +292,7 @@
 							}else{
 								echo"fotos/Male_user.png";
 							} 
-						?>" alt="Foto do treinador" height="200" width="200"><br>
+						?>" alt="Foto do colaborador" height="200" width="200"><br>
 					<label>Escolher a foto</label>
 						<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
 				</div>
@@ -502,12 +502,12 @@
 							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
 							$ficheiros->execute();
 							$resultado=$ficheiros->get_result();
-							while ($linha=$resultado->fetch_assoc()){
-								if (strpos($linha['nome'],'Registo_criminal')!==false) {
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Registo_criminal')!==false) {
 									?>
 										<label>Atualizar registo criminal:</label>
 										<input type="file" name="registo_criminal" accept=".pdf,.doc">
-										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha['id_ficheiro']); ?>"> 
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>"> 
 											<label>Download do registo criminal</label>
 										</a>
 									<?php	
@@ -538,12 +538,12 @@
 							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
 							$ficheiros->execute();
 							$resultado=$ficheiros->get_result();
-							while ($linha=$resultado->fetch_assoc()){
-								if (strpos($linha['nome'],'Certificado_academico')!==false) {
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Certificado_academico')!==false) {
 									?>
 										<label>Atualizar certificado academico:</label>
 										<input type="file" name="certificado_academico" accept=".pdf,.doc">
-										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha['id_ficheiro']); ?>">  
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
 											<label>Download do registo criminal</label>
 										</a>
 									<?php	
@@ -574,12 +574,12 @@
 							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
 							$ficheiros->execute();
 							$resultado=$ficheiros->get_result();
-							while ($linha=$resultado->fetch_assoc()){
-								if (strpos($linha['nome'],'Certificado_sbv_dae')!==false) {
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Certificado_sbv_dae')!==false) {
 									?>
 										<label>Atualizar certificado sbv/dae:</label>
 										<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
-										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha['id_ficheiro']); ?>">  
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
 											<label>Download do certificado academico</label>
 										</a>
 									<?php	
@@ -633,13 +633,10 @@
 		readURL(this);
 	});
 </script>
-
 <?php
 	if (!isset($_GET['id_colaborador'])) {
 		?>
 		<script>
-			//Escolher o sexo 
-
 			//Função de escolher a imagem consuante o sexo
 			function mudar_imagem(){
 				if ((document.getElementById("foto").value=='')) {
@@ -652,6 +649,18 @@
 			}
 		</script>
 		<?php
+	}else{
+		?>
+			<script>
+						//Escolher o sexo 
+					if ("<?php echo ($linha['sexo']); ?>"=="Masculino") {
+						document.getElementById("sexo").options.selectedIndex=0;
+					};
+					if ("<?php echo ($linha['sexo']); ?>"=="Feminino") {
+						document.getElementById("sexo").options.selectedIndex=1;
+					};
+			</script>
+		<?php 
 	}
 ?>
 <script type="text/javascript">

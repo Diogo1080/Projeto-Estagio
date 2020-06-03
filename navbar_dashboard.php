@@ -17,6 +17,12 @@
               <a class="nav-link" href="colaboradores.php">Colaboradores</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="contribuintes.php">Contribuintes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="colaboradores.php">Colaboradores</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#">Pricing</a>
             </li>
             <li class="nav-item">
