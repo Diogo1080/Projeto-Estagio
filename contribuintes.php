@@ -1,6 +1,5 @@
 <?php 
 	require ('ligacao.php');
-
 	if (isset($_POST['insert'])) {
 		//prepara o insert do contribuinte
 		$contribuintes=$con->prepare("INSERT INTO `contribuintes`(`num_socio`, `cc`, `nif`, `telemovel`, `telefone`, `cp`, `receber_email`, `tipo_contribuinte`, `morada`, `localidade`, `freguesia`, `concelho`, `nome`, `sexo`, `email`, `metodo_pagamento`, `dt_nasc`, `mensalidade_valor`, `foto`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -117,6 +116,124 @@
 		$contribuintes->close();
 	}
 
+	if (isset($_POST['update'])) {
+		//prepara o update do contribuinte
+		$contribuintes=$con->prepare("UPDATE `contribuintes` SET `num_socio`=?,`cc`=?,`nif`=?,`telemovel`=?,`telefone`=?,`cp`=?,`receber_email`=?,`tipo_contribuinte`=?,`morada`=?,`localidade`=?,`freguesia`=?,`concelho`=?,`nome`=?,`sexo`=?,`email`=?,`metodo_pagamento`=?,`dt_nasc`=?,`mensalidade_valor`=?,`foto`=? WHERE `id_contribuinte`=?");
+
+		//inicia variaveis "dummy" para a inserção de ficheiros(foto)
+		$null=NULL;
+		$foto=NULL;
+		$foto_enc=NULL;
+		print_r($_POST);
+
+		//Busca variaveis
+		if (isset($_POST['receber_email'])) {
+			$receber_email=1;
+		}else{
+			$receber_email=0;
+		}
+
+		if (empty($_POST['metodo_pagamento'])) {
+			$metodo_pagamento="No clube";
+		}else{
+			$metodo_pagamento=$_POST['metodo_pagamento'];
+		}
+
+		if ($_POST['tipo_contribuinte']=="Sócio") {
+			$num_socio=$_POST['num_socio'];
+		}else{	
+			$num_socio=NULL;
+		}
+
+		// coloca as variveis nos placeholders(?) da querry em questao.
+		$contribuintes->bind_param("iiiiiiissssssssssdbi",$num_socio,$_POST['cc'],$_POST['nif'],$_POST['telemovel'],$_POST['telefone'],$_POST['cp'],$receber_email,$_POST['tipo_contribuinte'],$_POST['morada'],$_POST['localidade'],$_POST['freguesia'],$_POST['concelho'],$_POST['nome'],$_POST['sexo'],$_POST['email'],$_POST['metodo_pagamento'],$_POST['dt_nasc'],$mensalidade_valor,$foto,$_POST['id_contribuinte']);
+
+		if (!empty($_POST['mensalidade_valor'])) {
+			$mensalidade_valor=$_POST['mensalidade_valor'];
+		}elseif(!empty($_POST['mensalidade_valor_atleta'])){
+			$mensalidade_valor=$_POST['mensalidade_valor_atleta'];
+		}else{
+			$mensalidade_valor=NULL;
+		}
+		//foto
+			if (!is_uploaded_file($_FILES["foto"]["tmp_name"])){
+				if ($_POST['sexo']=="Masculino") {
+					$contribuintes->send_long_data(18,file_get_contents("fotos/Male_user.png"));
+				}else{
+					$contribuintes->send_long_data(18,file_get_contents("fotos/Female_user.png"));
+				}
+			}else{
+				$contribuintes->send_long_data(18,file_get_contents($_FILES["foto"]["tmp_name"]));
+			}
+
+		//insere na tabela contribuintes
+		$contribuintes->execute();
+
+		//busca o id do contribuinte
+		$id_contribuinte=$contribuintes->insert_id;
+
+		if ($_POST['tipo_contribuinte']=="Atleta") {
+			if (isset($_POST['joia'])) {
+				$joia=1;
+			}else{
+				$joia=0;
+			}
+			if (!empty($_POST['nome_enc'])) {
+				if (isset($_POST['receber_email_enc'])) {
+					$receber_email_enc=1;
+				}else{
+					$receber_email_enc=0;
+				}
+				// coloca as variveis nos placeholders(?) da querry em questao(Encarregado de educação).
+				$contribuintes->bind_param("iiiiiiissssssssssdb",$null,$_POST['cc_enc'],$_POST['nif_enc'],$_POST['telemovel_enc'],$_POST['telefone_enc'],$_POST['cp_enc'],$receber_email_enc,$_POST['tipo_contribuinte_enc'],$_POST['morada_enc'],$_POST['localidade_enc'],$_POST['freguesia_enc'],$_POST['concelho_enc'],$_POST['nome_enc'],$_POST['sexo_enc'],$_POST['email_enc'],$null,$_POST['dt_nasc_enc'],$null,$foto_enc);
+				//foto do encarregado de educação
+				if (!is_uploaded_file($_FILES["foto_enc"]["tmp_name"])){
+					if ($_POST['sexo']=="Masculino") {
+						$contribuintes->send_long_data(18,file_get_contents("fotos/Male_user.png"));
+					}else{
+						$contribuintes->send_long_data(18,file_get_contents("fotos/Female_user.png"));
+					}
+				}else{
+					$contribuintes->send_long_data(18,file_get_contents($_FILES["foto_enc"]["tmp_name"]));
+				}
+				//insere na tabela contribuintes
+				$contribuintes->execute();
+				//Busca o id do enc_edu
+				$id_contribuinte_enc=$contribuintes->insert_id;
+			}else{
+				$id_contribuinte_enc=NULL;
+			}
+			//prepara a querry insert na tabela dos atletas
+			$atletas=$con->prepare("INSERT INTO `atletas`(`id_contribuinte`, `id_enc_edu`, `valor_joia`, `joia`) VALUES (?,?,?,?)");
+			// coloca as variveis nos placeholders(?) da querry em questao
+			$atletas->bind_param("iiii",$id_contribuinte,$id_contribuinte_enc,$_POST['valor_joia'],$joia);
+			//insere na tabela atletas
+			$atletas->execute();
+			$atletas->close();
+		}
+		if ($_POST['tipo_contribuinte']=="Encarregado de educação") {
+			$atletas=$con->prepare("UPDATE `atletas` SET `id_enc_edu`=? WHERE `id_contribuinte`=?");
+			$atletas->bind_param("ii",$id_contribuinte,$_POST['input_enc_edu_id']);
+			$atletas->execute();
+			$atletas->close();
+		}
+		print_r($contribuintes);
+
+		if ($contribuintes->affected_rows<1) {
+			?>
+				<script type="text/javascript">
+					alert("Ocurreu algo não esperado.");
+				</script>
+			<?php
+		}else{
+			?>
+				<script type="text/javascript">
+					alert("inserido com sucesso.");
+				</script>
+			<?php
+		}
+		$contribuintes->close();
+	}
 ?>
 <!DOCTYPE html>
 <html>
