@@ -14,7 +14,7 @@
               <a class="nav-link" href="dashboard.php">Home</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="colaboradores.php">Colaboradores</a>
+              <a class="nav-link" href="listar_colaboradores.php">Colaboradores</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="contribuintes.php">Contribuintes</a>
@@ -23,14 +23,11 @@
               <a class="nav-link" href="colaboradores.php">Colaboradores</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1">Disabled</a>
+              <a class="nav-link" href="#">CopyPaster</a>
             </li>
           </ul>
           <span class="navbar-text">
-           <a href="homepage.html"><strong><i class="fas fa-shopping-cart"></i> Go to Shop</strong></a>
+           <a href="homepage.html">Ver Website</strong></a>
           </span>
         </div>
       </nav>

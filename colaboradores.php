@@ -256,13 +256,56 @@
 ?>
 <!DOCTYPE html>
 <html>
+	<?php include('head.php'); ?>
 	<head>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
 		<title>Colaboradores</title>
 	</head>
 	<body>
+
+
+
+	<div class="container">
+	      <?php include('navbar_dashboard.php'); ?>
+
+
+	      <center style=" margin-top:25px;"><h1>Inserir Atleta</h1></center> 
+
+	      <div class="col-sm-12">
+	        
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações Básicas</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações de Contacto</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+	      	  </div>
+	      	</div>
+
+	      </div>
+	</div>
+
+
+
 		<?php require ('nav.php'); ?>
 		<div>
 			<?php 
