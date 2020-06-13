@@ -7,7 +7,7 @@
 		$offset = ($num_pagina-1) * $registos_por_pagina;
 
 	//Busca o total de registos que existem com os valores dados
-		$total_registos=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Atleta' AND atletas.id_enc_edu is null)");
+		$total_registos=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Encarregado de educação')");
 		$total_registos->bind_param("sss",$procura,$procura,$procura);
 		$total_registos->execute();
 
@@ -23,7 +23,7 @@
 
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		$atletas=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Atleta' AND atletas.id_enc_edu is null LIMIT $offset, $registos_por_pagina)");
+		$atletas=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Encarregado de educação') LIMIT $offset, $registos_por_pagina");
 		$atletas->bind_param("sss",$procura,$procura,$procura);
 		$atletas->execute();
 		$resultado=$atletas->get_result();
@@ -52,19 +52,7 @@
 								<td>'.$linha['nome'].'</td>
 								<td>'.$linha['cc'].'</td>
 								<td>'.$linha['nif'].'</td>
-								<td>
-								';
-									if (isset($_SESSION['array_atletas'])) {
-										if (in_array($linha['id_contribuinte'], $_SESSION['array_atletas'])) {
-											echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_contribuinte'].'\',\''.$linha['nome'].'\',\''.$linha['cc'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
-											# code...
-										}else{
-											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_contribuinte'].'\',\''.$linha['nome'].'\',\''.$linha['cc'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
-										}
-									}else{
-										echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_contribuinte'].'\',\''.$linha['nome'].'\',\''.$linha['cc'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
-									}
-								echo '</td>
+								<td><button type="button" onclick="esconder_modal_enc_edu();selecionar_enc_edu(\''.$linha['id_contribuinte'].'\',\''.$linha['nome'].'\',\''.$linha['cc'].'\',\''.$linha['nif'].'\',\''.$linha['morada'].'\',\''.$linha['localidade'].'\',\''.$linha['freguesia'].'\',\''.$linha['concelho'].'\',\''.$linha['cp'].'\',\''.$linha['email'].'\',\''.$linha['telemovel'].'\',\''.$linha['telefone'].'\',\''.$linha['sexo'].'\',\''.$linha['dt_nasc'].'\',\''.$linha['receber_email'].'\');">Selecionar</button></td>
 							</tr>
 							';
 						}
