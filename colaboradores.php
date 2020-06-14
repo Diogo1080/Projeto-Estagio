@@ -270,44 +270,11 @@
 	      <?php include('navbar_dashboard.php'); ?>
 
 
-	      <center style=" margin-top:25px;"><h1>Inserir Atleta</h1></center> 
+	      <center style=" margin-top:25px;"><h1>Inserir Colaborador</h1></center> 
 
 	      <div class="col-sm-12">
-	        
-	      	<div class="card"style="margin-top: 30px">
-	      	  <div class="card-header"> 
-	      	    <h3 class="panel-title">Informações Básicas</h3>
-	      	  </div>
-	      	  <div class="card-body">
-	      	    
-	      	  </div>
-	      	</div>
-
-	      	<div class="card"style="margin-top: 30px">
-	      	  <div class="card-header"> 
-	      	    <h3 class="panel-title">Informações de Contacto</h3>
-	      	  </div>
-	      	  <div class="card-body">
-	      	    
-	      	  </div>
-	      	</div>
-
-	      	<div class="card"style="margin-top: 30px">
-	      	  <div class="card-header"> 
-	      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
-	      	  </div>
-	      	  <div class="card-body">
-	      	    
-	      	  </div>
-	      	</div>
-
-	      </div>
-	</div>
-
-
-
-		<?php require ('nav.php'); ?>
-		<div>
+			<!-- ^Trabalha as fetches I think -->
+		  <div>
 			<?php 
 				if (isset($_GET['id_colaborador'])) {
 					$recursos_humanos=$con->prepare("SELECT * FROM recursos_humanos WHERE id_recurso_humano=?");
@@ -317,7 +284,16 @@
 					$linha=$resultado->fetch_assoc();
 				}
 			?>
+	        <!-- Inicio do Form -->
 			<form method="POST" enctype="multipart/form-data">
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações Básicas</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+
 				<?php if (isset($_GET['id_colaborador'])) { ?>
 					<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
 				<?php } ?>
@@ -452,6 +428,35 @@
 								} 
 							?>"><br>
 				</div>
+
+				<div>
+					<label>Sexo:</label>
+						<select id="sexo" name="sexo" onchange="mudar_imagem()">
+							<option value="Masculino">Masculino</option>
+							<option value="Feminino">Feminino</option>
+						</select><br>
+				</div>
+				<div>
+					<label>Data de nascimento:</label>
+						<input type="date" name="dt_nasc" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['dt_nasc']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['dt_nasc']);
+								} 
+							?>"><br>
+				</div>
+
+
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações de Contacto</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
 				<div>
 					<label>Morada:</label>
 						<input name="morada" value="<?php 
@@ -522,23 +527,16 @@
 								} 
 							?>"><br>
 				</div>
-				<div>
-					<label>Sexo:</label>
-						<select id="sexo" name="sexo" onchange="mudar_imagem()">
-							<option value="Masculino">Masculino</option>
-							<option value="Feminino">Feminino</option>
-						</select><br>
-				</div>
-				<div>
-					<label>Data de nascimento:</label>
-						<input type="date" name="dt_nasc" value="<?php 
-								if (isset($_GET['id_colaborador'])) {
-									echo($linha['dt_nasc']);
-								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-									echo($_POST['dt_nasc']);
-								} 
-							?>"><br>
-				</div>
+
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
 				<div>
 					<?php 
 						if (isset($_GET['id_colaborador'])) {
@@ -647,13 +645,21 @@
 					?>
 					<br>
 				</div>
-				<div>
+
+	      	  </div>
+	      	</div>
+
+	      </div>
+	</div>
+			<div class="d-flex justify-content-center">
+				<div class="button_insert">
 					<?php if (isset($_GET['id_colaborador'])) {?>
-						<input type="submit" name="update" value="Atualizar">
+						<input type="submit" class="btn btn-default" name="update" value="Atualizar">
 					<?php }else{?>
-						<input type="submit" name="insert" value="Inserir">
+						<input type="submit" class="btn btn-default" name="insert" value="Inserir">
 					<?php } ?>
 				</div>
+			</div>
 			</form>
 		</div>
 	</body>
