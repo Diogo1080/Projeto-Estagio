@@ -23,8 +23,32 @@
 
 		$id=$querry->insert_id;
 
-		$content=NULL;
 		$ficheiros=$con->prepare("INSERT INTO `ficheiros`(`id_recurso_humano`,`nome`, `extencao`, `filesize`, `ficheiro`) VALUES ($id,?,?,?,?)");
+		$content=NULL;
+		//Insert cargos
+			$insert_cargos=$con->prepare("INSERT INTO `cargos_recursos`(`id_cargo`, `id_recurso_humano`) VALUES (?,?)");
+			for ($i=0; $i < count($_POST['cargo']); $i++) { 
+				$insert_cargos->bind_param("ii",$_POST['cargo'][$i],$id);
+				$insert_cargos->execute();
+			}
+		//Insert se for treinador
+			if (isset($_POST['num_treinador'])) {
+				$insert_treinador=$con->prepare("INSERT INTO `treinadores`(`id_treinador`, `num_treinador`, `password`, `clubles_anteriores`) VALUES(?,?,?,?)");
+				$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
+				$num_treinador=$_POST['num_treinador'][0].$_POST['num_treinador'][1];
+				$insert_treinador->bind_param("isss",$id,$num_treinador,$hashed_password,$_POST['clubes_anteriores']);
+				$insert_treinador->execute();
+
+				$filename = "Certificado_desportivo_".$_POST['cc'];
+				$tmpname = $_FILES["Certificado_desportivo"]['tmp_name'];
+				$file_size = $_FILES["Certificado_desportivo"]['size'];
+				$file_type = $_FILES["Certificado_desportivo"]['type'];
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+				$ficheiros->bind_param('ssib',$filename,$file_type,$file_size,$content);
+				$ficheiros->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));
+				$ficheiros->execute();
+			}
 		//Insert dos ficheiros
 			//registo criminal
 				if (is_uploaded_file($_FILES["registo_criminal"]['tmp_name'])) {
@@ -78,6 +102,9 @@
 				}
 
 			$ficheiros->close();
+
+
+
 		if ($querry->affected_rows<1) {
 			?>
 				<script type="text/javascript">
@@ -228,6 +255,7 @@
 						}
 					}
 				}	
+
 		$ficheiros_insert->close();
 		$ficheiros_update->close();
 		$ficheiros_select->close();
@@ -254,481 +282,477 @@
 		$querry->close();
 	}
 ?>
+<!DOCTYPE html>
+<html>
+	<?php include('head.php'); ?>
+	<head>
+		<script src="//code.jquery.com/jquery.min.js"></script>
+		<script src="toastr/toastr.js"></script>
+		<title>Colaboradores</title>
+	</head>
+	<body>
 
-<html lang="pt">
-    <!-- Tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Colaboradores</title>
 
-  <!-- CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<div class="container">
+	      <?php include('navbar_dashboard.php'); ?>
 
-  <!-- Styles -->
-  <link href="css/full-width-pics.css" rel="stylesheet">
 
-<body>
+	      <center style=" margin-top:25px;"><h1>Inserir Colaborador</h1></center> 
 
-  <!-- Barra de navegação -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">Estrela Azul</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  <div class="collapse navbar-collapse" id="navbarResponsive">
-    <ul class="navbar-nav mx-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="dashboard.php">Dashboard</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="Colaboradores.php">Colaboradores</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="Contribuintes.php">Contribuintes</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="Cargos.php">Cargos</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-            <div class="container-fluid">
-              <br>
-                <!-- Row -->
-                <div class="row">
-                    <!-- Column -->
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <center class="m-t-30"> 
-									<img id="foto_place" src="
-										<?php 
-											if (isset($_GET['id_colaborador'])){
-												echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
-											}elseif (isset($_POST['insert']) or isset($_POST['update'])){
-												if($_POST['sexo']=='Masculino'){
-													echo("fotos/Male_user.png");
-												}else{
-													echo("fotos/Female_user.png");
-												}
-											}else{
-												echo"fotos/Male_user.png";
-											} 
-										?>" alt="Foto do colaborador" height="200" width="200"><br>
-									<label>Escolher a foto</label>
-										<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
-                                </center>
-                            </div>
-                            <div>
-                                <hr> </div>
-                            <div class="card-body">
-                                <div class="map-box">
-                                    <div style="width: 100%"><iframe width="100%" height="150" src="https://maps.google.com/maps?width=100%&amp;height=150&amp;hl=en&amp;coord=40.767590423915316, -8.527064323425295&amp;q=R.%20do%20Barreiro%20do%20Al%C3%A9m%2017%20Beduido+(Santiais)&amp;ie=UTF8&amp;t=&amp;z=15&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/draw-radius-circle-map/">Radius map tool</a></iframe></div><br/>
-                                </div> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column -->
-                    <div class="col-lg-8 col-xlg-9 col-md-7">
-                        <div class="card">
-                            <div class="card-body">
-								<form class="form-horizontal form-material" method="POST" enctype="multipart/form-data">
-									<?php 
-										if (isset($_GET['id_colaborador'])) {
-											$recursos_humanos=$con->prepare("SELECT * FROM recursos_humanos WHERE id_recurso_humano=?");
-											$recursos_humanos->bind_param("i",$_GET['id_colaborador']);
-											$recursos_humanos->execute();
-											$resultado=$recursos_humanos->get_result();
-											$linha=$resultado->fetch_assoc();
-										}
-									?>
-						      	<div class="card"style="margin-top: 30px">
-						      	  <div class="card-header"> 
-						      	    <h3 class="panel-title">Informações Básicas</h3>
-						      	  </div>
-						      	  <div class="card-body">
-						      	    
+	      <div class="col-sm-12">
+			<!-- ^Trabalha as fetches I think -->
+		  <div>
+			<?php 
+				if (isset($_GET['id_colaborador'])) {
+					$recursos_humanos=$con->prepare("SELECT * FROM recursos_humanos WHERE id_recurso_humano=?");
+					$recursos_humanos->bind_param("i",$_GET['id_colaborador']);
+					$recursos_humanos->execute();
+					$resultado=$recursos_humanos->get_result();
+					$linha=$resultado->fetch_assoc();
+				}
+			?>
+	        <!-- Inicio do Form -->
+			<form method="POST" enctype="multipart/form-data">
 
-									<?php if (isset($_GET['id_colaborador'])) { ?>
-										<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
-									<?php } ?>
-									<div>
-										<label>Cargos:</label><br>
-											<?php 
-												//busca todos os cargos existentes na tabela cargos.
-												$cargos = $con->prepare("SELECT * FROM cargos");
-												$cargos->execute();
-												$resultado=$cargos->get_result();
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações Básicas</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
 
-												//Confirma se existem cargos.
-												if($resultado->num_rows === 0){ 
-													echo "Não existem cargos disponiveis.<br>";
-												}else{
-													//Se um humano nao tiver selecionado.
-													if (!isset($_GET['id_colaborador'])) {
-														//Escreve os cargos e as respetivas checkboxes.
-														while ($linha_cargo=$resultado->fetch_assoc()) { 
-															?>
-																<label>
-																	<?php 
-																		echo($linha_cargo['cargo']);
-																		if (strpos($linha_cargo['cargo'],'reinador')!==false) {
-																			?>
-																				<input onclick="alert('função que faz aparecer os campos do treinador.');" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}else{
-																			?>
-																				<input type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}
-																	?>
-																</label><br>
-															<?php
-														}
-													}else{
-														//se tiver selecionado verifica quais os cargos daquela pessoa e faz check das mesmas.
-														while ($linha_cargo=$resultado->fetch_assoc()) { ?>
-															<label>
-																<?php
-																	$cargo_recurso=$con->prepare("SELECT * FROM cargos_recursos WHERE id_cargo=? AND id_recurso_humano=?");
-																	$cargo_recurso->bind_param("ii",$linha_cargo['id_cargo'],$linha['id_colaborador']);
-																	$cargo_recurso->execute();
-																	$resultado_tabela=$cargo_recurso->get_result();
-																	
-																	echo($linha_cargo['cargo']);
-																	if($resultado_tabela->num_rows === 0){ 
-																		if (strpos($linha_cargo['cargo'],'Treinador')!==false) {
-																			?>
-																				<input onclick="treinador_campos()" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}else{
-																			?>
-																				<input type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}
-																	}else{
-																		if (strpos($linha_cargo['cargo'],'Treinador')!==false) {
-																			?>
-																				<input checked onclick="alert('função que faz aparecer os campos do treinador.');" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}else{
-																			?>
-																				<input checked type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
-																			<?php
-																		}
-																	}
-																?>
-															</label><br>
+				<?php if (isset($_GET['id_colaborador'])) { ?>
+					<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
+				<?php } ?>
+				<div>
+					<img id="foto_place" src="
+						<?php 
+							if (isset($_GET['id_colaborador'])){
+								echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
+							}elseif (isset($_POST['insert']) or isset($_POST['update'])){
+								if($_POST['sexo']=='Masculino'){
+									echo("fotos/Male_user.png");
+								}else{
+									echo("fotos/Female_user.png");
+								}
+							}else{
+								echo"fotos/Male_user.png";
+							} 
+						?>" alt="Foto do colaborador" height="200" width="200"><br>
+					<label>Escolher a foto</label>
+						<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+				</div>
+				<div>
+					<label>Cargos:</label><br>
+						<?php 
+							//busca todos os cargos existentes na tabela cargos.
+							$cargos = $con->prepare("SELECT * FROM cargos");
+							$cargos->execute();
+							$resultado=$cargos->get_result();
+
+							//Confirma se existem cargos.
+							if($resultado->num_rows === 0){ 
+								echo "Não existem cargos disponiveis.<br>";
+							}else{
+								//Se um humano nao tiver selecionado.
+								if (!isset($_GET['id_colaborador'])) {
+									//Escreve os cargos e as respetivas checkboxes.
+									while ($linha_cargo=$resultado->fetch_assoc()) { 
+										?>
+											<label>
+												<?php 
+													echo($linha_cargo['cargo']);
+													if (strpos($linha_cargo['cargo'],'reinador')!==false) {
+														?>
+															<input onclick="toogle_treinador_campos();" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
-														}
-													}	
+													}else{
+														?>
+															<input type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+														<?php
+													}
+												?>
+											</label><br>
+										<?php
+									}
+								}else{
+									//se tiver selecionado verifica quais os cargos daquela pessoa e faz check das mesmas.
+									while ($linha_cargo=$resultado->fetch_assoc()) { ?>
+										<label>
+											<?php
+												$cargo_recurso=$con->prepare("SELECT * FROM cargos_recursos WHERE id_cargo=? AND id_recurso_humano=?");
+												$cargo_recurso->bind_param("ii",$linha_cargo['id_cargo'],$linha['id_recurso_humano']);
+												$cargo_recurso->execute();
+												$resultado_tabela=$cargo_recurso->get_result();
+												
+												echo($linha_cargo['cargo']);
+												if($resultado_tabela->num_rows === 0){ 
+													if (strpos($linha_cargo['cargo'],'reinador')!==false) {
+														?>
+															<input onclick="toogle_treinador_campos()" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+														<?php
+													}else{
+														?>
+															<input type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+														<?php
+													}
+												}else{
+													if (strpos($linha_cargo['cargo'],'reinador')!==false) {	
+														$is_treinador=1;											
+														?>
+															<input checked onclick="toogle_treinador_campos();" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+														<?php
+													}else{
+														?>
+															<input checked type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+														<?php
+													}
 												}
 											?>
-									</div>
-									<div>
-										<label>Salario:</label>
-											<input name="salario" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['salario']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['salario']);
-													} 
-												?>">€<br>
-									</div>
-									<div>
-										<label>Nome:</label>
-											<input name="nome" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['nome']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['nome']);
-													} 
-												?>"><br>			
-									</div>
-									<div>
-										<label>CC:</label>
-											<input name="cc" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['CC']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['cc']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>NIF:</label>
-											<input name="nif" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['NIF']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['nif']);
-													} 
-												?>"><br>
-									</div>
+										</label><br>
+									<?php
+									}
+								}	
+							}
+						?>
+				</div>
+				<?php 
+					if (isset($is_treinador)) {
+						$treinador=$con->prepare("SELECT * FROM `treinadores` WHERE id_treinador=?");
+						$treinador->bind_param("i",$linha['id_recurso_humano']);
+						$treinador->execute();
+						$resultado_treinador=$treinador->get_result();
+						$linha_treinador=$resultado_treinador->fetch_assoc();
 
-									<div>
-										<label>Sexo:</label>
-											<select id="sexo" name="sexo" onchange="mudar_imagem()">
-												<option value="Masculino">Masculino</option>
-												<option value="Feminino">Feminino</option>
-											</select><br>
-									</div>
-									<div>
-										<label>Data de nascimento:</label>
-											<input type="date" name="dt_nasc" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['dt_nasc']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['dt_nasc']);
-													} 
-												?>"><br>
-									</div>
-
-
-						      	  </div>
-						      	</div>
-
-						      	<div class="card"style="margin-top: 30px">
-						      	  <div class="card-header"> 
-						      	    <h3 class="panel-title">Informações de Contacto</h3>
-						      	  </div>
-						      	  <div class="card-body">
-						      	    
-									<div>
-										<label>Morada:</label>
-											<input name="morada" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['morada']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['morada']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>Localidade:</label>
-											<input name="localidade" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['localidade']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['localidade']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>Freguesia:</label>
-											<input name="freguesia" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['freguesia']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['freguesia']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>Concelho:</label>
-											<input name="concelho" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['concelho']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['concelho']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>CP:</label>
-											<input name="cp" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['CP']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['cp']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>Email:</label>
-											<input name="email" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['email']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['email']);
-													} 
-												?>"><br>
-									</div>
-									<div>
-										<label>Telemovel:</label>
-											<input name="telemovel" value="<?php 
-													if (isset($_GET['id_colaborador'])) {
-														echo($linha['telemovel']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['telemovel']);
-													} 
-												?>"><br>
-									</div>
-
-						      	  </div>
-						      	</div>
-
-						      	<div class="card"style="margin-top: 30px">
-						      	  <div class="card-header"> 
-						      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
-						      	  </div>
-						      	  <div class="card-body">
-						      	    
-									<div>
-										<?php 
-											if (isset($_GET['id_colaborador'])) {
-												$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
-												$ficheiros->execute();
-												$resultado=$ficheiros->get_result();
-												while ($linha_ficheiro=$resultado->fetch_assoc()){
-													if (strpos($linha_ficheiro['nome'],'Registo_criminal')!==false) {
-														?>
-															<label>Atualizar registo criminal:</label>
-															<input type="file" name="registo_criminal" accept=".pdf,.doc">
-															<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>"> 
-																<label>Download do registo criminal</label>
-															</a>
-														<?php	
-														$done=1;
-														break;
-													}
-												}
-												if (!isset($done)) {
-													?>
-														<label>Registo criminal:</label>
-														<input type="file" name="registo_criminal" accept=".pdf,.doc">
-													<?php
-												}else{
-													unset($done);
-												}
-											}else{
-												?>
-													<label>Registo criminal:</label>
-													<input type="file" name="registo_criminal" accept=".pdf,.doc">
-												<?php
-											} 
-										?>
-										<br>
-									</div>
-									<div>
-										<?php 
-											if (isset($_GET['id_colaborador'])) {
-												$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
-												$ficheiros->execute();
-												$resultado=$ficheiros->get_result();
-												while ($linha_ficheiro=$resultado->fetch_assoc()){
-													if (strpos($linha_ficheiro['nome'],'Certificado_academico')!==false) {
-														?>
-															<label>Atualizar certificado academico:</label>
-															<input type="file" name="certificado_academico" accept=".pdf,.doc">
-															<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
-																<label>Download do registo criminal</label>
-															</a>
-														<?php	
-														$done=1;
-														break;
-													}
-												}
-												if (!isset($done)) {
-													?>
-														<label>Certificado academico:</label>
-														<input type="file" name="certificado_academico" accept=".pdf,.doc">
-													<?php
-												}else{
-													unset($done);
-												}
-											}else{
-												?>
-													<label>Certificado academico:</label>
-													<input type="file" name="certificado_academico" accept=".pdf,.doc">
-												<?php
-											} 
-										?>
-										<br>
-									</div>
-									<div>
-										<?php 
-											if (isset($_GET['id_colaborador'])) {
-												$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
-												$ficheiros->execute();
-												$resultado=$ficheiros->get_result();
-												while ($linha_ficheiro=$resultado->fetch_assoc()){
-													if (strpos($linha_ficheiro['nome'],'Certificado_sbv_dae')!==false) {
-														?>
-															<label>Atualizar certificado sbv/dae:</label>
-															<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
-															<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
-																<label>Download do certificado academico</label>
-															</a>
-														<?php	
-														$done=1;
-														break;
-													}
-												}
-												if (!isset($done)) {
-													?>
-														<label>Certificado sbv/dae:</label>
-														<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
-													<?php
-												}else{
-													unset($done);
-												}
-											}else{
-												?>
-													<label>Certificado sbv/dae:</label>
-													<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
-												<?php
-											} 
-										?>
-										<br>
-									</div>
-
-						      	  </div>
-						      	</div>
-
-						      </div>
-						
-						<div class="d-flex justify-content-center">
-							<div class="button_insert">
-								<?php if (isset($_GET['id_colaborador'])) {?>
-									<input type="submit" name="update" value="Atualizar">
-								<?php }else{?>
-									<input type="submit" name="insert" value="Inserir">
-								<?php } ?>
-							</div>
-						</div>
-						</form>
-						</div>
+						$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+						$ficheiros->execute();
+						$resultado=$ficheiros->get_result();
+					}
+				?>
+				<div id="treinador_campos" style="display: none;">
+					<div>
+						<label>Numero de treinador:</label><input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]">
 					</div>
-                </div>
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-        <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
-        <!-- Bootstrap tether Core JavaScript -->
-        <script src="../../assets/libs/popper.js/dist/umd/popper.min.js"></script>
-        <script src="../../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
-        <!-- slimscrollbar scrollbar JavaScript -->
-        <script src="../../assets/extra-libs/sparkline/sparkline.js"></script>
-        <!--Wave Effects -->
-        <script src="../../dist/js/waves.js"></script>
-        <!--Menu sidebar -->
-        <script src="../../dist/js/sidebarmenu.js"></script>
-        <!--Custom JavaScript -->
-        <script src="../../dist/js/custom.min.js"></script>
-          <!-- JavaScript -->
-          <script src="vendor/jquery/jquery.min.js"></script>
-          <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-</body>
+					<div>
+						<label>Palavra-passe:</label><input disabled class="disable required" name="password">
+					</div>
+					<div>
+						<?php 
+							if (isset($is_treinador)) {
+								$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+								$ficheiros->execute();
+								$resultado=$ficheiros->get_result();
+								while ($linha_ficheiro=$resultado->fetch_assoc()){
+									if (strpos($linha_ficheiro['nome'],'Certificado_desportivo')!==false) {
+										?>
+											<label>Atualizar certificado desportivo:</label>
+											<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+											<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>"> 
+												<label>Download do registo criminal</label>
+											</a>
+										<?php	
+										$done=1;
+										break;
+									}
+								}
+								if (!isset($done)) {
+									?>
+										<label>Certificado_desportivo:</label>
+										<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+									<?php
+								}else{
+									unset($done);
+								}
+							}else{
+								?>
+									<label>Certificado_desportivo:</label>
+									<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+								<?php
+							} 
+						?>
+					</div>
+					<div>
+						<label>Clubes anteriores:</label><textarea disabled class="disable" name="clubes_anteriores"><?php if (isset($is_treinador)) {echo $linha_treinador['clubles_anteriores'];} ?></textarea>
+					</div>
+				</div>
+				<div>
+					<label>Salario:</label>
+						<input name="salario" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['salario']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['salario']);
+								} 
+							?>">€<br>
+				</div>
+				<div>
+					<label>Nome:</label>
+						<input name="nome" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['nome']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['nome']);
+								} 
+							?>"><br>			
+				</div>
+				<div>
+					<label>CC:</label>
+						<input name="cc" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['cc']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['cc']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>NIF:</label>
+						<input name="nif" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['nif']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['nif']);
+								} 
+							?>"><br>
+				</div>
 
+				<div>
+					<label>Sexo:</label>
+						<select id="sexo" name="sexo" onchange="mudar_imagem()">
+							<option value="Masculino">Masculino</option>
+							<option value="Feminino">Feminino</option>
+						</select><br>
+				</div>
+				<div>
+					<label>Data de nascimento:</label>
+						<input type="date" name="dt_nasc" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['dt_nasc']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['dt_nasc']);
+								} 
+							?>"><br>
+				</div>
+
+
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Informações de Contacto</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+				<div>
+					<label>Morada:</label>
+						<input name="morada" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['morada']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['morada']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>Localidade:</label>
+						<input name="localidade" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['localidade']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['localidade']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>Freguesia:</label>
+						<input name="freguesia" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['freguesia']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['freguesia']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>Concelho:</label>
+						<input name="concelho" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['concelho']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['concelho']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>CP:</label>
+						<input name="cp" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['cp']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['cp']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>Email:</label>
+						<input name="email" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['email']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['email']);
+								} 
+							?>"><br>
+				</div>
+				<div>
+					<label>Telemovel:</label>
+						<input name="telemovel" value="<?php 
+								if (isset($_GET['id_colaborador'])) {
+									echo($linha['telemovel']);
+								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+									echo($_POST['telemovel']);
+								} 
+							?>"><br>
+				</div>
+
+	      	  </div>
+	      	</div>
+
+	      	<div class="card"style="margin-top: 30px">
+	      	  <div class="card-header"> 
+	      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
+	      	  </div>
+	      	  <div class="card-body">
+	      	    
+				<div>
+					<?php 
+						if (isset($_GET['id_colaborador'])) {
+							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+							$ficheiros->execute();
+							$resultado=$ficheiros->get_result();
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Registo_criminal')!==false) {
+									?>
+										<label>Atualizar registo criminal:</label>
+										<input type="file" name="registo_criminal" accept=".pdf,.doc">
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>"> 
+											<label>Download do registo criminal</label>
+										</a>
+									<?php	
+									$done=1;
+									break;
+								}
+							}
+							if (!isset($done)) {
+								?>
+									<label>Registo criminal:</label>
+									<input type="file" name="registo_criminal" accept=".pdf,.doc">
+								<?php
+							}else{
+								unset($done);
+							}
+						}else{
+							?>
+								<label>Registo criminal:</label>
+								<input type="file" name="registo_criminal" accept=".pdf,.doc">
+							<?php
+						} 
+					?>
+					<br>
+				</div>
+				<div>
+					<?php 
+						if (isset($_GET['id_colaborador'])) {
+							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+							$ficheiros->execute();
+							$resultado=$ficheiros->get_result();
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Certificado_academico')!==false) {
+									?>
+										<label>Atualizar certificado academico:</label>
+										<input type="file" name="certificado_academico" accept=".pdf,.doc">
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
+											<label>Download do registo criminal</label>
+										</a>
+									<?php	
+									$done=1;
+									break;
+								}
+							}
+							if (!isset($done)) {
+								?>
+									<label>Certificado academico:</label>
+									<input type="file" name="certificado_academico" accept=".pdf,.doc">
+								<?php
+							}else{
+								unset($done);
+							}
+						}else{
+							?>
+								<label>Certificado academico:</label>
+								<input type="file" name="certificado_academico" accept=".pdf,.doc">
+							<?php
+						} 
+					?>
+					<br>
+				</div>
+				<div>
+					<?php 
+						if (isset($_GET['id_colaborador'])) {
+							$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+							$ficheiros->execute();
+							$resultado=$ficheiros->get_result();
+							while ($linha_ficheiro=$resultado->fetch_assoc()){
+								if (strpos($linha_ficheiro['nome'],'Certificado_sbv_dae')!==false) {
+									?>
+										<label>Atualizar certificado sbv/dae:</label>
+										<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
+										<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>">  
+											<label>Download do certificado academico</label>
+										</a>
+									<?php	
+									$done=1;
+									break;
+								}
+							}
+							if (!isset($done)) {
+								?>
+									<label>Certificado sbv/dae:</label>
+									<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
+								<?php
+							}else{
+								unset($done);
+							}
+						}else{
+							?>
+								<label>Certificado sbv/dae:</label>
+								<input type="file" name="certificado_sbv_dae" accept=".pdf,.doc">
+							<?php
+						} 
+					?>
+					<br>
+				</div>
+
+	      	  </div>
+	      	</div>
+
+	      </div>
+	</div>
+			<div class="d-flex justify-content-center">
+				<div class="button_insert">
+					<?php if (isset($_GET['id_colaborador'])) {?>
+						<input type="submit" class="btn btn-default" name="update" value="Atualizar">
+					<?php }else{?>
+						<input type="submit" class="btn btn-default" name="insert" value="Inserir">
+					<?php } ?>
+				</div>
+			</div>
+			</form>
+		</div>
+	</body>
 </html>
+
 <!--Faz upload da foto para mostrar no site temporariamente-->
 <script type="text/javascript">
 	function readURL(input) {
@@ -745,6 +769,29 @@
 	$("#foto").change(function() {
 		readURL(this);
 	});
+</script>
+<script type="text/javascript">
+	function toogle_treinador_campos(){
+		var inputs_required=document.getElementsByClassName("required");
+		var inputs_disable=document.getElementsByClassName("disable");
+		if (document.getElementById("treinador_campos").style.display=="none") {
+			document.getElementById("treinador_campos").style.display="block";
+			for (var i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled=false;
+			}
+			for (var i = inputs_required.length - 1; i >= 0; i--) {
+				inputs_required[i].required=true;
+			}
+		}else{
+			document.getElementById("treinador_campos").style.display="none";	
+			for (var i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled=true;
+			}
+			for (var i = inputs_required.length - 1; i >= 0; i--) {
+				inputs_required[i].required=false;
+			}		
+		}
+	}
 </script>
 <?php
 	if (!isset($_GET['id_colaborador'])) {
@@ -763,9 +810,12 @@
 		</script>
 		<?php
 	}else{
+		if (isset($is_treinador)) {
+			?><script type="text/javascript">toogle_treinador_campos()</script><?php
+		}
 		?>
 			<script>
-						//Escolher o sexo 
+				//Escolher o sexo 
 					if ("<?php echo ($linha['sexo']); ?>"=="Masculino") {
 						document.getElementById("sexo").options.selectedIndex=0;
 					};
@@ -776,8 +826,3 @@
 		<?php 
 	}
 ?>
-<script type="text/javascript">
-	function treinador_campos(){
-
-	}
-</script>
