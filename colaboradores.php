@@ -292,8 +292,10 @@
 	      	    <h3 class="panel-title">Informações Básicas</h3>
 	      	  </div>
 	      	  <div class="card-body">
-	      	    
+				<div class="row">
 
+				<div class="col-md-4">
+				
 				<?php if (isset($_GET['id_colaborador'])) { ?>
 					<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
 				<?php } ?>
@@ -315,6 +317,10 @@
 					<label>Escolher a foto</label>
 						<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
 				</div>
+
+				</div>
+
+				<div class="col-md-8">
 				<div>
 					<label>Cargos:</label><br>
 						<?php 
@@ -366,7 +372,7 @@
 														<?php
 													}else{
 														?>
-															<input type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input class="form-label-group" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}
 												}else{
@@ -376,7 +382,7 @@
 														<?php
 													}else{
 														?>
-															<input checked type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input  class="form-label-group" checked type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}
 												}
@@ -390,7 +396,7 @@
 				</div>
 				<div>
 					<label>Salario:</label>
-						<input name="salario" value="<?php 
+						<input class="form-label-group" name="salario" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -400,7 +406,7 @@
 				</div>
 				<div>
 					<label>Nome:</label>
-						<input name="nome" value="<?php 
+						<input class="form-label-group" name="nome" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -410,7 +416,7 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input name="cc" value="<?php 
+						<input class="form-label-group" name="cc" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['CC']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -420,7 +426,7 @@
 				</div>
 				<div>
 					<label>NIF:</label>
-						<input name="nif" value="<?php 
+						<input class="form-label-group" name="nif" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['NIF']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -431,14 +437,14 @@
 
 				<div>
 					<label>Sexo:</label>
-						<select id="sexo" name="sexo" onchange="mudar_imagem()">
+						<select  class="form-label-group" id="sexo" name="sexo" onchange="mudar_imagem()">
 							<option value="Masculino">Masculino</option>
 							<option value="Feminino">Feminino</option>
 						</select><br>
 				</div>
 				<div>
 					<label>Data de nascimento:</label>
-						<input type="date" name="dt_nasc" value="<?php 
+						<input  class="form-label-group" type="date" name="dt_nasc" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['dt_nasc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -446,6 +452,9 @@
 								} 
 							?>"><br>
 				</div>
+				</div>
+
+			</div>
 
 
 	      	  </div>
