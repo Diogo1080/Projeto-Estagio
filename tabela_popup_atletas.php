@@ -23,7 +23,7 @@
 
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		$atletas=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Atleta' AND atletas.id_enc_edu is null LIMIT $offset, $registos_por_pagina)");
+		$atletas=$con->prepare("SELECT * FROM `contribuintes` INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Atleta' AND atletas.id_enc_edu is null) LIMIT $offset, $registos_por_pagina");
 		$atletas->bind_param("sss",$procura,$procura,$procura);
 		$atletas->execute();
 		$resultado=$atletas->get_result();

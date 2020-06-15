@@ -86,7 +86,7 @@
 		<?php require ('nav.php'); ?>
 		<div>
 			<form method="POST" enctype="multipart/form-data">
-				<!--form de inserir o enc_educação-->
+				<!--form de inserir o cargo-->
 				<div>
 					<!--Form secundario-->
 						<h1>Cargos</h1>
