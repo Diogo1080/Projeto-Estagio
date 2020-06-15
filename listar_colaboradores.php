@@ -5,55 +5,38 @@
     <div class="container">
       <?php include('navbar_dashboard.php'); ?>
 
-        <!-- Tables Of Products -->
-        <div class="col-sm-12">
-          <div class="card"style="margin-top: 30px">
-            <div class="card-header"> 
-                <div class="row">
-                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                          <h3 class="panel-title">Lista de Colaboradores</h3>
-                      </div>
-                      <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
-                          <a href="colaboradores.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Colaborador</a>      
-                      </div>
-                  </div>
-            </div>
-            <div class="card-body">
-              <table class="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Dados</th>
-                    <th scope="col">Dados</th>
-                    <th scope="col">Operações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      <!-- Tables dos colaboradores -->
+      <div class="col-sm-12">
+        <div class="card"style="margin-top: 30px">
+          <div class="card-header"> 
+              <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+                        <h3 class="panel-title">Lista de Colaboradores</h3>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
+                        <a href="colaboradores.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Colaborador</a>      
+                    </div>
+                </div>
+          </div>
+          <div>
+            Procura: <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);">
+            </select>
+          </div>
+          <div class="card-body" id="tabela_colaboradores"></div>
+          <div>
+            <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
+            <<
+            </button>
+            <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
+            <
+            </button>
+            <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
+            >
+            </button>
+            <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
+            >>
+            </button> 
+          </div>
         </div>
       </div>
     </div>
@@ -66,3 +49,48 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
 </html>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript">
+  var procura='';
+  var num_pagina=1;
+
+  function tabela_colaboradores(num_pagina,procura){
+    $.post(
+      'tabela_colaboradores.php', 
+      {
+        'num_pagina': num_pagina,
+        'procura':procura
+      }, 
+      function(response) {
+        var resposta=response.split("«");
+        total_num_paginas=resposta[0];
+        $('#tabela_colaboradores').html(resposta[1]);
+      }
+    )
+  }
+  function definir_procura(value){
+    procura=value;
+  }
+
+  function first_page(){
+    num_pagina=1;
+  }
+
+  function prev_page(){
+    if (num_pagina>1) {
+      num_pagina--;
+    }
+  }
+
+  function next_page(){
+    if (num_pagina<total_num_paginas) {
+      num_pagina++;
+    }
+  }
+
+  function last_page(){
+    num_pagina=total_num_paginas;
+  }
+
+  tabela_colaboradores(num_pagina,procura);
+</script>

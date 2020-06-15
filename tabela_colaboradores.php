@@ -26,18 +26,18 @@
 		$cargos->execute();
 		$resultado=$cargos->get_result();
 		echo '
-			<div class="table-responsive">
-				<table border class="table table-striped table-sm">
+			<div class="card-body">
+				<table class="table table-hover table-bordered">
 					<thead>
 						<tr>
-							<th>Nome</th>
-							<th>CC</th>
-							<th>NIF</th>
-							<th>Selecionar</th>
+							<th scope="col">Nome</th>
+							<th scope="col">CC</th>
+							<th scope="col">NIF</th>
+							<th scope="col">Selecionar</th>
 						</tr>
 					</thead>
-					<tbody>';
-					if ($resultado->num_rows==0) {
+                ';
+                if ($resultado->num_rows==0) {
 						echo '
 							<tr>
 								<td colspan="100%">Nenhum registo encontrado.</td>
@@ -55,8 +55,10 @@
 							';
 						}
 					}
-		echo '		</tbody>
-				</table>
-			</div>
-		';
+				echo '
+</tbody>
+</table>
+</div>
+				';
+                
 ?>
