@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include_once './conexao.php';
+include_once './ligacao.php';
 
 $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 

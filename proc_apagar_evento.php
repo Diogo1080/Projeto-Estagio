@@ -2,7 +2,7 @@
 
 session_start();
 
-include_once './conexao.php';
+include_once './ligacao.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
@@ -14,12 +14,12 @@ if (!empty($id)) {
     
     if($delete_event->execute()){
         $_SESSION['msg'] = '<div class="alert alert-success" role="alert">Treino apagado com sucesso!</div>';
-        header("Location: index.php");
+        header("Location: calendario.php");
     }else{
         $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">Erro: Treino não foi apagado com sucesso!</div>';
-        header("Location: index.php");
+        header("Location: calendario.php");
     }
 } else {
     $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">Erro: Treino não foi apagado com sucesso!</div>';
-    header("Location: index.php");
+    header("Location: calendario.php");
 }

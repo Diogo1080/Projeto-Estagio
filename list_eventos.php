@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include 'ligacao.php';
 
 $query_events = "SELECT id, title, color, start, end FROM treinos";
 $resultado_events = $conn->prepare($query_events);
