@@ -848,7 +848,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input id="cp_contribuinte_enc" class="input_enc required" name="cp_enc" onkeyup="codigo_postalcheck(this)" value="<?php 
+								<input id="cp_contribuinte_enc" maxlength="8" class="input_enc required" name="cp_enc" onkeyup="codigo_postalcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1316,6 +1316,17 @@
 				return true
 			}
 		};
+
+		$(document).ready(function () { 
+		    var $campo = $("#cp");
+		    $campo.mask('0000-000', {reverse: true});
+		});
+
+		$(document).ready(function () { 
+		    var $campo = $("#cp_contribuinte_enc");
+		    $campo.mask('0000-000', {reverse: true});
+		});
+
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {

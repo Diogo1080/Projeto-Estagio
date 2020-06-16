@@ -912,7 +912,7 @@
 
 	$(document).ready(function () { 
         var $campo = $("#cp");
-        $campo.mask('00000-000', {reverse: true});
+        $campo.mask('0000-000', {reverse: true});
     });
 </script>
 <?php
