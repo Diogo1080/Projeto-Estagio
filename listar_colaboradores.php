@@ -26,27 +26,26 @@
 
           <div class="row card-header">
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                    <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
+                    <button type="button" class="btn btn-default" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
                     <<
                     </button>
-                    <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
+                    <button type="button" class="btn btn-default" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
                     <
                     </button>
-                    <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
+                    <button type="button" class="btn btn-default" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
                     >
                     </button>
-                    <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
+                    <button type="button" class="btn btn-default" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
                     >>
                     </button> 
                   </div>
 
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
-
-                    <div>
-                      Procura: <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);">
-                      </select>
-                  </div> 
-
+                  <div class="form-label-group">
+                  <input type="text" id="pesquisa_text" onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);" class="form-control" placeholder="Pesquisa" required autofocus>
+                  <!-- <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);" class=""> -->
+                  <label for="pesquisa_text">Pesquisa</label>
+                </div>
              </div>
       </div>
     </div>
