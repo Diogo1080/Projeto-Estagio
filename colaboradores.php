@@ -478,7 +478,7 @@
 				</div>
 				<div>
 					<label>Salario:</label>
-						<input name="salario" onkeyup="sonumeros(this)" value="<?php 
+						<input name="salario" onkeypress="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -488,7 +488,7 @@
 				</div>
 				<div>
 					<label>Nome:</label>
-						<input name="nome" onkeyup="nomecheck(this)" value="<?php 
+						<input name="nome" onkeypress="nomecheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -498,7 +498,7 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input name="cc" onkeyup="sonumeros(this)" value="<?php 
+						<input name="cc" onkeypress="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -508,7 +508,7 @@
 				</div>
 				<div>
 					<label>NIF:</label>
-						<input name="nif" onkeyup="sonumeros(this)" value="<?php 
+						<input name="nif" onkeypress="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nif']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -547,7 +547,7 @@
 	      	    
 				<div>
 					<label>Morada:</label>
-						<input name="morada" onkeyup="moradacheck(this)"  value="<?php 
+						<input name="morada" onkeypress="moradacheck(this)"  value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['morada']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -557,7 +557,7 @@
 				</div>
 				<div>
 					<label>Localidade:</label>
-						<input name="localidade" onkeyup="soletras(this)" value="<?php 
+						<input name="localidade" onkeypress="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['localidade']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -567,7 +567,7 @@
 				</div>
 				<div>
 					<label>Freguesia:</label>
-						<input name="freguesia" onkeyup="soletras(this)" value="<?php 
+						<input name="freguesia" onkeypress="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['freguesia']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -577,7 +577,7 @@
 				</div>
 				<div>
 					<label>Concelho:</label>
-						<input name="concelho" onkeyup="soletras(this)" value="<?php 
+						<input name="concelho" onkeypress="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['concelho']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -587,7 +587,7 @@
 				</div>
 				<div>
 					<label>CP:</label>
-						<input name="cp" onkeyup="codigo_postalcheck(this)" value="<?php 
+						<input name="cp" onkeypress="codigo_postalcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cp']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -597,7 +597,7 @@
 				</div>
 				<div>
 					<label>Email:</label>
-						<input name="email" onkeyup="emailcheck(this)" value="<?php 
+						<input name="email" onkeypress="emailcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['email']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -607,7 +607,7 @@
 				</div>
 				<div>
 					<label>Telemovel:</label>
-						<input name="telemovel" onkeyup="telemovelcheck(this)" value="<?php 
+						<input name="telemovel" onkeypress="telemovelcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['telemovel']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
