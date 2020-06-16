@@ -530,12 +530,17 @@
 				</div>
 				<div>
 					<label>Data de nascimento:</label>
-						<input type="date" name="dt_nasc" value="<?php 
+						<?php 
+							$thisyear=date('Y',strtotime('-17 years'));
+						?>
+						<input type="date" name="dt_nasc" max="<?php echo date('Y-m-d',mktime(00,00,00, 12, 31,$thisyear)); ?>" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['dt_nasc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['dt_nasc']);
-								} 
+								}else{
+									echo date('Y-m-d',mktime(0,0,0, 12, 31,$thisyear));
+								}
 							?>"><br>
 				</div>
 
