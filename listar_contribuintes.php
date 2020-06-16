@@ -11,32 +11,38 @@
           <div class="card-header"> 
               <div class="row">
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                        <h3 class="panel-title">Lista de Colaboradores</h3>
+                        <h3 class="panel-title">Lista de Contribuintes</h3>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
-                        <a href="colaboradores.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Colaborador</a>      
+                        <a href="contribuintes.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Contribuinte</a>      
                     </div>
                 </div>
           </div>
-          <div>
-            Procura: <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);">
-            </select>
-          </div>
-          <div class="card-body" id="tabela_colaboradores"></div>
-          <div>
-            <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
-            <<
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
-            <
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
-            >
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
-            >>
-            </button> 
-          </div>
+        <div>
+          Procura: <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
+          Tipo: 
+          <select onchange="definir_tipo(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
+            <option></option>
+            <option>Sócio</option>
+            <option>Atleta</option>
+            <option>Encarregado de educação</option>
+          </select>
+        </div>
+        <div class="card-body" id="tabela_contribuintes"></div>
+        <div>
+        <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_contribuintes(num_pagina,procura,tipo); ">
+          <<
+        </button>
+        <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_contribuintes(num_pagina,procura,tipo);">
+          <
+        </button>
+        <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_contribuintes(num_pagina,procura,tipo);">
+          >
+        </button>
+        <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_contribuintes(num_pagina,procura,tipo);">
+          >>
+        </button> 
+      </div>
         </div>
       </div>
     </div>
@@ -53,26 +59,29 @@
 <script type="text/javascript">
   var procura='';
   var num_pagina=1;
-  var total_num_paginas=0;
+  var tipo='';
 
-  function tabela_colaboradores(num_pagina,procura){
+  function tabela_contribuintes(num_pagina,procura,tipo){
     $.post(
-      'tabela_colaboradores.php', 
+      'tabela_contribuintes.php', 
       {
         'num_pagina': num_pagina,
-        'procura':procura
+        'procura':procura,
+        'tipo':tipo
       }, 
       function(response) {
         var resposta=response.split("«");
         total_num_paginas=resposta[0];
-        $('#tabela_colaboradores').html(resposta[1]);
+        $('#tabela_contribuintes').html(resposta[1]);
       }
     )
   }
   function definir_procura(value){
     procura=value;
   }
-
+  function definir_tipo(value){
+    tipo=value;
+  }
   function first_page(){
     num_pagina=1;
   }
@@ -93,5 +102,5 @@
     num_pagina=total_num_paginas;
   }
 
-  tabela_colaboradores(num_pagina,procura);
+  tabela_contribuintes(num_pagina,procura,tipo);
 </script>

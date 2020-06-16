@@ -40,7 +40,6 @@
 			}
 			//fecha a query
 			$querry->close();
-
 		}	
 	}
 ?>

@@ -23,8 +23,32 @@
 
 		$id=$querry->insert_id;
 
-		$content=NULL;
 		$ficheiros=$con->prepare("INSERT INTO `ficheiros`(`id_recurso_humano`,`nome`, `extencao`, `filesize`, `ficheiro`) VALUES ($id,?,?,?,?)");
+		$content=NULL;
+		//Insert cargos
+			$insert_cargos=$con->prepare("INSERT INTO `cargos_recursos`(`id_cargo`, `id_recurso_humano`) VALUES (?,?)");
+			for ($i=0; $i < count($_POST['cargo']); $i++) { 
+				$insert_cargos->bind_param("ii",$_POST['cargo'][$i],$id);
+				$insert_cargos->execute();
+			}
+		//Insert se for treinador
+			if (isset($_POST['num_treinador'])) {
+				$insert_treinador=$con->prepare("INSERT INTO `treinadores`(`id_treinador`, `num_treinador`, `password`, `clubles_anteriores`) VALUES(?,?,?,?)");
+				$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
+				$num_treinador=$_POST['num_treinador'][0].$_POST['num_treinador'][1];
+				$insert_treinador->bind_param("isss",$id,$num_treinador,$hashed_password,$_POST['clubes_anteriores']);
+				$insert_treinador->execute();
+
+				$filename = "Certificado_desportivo_".$_POST['cc'];
+				$tmpname = $_FILES["Certificado_desportivo"]['tmp_name'];
+				$file_size = $_FILES["Certificado_desportivo"]['size'];
+				$file_type = $_FILES["Certificado_desportivo"]['type'];
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+				$ficheiros->bind_param('ssib',$filename,$file_type,$file_size,$content);
+				$ficheiros->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));
+				$ficheiros->execute();
+			}
 		//Insert dos ficheiros
 			//registo criminal
 				if (is_uploaded_file($_FILES["registo_criminal"]['tmp_name'])) {
@@ -78,6 +102,9 @@
 				}
 
 			$ficheiros->close();
+
+
+
 		if ($querry->affected_rows<1) {
 			?>
 				<script type="text/javascript">
@@ -228,6 +255,7 @@
 						}
 					}
 				}	
+
 		$ficheiros_insert->close();
 		$ficheiros_update->close();
 		$ficheiros_select->close();
@@ -292,10 +320,8 @@
 				<h3 class="panel-title">Informações Básicas</h3>
 	      	  </div>
 	      	  <div class="card-body">
-				<div class="row">
+	      	    
 
-				<div class="col-md-4">
-				
 				<?php if (isset($_GET['id_colaborador'])) { ?>
 					<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
 				<?php } ?>
@@ -317,10 +343,6 @@
 					<label>Escolher a foto</label>
 						<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
 				</div>
-
-				</div>
-
-				<div class="col-md-8">
 				<div>
 					<label>Cargos:</label><br>
 						<?php 
@@ -343,11 +365,11 @@
 													echo($linha_cargo['cargo']);
 													if (strpos($linha_cargo['cargo'],'reinador')!==false) {
 														?>
-															<input onclick="alert('função que faz aparecer os campos do treinador.');" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input onclick="toogle_treinador_campos();" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}else{
 														?>
-															<input type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}
 												?>
@@ -360,29 +382,30 @@
 										<label>
 											<?php
 												$cargo_recurso=$con->prepare("SELECT * FROM cargos_recursos WHERE id_cargo=? AND id_recurso_humano=?");
-												$cargo_recurso->bind_param("ii",$linha_cargo['id_cargo'],$linha['id_colaborador']);
+												$cargo_recurso->bind_param("ii",$linha_cargo['id_cargo'],$linha['id_recurso_humano']);
 												$cargo_recurso->execute();
 												$resultado_tabela=$cargo_recurso->get_result();
 												
 												echo($linha_cargo['cargo']);
 												if($resultado_tabela->num_rows === 0){ 
-													if (strpos($linha_cargo['cargo'],'Treinador')!==false) {
+													if (strpos($linha_cargo['cargo'],'reinador')!==false) {
 														?>
-															<input onclick="treinador_campos()" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input onclick="toogle_treinador_campos()" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}else{
 														?>
-															<input class="form-label-group" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}
 												}else{
-													if (strpos($linha_cargo['cargo'],'Treinador')!==false) {
+													if (strpos($linha_cargo['cargo'],'reinador')!==false) {	
+														$is_treinador=1;											
 														?>
-															<input checked onclick="alert('função que faz aparecer os campos do treinador.');" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input checked onclick="toogle_treinador_campos();" value="<?php echo($linha_cargo['id_cargo']) ?>" type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}else{
 														?>
-															<input  class="form-label-group" checked type="checkbox" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
+															<input checked type="checkbox" value="<?php echo($linha_cargo['id_cargo']) ?>" id="<?php echo($linha_cargo['id_cargo']); ?>" name="cargo[]">
 														<?php
 													}
 												}
@@ -394,9 +417,68 @@
 							}
 						?>
 				</div>
+				<?php 
+					if (isset($is_treinador)) {
+						$treinador=$con->prepare("SELECT * FROM `treinadores` WHERE id_treinador=?");
+						$treinador->bind_param("i",$linha['id_recurso_humano']);
+						$treinador->execute();
+						$resultado_treinador=$treinador->get_result();
+						$linha_treinador=$resultado_treinador->fetch_assoc();
+
+						$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+						$ficheiros->execute();
+						$resultado=$ficheiros->get_result();
+					}
+				?>
+				<div id="treinador_campos" style="display: none;">
+					<div>
+						<label>Numero de treinador:</label><input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]">
+					</div>
+					<div>
+						<label>Palavra-passe:</label><input disabled class="disable required" name="password">
+					</div>
+					<div>
+						<?php 
+							if (isset($is_treinador)) {
+								$ficheiros=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_GET[id_colaborador]");
+								$ficheiros->execute();
+								$resultado=$ficheiros->get_result();
+								while ($linha_ficheiro=$resultado->fetch_assoc()){
+									if (strpos($linha_ficheiro['nome'],'Certificado_desportivo')!==false) {
+										?>
+											<label>Atualizar certificado desportivo:</label>
+											<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+											<a href="download_ficheiro.php?id_ficheiro=<?php echo($linha_ficheiro['id_ficheiro']); ?>"> 
+												<label>Download do registo criminal</label>
+											</a>
+										<?php	
+										$done=1;
+										break;
+									}
+								}
+								if (!isset($done)) {
+									?>
+										<label>Certificado_desportivo:</label>
+										<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+									<?php
+								}else{
+									unset($done);
+								}
+							}else{
+								?>
+									<label>Certificado_desportivo:</label>
+									<input type="file" name="Certificado_desportivo" accept=".pdf,.doc">
+								<?php
+							} 
+						?>
+					</div>
+					<div>
+						<label>Clubes anteriores:</label><textarea disabled class="disable" name="clubes_anteriores"><?php if (isset($is_treinador)) {echo $linha_treinador['clubles_anteriores'];} ?></textarea>
+					</div>
+				</div>
 				<div>
 					<label>Salario:</label>
-						<input class="form-label-group" name="salario" value="<?php 
+						<input name="salario" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -406,7 +488,7 @@
 				</div>
 				<div>
 					<label>Nome:</label>
-						<input class="form-label-group" name="nome" value="<?php 
+						<input name="nome" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -416,9 +498,9 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input class="form-label-group" name="cc" value="<?php 
+						<input name="cc" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
-									echo($linha['CC']);
+									echo($linha['cc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['cc']);
 								} 
@@ -426,9 +508,9 @@
 				</div>
 				<div>
 					<label>NIF:</label>
-						<input class="form-label-group" name="nif" value="<?php 
+						<input name="nif" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
-									echo($linha['NIF']);
+									echo($linha['nif']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['nif']);
 								} 
@@ -437,14 +519,14 @@
 
 				<div>
 					<label>Sexo:</label>
-						<select  class="form-label-group" id="sexo" name="sexo" onchange="mudar_imagem()">
+						<select id="sexo" name="sexo" onchange="mudar_imagem()">
 							<option value="Masculino">Masculino</option>
 							<option value="Feminino">Feminino</option>
 						</select><br>
 				</div>
 				<div>
 					<label>Data de nascimento:</label>
-						<input  class="form-label-group" type="date" name="dt_nasc" value="<?php 
+						<input type="date" name="dt_nasc" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['dt_nasc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -452,9 +534,6 @@
 								} 
 							?>"><br>
 				</div>
-				</div>
-
-			</div>
 
 
 	      	  </div>
@@ -510,7 +589,7 @@
 					<label>CP:</label>
 						<input name="cp" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
-									echo($linha['CP']);
+									echo($linha['cp']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['cp']);
 								} 
@@ -691,6 +770,29 @@
 		readURL(this);
 	});
 </script>
+<script type="text/javascript">
+	function toogle_treinador_campos(){
+		var inputs_required=document.getElementsByClassName("required");
+		var inputs_disable=document.getElementsByClassName("disable");
+		if (document.getElementById("treinador_campos").style.display=="none") {
+			document.getElementById("treinador_campos").style.display="block";
+			for (var i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled=false;
+			}
+			for (var i = inputs_required.length - 1; i >= 0; i--) {
+				inputs_required[i].required=true;
+			}
+		}else{
+			document.getElementById("treinador_campos").style.display="none";	
+			for (var i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled=true;
+			}
+			for (var i = inputs_required.length - 1; i >= 0; i--) {
+				inputs_required[i].required=false;
+			}		
+		}
+	}
+</script>
 <?php
 	if (!isset($_GET['id_colaborador'])) {
 		?>
@@ -708,9 +810,12 @@
 		</script>
 		<?php
 	}else{
+		if (isset($is_treinador)) {
+			?><script type="text/javascript">toogle_treinador_campos()</script><?php
+		}
 		?>
 			<script>
-						//Escolher o sexo 
+				//Escolher o sexo 
 					if ("<?php echo ($linha['sexo']); ?>"=="Masculino") {
 						document.getElementById("sexo").options.selectedIndex=0;
 					};
@@ -721,8 +826,3 @@
 		<?php 
 	}
 ?>
-<script type="text/javascript">
-	function treinador_campos(){
-
-	}
-</script>
