@@ -596,7 +596,7 @@
 				</div>
 				<div>
 					<label>CP:</label>
-						<input id="cp" name="cp" onkeypress="return codigo_postalcheck(event)" value="<?php 
+						<input id="cp" name="cp" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cp']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -751,9 +751,9 @@
 			<div class="d-flex justify-content-center">
 				<div class="button_insert">
 					<?php if (isset($_GET['id_colaborador'])) {?>
-						<input type="submit" class="btn btn-default" name="update" onclick='return validadata()' value="Atualizar">
+						<input type="submit" class="btn btn-default" name="update" value="Atualizar">
 					<?php }else{?>
-						<input type="submit" class="btn btn-default" name="insert" onclick='return validadata()' value="Inserir">
+						<input type="submit" class="btn btn-default" name="insert" value="Inserir">
 					<?php } ?>
 				</div>
 			</div>
@@ -909,37 +909,6 @@
 			return true
 		}
 	};
-
-	function validadata(){
-	   var data = document.getElementById("nascimento").value; // pega o valor do input
-	   data = data.replace(/\//g, "-"); // substitui eventuais barras (ex. IE) "/" por hífen "-"
-	   var data_array = data.split("-"); // quebra a data em array
-	   
-	   // para o IE onde será inserido no formato dd/MM/yyyy
-	   if(data_array[0].length != 4){
-	      data = data_array[2]+"-"+data_array[1]+"-"+data_array[0]; // remonto a data no formato yyyy/MM/dd
-	   }
-	   
-	   // comparo as datas e calculo a idade
-	   var hoje = new Date();
-	   var nasc  = new Date(data);
-	   var idade = hoje.getFullYear() - nasc.getFullYear();
-	   var m = hoje.getMonth() - nasc.getMonth();
-	   if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
-	   
-	   if(idade < 5){
-	      alert("Pessoas menores de 5 não podem ser inseridos.");
-	      return false;
-	   }
-
-	   if(idade >= 5 && idade <= 60){
-	      alert("Maior de 5 anos, podem ser inseridos.");
-	      return true;
-	   }
-	   
-	   // se for maior que 60 não vai acontecer nada!
-	   return false;
-	}
 
 	$(document).ready(function () { 
         var $campo = $("#cp");

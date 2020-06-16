@@ -675,7 +675,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input required maxlength="9" id="cp" name="cp" onkeypress="return codigo_postalcheck(event)" value="<?php 
+								<input required maxlength="8" id="cp" name="cp" onkeypress="return codigo_postalcheck(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -910,9 +910,9 @@
 				</div>
 				<div>
 					<?php if (isset($_GET['id_contribuinte'])) {?>
-						<input type="submit" name="update" onclick='return validadata()' value="Atualizar">
+						<input type="submit" name="update" value="Atualizar">
 					<?php }else{?>
-						<input type="submit" name="insert" onclick='return validadata()' value="Inserir">
+						<input type="submit" name="insert" value="Inserir">
 					<?php } ?>
 					<button type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
 				</div>
@@ -1316,42 +1316,6 @@
 				return true
 			}
 		};
-
-		function validadata(){
-		   var data = document.getElementById("nascimento").value; // pega o valor do input
-		   data = data.replace(/\//g, "-"); // substitui eventuais barras (ex. IE) "/" por hífen "-"
-		   var data_array = data.split("-"); // quebra a data em array
-		   
-		   // para o IE onde será inserido no formato dd/MM/yyyy
-		   if(data_array[0].length != 4){
-		      data = data_array[2]+"-"+data_array[1]+"-"+data_array[0]; // remonto a data no formato yyyy/MM/dd
-		   }
-		   
-		   // comparo as datas e calculo a idade
-		   var hoje = new Date();
-		   var nasc  = new Date(data);
-		   var idade = hoje.getFullYear() - nasc.getFullYear();
-		   var m = hoje.getMonth() - nasc.getMonth();
-		   if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
-		   
-		   if(idade < 5){
-		      alert("Pessoas menores de 5 não podem ser inseridos.");
-		      return false;
-		   }
-
-		   if(idade >= 5 && idade <= 60){
-		      alert("Maior de 5 anos, podem ser inseridos.");
-		      return true;
-		   }
-		   
-		   // se for maior que 60 não vai acontecer nada!
-		   return false;
-		}
-
-		$(document).ready(function () { 
-	        var $campo = $("#cp");
-	        $campo.mask('00000-000', {reverse: true});
-	    });
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {
