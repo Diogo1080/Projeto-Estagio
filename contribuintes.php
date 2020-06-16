@@ -431,7 +431,7 @@
 		<div>
 			<form method="POST" enctype="multipart/form-data">
 				<div>
-					<h1>Contibuinte</h1>
+					<h1>Contribuinte</h1>
 					<?php if (isset($_GET['id_contribuinte'])) {	?>
 							<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
 					<?php } ?>

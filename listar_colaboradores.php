@@ -13,31 +13,41 @@
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                         <h3 class="panel-title">Lista de Colaboradores</h3>
                     </div>
+
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
                         <a href="colaboradores.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Colaborador</a>      
                     </div>
+
+
                 </div>
           </div>
-          <div>
-            Procura: <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);">
-            </select>
-          </div>
+
           <div class="card-body" id="tabela_colaboradores"></div>
-          <div>
-            <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
-            <<
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
-            <
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
-            >
-            </button>
-            <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
-            >>
-            </button> 
-          </div>
-        </div>
+
+          <div class="row card-header">
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
+                    <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_colaboradores(num_pagina,procura); ">
+                    <<
+                    </button>
+                    <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_colaboradores(num_pagina,procura);">
+                    <
+                    </button>
+                    <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_colaboradores(num_pagina,procura);">
+                    >
+                    </button>
+                    <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_colaboradores(num_pagina,procura);">
+                    >>
+                    </button> 
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
+
+                    <div>
+                      Procura: <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);">
+                      </select>
+                  </div> 
+
+             </div>
       </div>
     </div>
    
