@@ -356,6 +356,8 @@
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
 		<script src="//code.jquery.com/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Contribuintes</title>
 	</head>
 	<body>
@@ -478,7 +480,7 @@
 							</div>
 							<div>
 								<label>Valor quota: </label>
-									<input class="input_socio" name="mensalidade_valor" onkeyup="sonumeros(this)" value="<?php 
+									<input class="input_socio" name="mensalidade_valor" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['mensalidade_valor']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -508,7 +510,7 @@
 							?>
 							<div>
 								<label>Valor mensalidade: </label>
-									<input id="valor_mensalidade" class="input_atleta" name="mensalidade_valor_atleta" onkeyup="sonumeros(this)" value="<?php 
+									<input id="valor_mensalidade" class="input_atleta" name="mensalidade_valor_atleta" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
 											echo($linha['mensalidade_valor']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -518,7 +520,7 @@
 							</div>
 							<div>
 								<label>Valor joia:</label>
-									<input id="valor_joia" class="input_atleta" name="valor_joia" onkeyup="sonumeros(this)" value="<?php 
+									<input id="valor_joia" class="input_atleta" name="valor_joia" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
 											echo($linha_atleta['valor_joia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -603,7 +605,7 @@
 					<!--Form principal-->
 						<div>
 							<label>Nome:</label>
-								<input required name="nome" onkeyup="nomecheck(this)" value="<?php 
+								<input required name="nome" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['nome']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -613,7 +615,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input required name="cc" onkeyup="sonumeros(this)" value="<?php 
+								<input required name="cc" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -623,7 +625,7 @@
 						</div>
 						<div>
 							<label>NIF:</label>
-								<input required name="nif" onkeyup="sonumeros(this)" value="<?php 
+								<input required name="nif" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['nif']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -633,7 +635,7 @@
 						</div>
 						<div>
 							<label>Morada:</label>
-								<input required name="morada" onkeyup="moradacheck(this)" value="<?php 
+								<input required name="morada" onkeypress="return moradacheck(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['morada']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -643,7 +645,7 @@
 						</div>
 						<div>
 							<label>Localidade:</label>
-								<input required name="localidade" onkeyup="soletras(this)" value="<?php 
+								<input required name="localidade" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['localidade']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -653,7 +655,7 @@
 						</div>
 						<div>
 							<label>Freguesia:</label>
-								<input required name="freguesia" onkeyup="soletras(this)" value="<?php 
+								<input required name="freguesia" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['freguesia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -663,7 +665,7 @@
 						</div>
 						<div>
 							<label>Concelho:</label>
-								<input required name="concelho" onkeyup="soletras(this)" value="<?php 
+								<input required name="concelho" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['concelho']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -673,7 +675,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input required name="cp" onkeyup="codigo_postalcheck(this)" value="<?php 
+								<input required maxlength="9" id="cp" name="cp" onkeypress="return codigo_postalcheck(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -683,7 +685,7 @@
 						</div>
 						<div>
 							<label>Email:</label>
-								<input required name="email" onkeyup="emailcheck(this)" value="<?php 
+								<input required name="email" onkeypress="return emailcheck(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['email']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -693,7 +695,7 @@
 						</div>
 						<div>
 							<label>Telemovel:</label>
-								<input required name="telemovel" onkeyup="telemovelcheck(this)" value="<?php 
+								<input required maxlength="9" name="telemovel" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['telemovel']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -703,7 +705,7 @@
 						</div>
 						<div>
 							<label>Telefone:</label>
-								<input required name="telefone" onkeyup="telemovelcheck(this)" value="<?php 
+								<input required maxlength="9" name="telefone" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['telefone']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -866,7 +868,7 @@
 						</div>
 						<div>
 							<label>Telemovel:</label>
-								<input id="telemovel_contribuinte_enc" class="input_enc required" name="telefone_enc" onkeyup="telemovelcheck(this)" value="<?php 
+								<input id="telemovel_contribuinte_enc" class="input_enc required" name="telemovel_enc" onkeyup="telemovelcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['telemovel']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -876,7 +878,7 @@
 						</div>
 						<div>
 							<label>Telefone:</label>
-								<input id="telefone_contribuinte_enc" class="input_enc required" name="telemovel_enc" onkeyup="telemovelcheck(this)" value="<?php 
+								<input id="telefone_contribuinte_enc" class="input_enc required" name="telefone_enc" onkeyup="telemovelcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['telefone']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -908,9 +910,9 @@
 				</div>
 				<div>
 					<?php if (isset($_GET['id_contribuinte'])) {?>
-						<input type="submit" name="update" value="Atualizar">
+						<input type="submit" name="update" onclick='return validadata()' value="Atualizar">
 					<?php }else{?>
-						<input type="submit" name="insert" value="Inserir">
+						<input type="submit" name="insert" onclick='return validadata()' value="Inserir">
 					<?php } ?>
 					<button type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
 				</div>
@@ -1191,14 +1193,18 @@
 			}
 		}
 
-		function sonumeros(evt){
-			evt = (evt) ? evt : window.event;
-			var charCode = (evt.wich) ? evt.which: evt.keyCode;
-			if ((charCode==32) || (charCode==186) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255) || (charCode >= 48 && charCode <= 57)) {
-				return true;
-			}
-				return false;
-		}
+		function sonumeros(e) {
+	        var charCode = e.charCode ? e.charCode : e.keyCode;
+	        // charCode 8 = backspace   
+	        // charCode 9 = tab
+	        if (charCode != 8 && charCode != 9) {
+	            // charCode 48 equivale a 0   
+	            // charCode 57 equivale a 9
+	            if (charCode < 48 || charCode > 57) {
+	                return false;
+	            }
+	        }
+	    }
 
 		function soletras(evt){
 			evt = (evt) ? evt : window.event;
@@ -1310,6 +1316,42 @@
 				return true
 			}
 		};
+
+		function validadata(){
+		   var data = document.getElementById("nascimento").value; // pega o valor do input
+		   data = data.replace(/\//g, "-"); // substitui eventuais barras (ex. IE) "/" por hífen "-"
+		   var data_array = data.split("-"); // quebra a data em array
+		   
+		   // para o IE onde será inserido no formato dd/MM/yyyy
+		   if(data_array[0].length != 4){
+		      data = data_array[2]+"-"+data_array[1]+"-"+data_array[0]; // remonto a data no formato yyyy/MM/dd
+		   }
+		   
+		   // comparo as datas e calculo a idade
+		   var hoje = new Date();
+		   var nasc  = new Date(data);
+		   var idade = hoje.getFullYear() - nasc.getFullYear();
+		   var m = hoje.getMonth() - nasc.getMonth();
+		   if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+		   
+		   if(idade < 5){
+		      alert("Pessoas menores de 5 não podem ser inseridos.");
+		      return false;
+		   }
+
+		   if(idade >= 5 && idade <= 60){
+		      alert("Maior de 5 anos, podem ser inseridos.");
+		      return true;
+		   }
+		   
+		   // se for maior que 60 não vai acontecer nada!
+		   return false;
+		}
+
+		$(document).ready(function () { 
+	        var $campo = $("#cp");
+	        $campo.mask('00000-000', {reverse: true});
+	    });
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {
