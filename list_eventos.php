@@ -1,18 +1,17 @@
 <?php
 include 'ligacao.php';
 
-$query_events = "SELECT id, title, color, start, end FROM treinos";
-$resultado_events = $conn->prepare($query_events);
+$resultado_events = $conn->prepare("SELECT * FROM treinos");
 $resultado_events->execute();
-
+$resultado_events=$resultado_events->get_result();
 $eventos = [];
 
-while($row_events = $resultado_events->fetch(PDO::FETCH_ASSOC)){
-    $id = $row_events['id'];
-    $title = $row_events['title'];
-    $color = $row_events['color'];
-    $start = $row_events['start'];
-    $end = $row_events['end'];
+while($row_events = $resultado_events->fetch_assoc()){
+    $id = $row_events['id_treino'];
+    $title = $row_events['titulo'];
+    $color = $row_events['cor'];
+    $start = $row_events['data_inicio'];
+    $end = $row_events['data_fim'];
     
     $eventos[] = [
         'id' => $id, 
@@ -20,7 +19,7 @@ while($row_events = $resultado_events->fetch(PDO::FETCH_ASSOC)){
         'color' => $color, 
         'start' => $start, 
         'end' => $end, 
-        ];
+    ];
 }
 
 echo json_encode($eventos);
