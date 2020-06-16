@@ -12,14 +12,7 @@
               <h5 class="card-title" style="text-align: center;">Atletas</h5>
             </div>
             <div class="card-body">
-              <?php 
-                $atletas=$con->prepare("SELECT COUNT(id_contribuinte) as total_atletas FROM contribuintes WHERE tipo_contribuinte='Atleta'");
-                $atletas->execute();
-                $resultado_atletas=$atletas->get_result();
-                $linha_atletas=$resultado_atletas->fetch_assoc();
-                $atletas->close();
-              ?>
-              <h1 class="card-text" style="text-align: center;color: #007EA7; "><?php echo $linha_atletas['total_atletas'];?></h1>
+              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
             </div>
           </div>
         </div>
@@ -29,14 +22,7 @@
               <h5 class="card-title" style="text-align: center;">Colaboradores</h5>
             </div>
             <div class="card-body">
-              <?php 
-                $colaboradores=$con->prepare("SELECT COUNT(id_recurso_humano) as total_colaboradores FROM recursos_humanos");
-                $colaboradores->execute();
-                $resultado_colaboradores=$colaboradores->get_result();
-                $linha_colaboradores=$resultado_colaboradores->fetch_assoc();
-                $colaboradores->close();
-              ?>
-              <h1 class="card-text" style="text-align: center;color: #007EA7; "><?php echo $linha_colaboradores['total_colaboradores'];?></h1>
+              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
             </div>
           </div>
         </div>
@@ -46,14 +32,7 @@
               <h5 class="card-title" style="text-align: center;">Treinadores</h5>
             </div>
             <div class="card-body">
-              <?php 
-                $treinadores=$con->prepare("SELECT COUNT(recursos_humanos.id_recurso_humano) as total_treinadores FROM recursos_humanos INNER JOIN cargos_recursos ON recursos_humanos.id_recurso_humano=cargos_recursos.id_recurso_humano INNER JOIN cargos ON cargos_recursos.id_cargo=cargos.id_cargo WHERE cargo like 'treinado' ");
-                $treinadores->execute();
-                $resultado_treinadores=$treinadores->get_result();
-                $linha_treinadores=$resultado_treinadores->fetch_assoc();
-                $treinadores->close();
-              ?>
-              <h1 class="card-text" style="text-align: center;color: #007EA7; "><?php echo $linha_treinadores['total_treinadores']; ?></h1>
+              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
             </div>
           </div>
         </div>
@@ -63,14 +42,7 @@
               <h5 class="card-title" style="text-align: center;">Treinos Agendados</h5>
             </div>
             <div class="card-body">
-              <?php 
-                $treinos=$con->prepare("SELECT COUNT(id_treino) as total_treinos FROM treinos");
-                $treinos->execute();
-                $resultado_treinos=$treinos->get_result();
-                $linha_treinos=$resultado_treinos->fetch_assoc();
-                $treinos->close();
-              ?>
-              <h1 class="card-text" style="text-align: center;color: #007EA7; "><?php echo $linha_treinos['total_treinos']; ?></h1>
+              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
             </div>
           </div>
         </div>
