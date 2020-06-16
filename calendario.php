@@ -23,7 +23,9 @@
         <script src="js/bootstrap.main.min.js"></script>
     </head>
     <body>
+
         <?php
+        require 'nav.php';
         if (isset($_SESSION['msg'])) {
             echo $_SESSION['msg'];
             unset($_SESSION['msg']);
@@ -159,7 +161,7 @@
 
                             <div class="form-group row">
                                 <div class="col-sm-10">
-                                    <button type="submit" name="CadEvent" id="CadEvent" value="CadEvent" class="btn btn-success">Adicionar</button>                                    
+                                    <button type="submit" name="CadEvent" id="CadEvent" value="CadEvent" class="btn btn-success">Adicionar</button>
                                 </div>
                             </div>
                         </form>

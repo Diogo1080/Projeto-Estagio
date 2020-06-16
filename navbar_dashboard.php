@@ -17,10 +17,13 @@
               <a class="nav-link" href="listar_colaboradores.php">Colaboradores</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contribuintes.php">Contribuintes</a>
+              <a class="nav-link" href="listar_contribuintes.php">Contribuintes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="colaboradores.php">Colaboradores</a>
+              <a class="nav-link" href="cargos.php">Cargos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="calendario.php">Calendario</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">CopyPaster</a>
