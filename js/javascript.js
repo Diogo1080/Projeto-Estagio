@@ -30,6 +30,15 @@ toastr.options ={
 	"hideMethod": "hide"
 }
 
+function sonumeros(evt){
+	evt = (evt) ? evt : window.event;
+	var charCode = (evt.wich) ? evt.which: evt.keyCode;
+	if (charCode >= 48 && charCode <= 57){
+		return true;
+	}
+		return false;
+}
+
 function soletras(evt){
 	evt = (evt) ? evt : window.event;
 	var charCode = (evt.wich) ? evt.which: evt.keyCode;

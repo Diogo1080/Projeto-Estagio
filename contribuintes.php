@@ -478,7 +478,7 @@
 							</div>
 							<div>
 								<label>Valor quota: </label>
-									<input class="input_socio" name="mensalidade_valor" value="<?php 
+									<input class="input_socio" name="mensalidade_valor" onkeyup="sonumeros(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['mensalidade_valor']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -508,7 +508,7 @@
 							?>
 							<div>
 								<label>Valor mensalidade: </label>
-									<input id="valor_mensalidade" class="input_atleta" name="mensalidade_valor_atleta" value="<?php 
+									<input id="valor_mensalidade" class="input_atleta" name="mensalidade_valor_atleta" onkeyup="sonumeros(this)" value="<?php 
 										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
 											echo($linha['mensalidade_valor']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -518,7 +518,7 @@
 							</div>
 							<div>
 								<label>Valor joia:</label>
-									<input id="valor_joia" class="input_atleta" name="valor_joia" value="<?php 
+									<input id="valor_joia" class="input_atleta" name="valor_joia" onkeyup="sonumeros(this)" value="<?php 
 										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
 											echo($linha_atleta['valor_joia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -603,7 +603,7 @@
 					<!--Form principal-->
 						<div>
 							<label>Nome:</label>
-								<input required name="nome" value="<?php 
+								<input required name="nome" onkeyup="nomecheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['nome']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -613,7 +613,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input required name="cc" value="<?php 
+								<input required name="cc" onkeyup="sonumeros(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -623,7 +623,7 @@
 						</div>
 						<div>
 							<label>NIF:</label>
-								<input required name="nif" value="<?php 
+								<input required name="nif" onkeyup="sonumeros(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['nif']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -633,7 +633,7 @@
 						</div>
 						<div>
 							<label>Morada:</label>
-								<input required name="morada" value="<?php 
+								<input required name="morada" onkeyup="moradacheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['morada']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -643,7 +643,7 @@
 						</div>
 						<div>
 							<label>Localidade:</label>
-								<input required name="localidade" value="<?php 
+								<input required name="localidade" onkeyup="soletras(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['localidade']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -653,7 +653,7 @@
 						</div>
 						<div>
 							<label>Freguesia:</label>
-								<input required name="freguesia" value="<?php 
+								<input required name="freguesia" onkeyup="soletras(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['freguesia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -663,7 +663,7 @@
 						</div>
 						<div>
 							<label>Concelho:</label>
-								<input required name="concelho" value="<?php 
+								<input required name="concelho" onkeyup="soletras(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['concelho']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -673,7 +673,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input required name="cp" value="<?php 
+								<input required name="cp" onkeyup="codigo_postalcheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -683,7 +683,7 @@
 						</div>
 						<div>
 							<label>Email:</label>
-								<input required name="email" value="<?php 
+								<input required name="email" onkeyup="emailcheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['email']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -693,7 +693,7 @@
 						</div>
 						<div>
 							<label>Telemovel:</label>
-								<input required name="telefone" value="<?php 
+								<input required name="telemovel" onkeyup="telemovelcheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['telemovel']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -703,7 +703,7 @@
 						</div>
 						<div>
 							<label>Telefone:</label>
-								<input required name="telemovel" value="<?php 
+								<input required name="telefone" onkeyup="telemovelcheck(this)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['telefone']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -776,7 +776,7 @@
 						</div>
 						<div>
 							<label>Nome:</label>
-								<input id="nome_contribuinte_enc" class="input_enc required" name="nome_enc" value="<?php 
+								<input id="nome_contribuinte_enc" class="input_enc required" name="nome_enc" onkeyup="soletras(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['nome']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -786,7 +786,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input id="cc_contribuinte_enc" class="input_enc required" name="cc_enc" value="<?php 
+								<input id="cc_contribuinte_enc" class="input_enc required" name="cc_enc" onkeyup="sonumeros(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -796,7 +796,7 @@
 						</div>
 						<div>
 							<label>NIF:</label>
-								<input id="nif_contribuinte_enc" class="input_enc required" name="nif_enc" value="<?php 
+								<input id="nif_contribuinte_enc" class="input_enc required" name="nif_enc" onkeyup="sonumeros(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['nif']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -806,7 +806,7 @@
 						</div>
 						<div>
 							<label>Morada:</label>
-								<input id="morada_contribuinte_enc" class="input_enc required" name="morada_enc" value="<?php 
+								<input id="morada_contribuinte_enc" class="input_enc required" name="morada_enc" onkeyup="moradacheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['morada']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -816,7 +816,7 @@
 						</div>
 						<div>
 							<label>Localidade:</label>
-								<input id="localidade_contribuinte_enc" class="input_enc required" name="localidade_enc" value="<?php 
+								<input id="localidade_contribuinte_enc" class="input_enc required" name="localidade_enc" onkeyup="soletras(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['localidade']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -826,7 +826,7 @@
 						</div>
 						<div>
 							<label>Freguesia:</label>
-								<input id="freguesia_contribuinte_enc" class="input_enc required" name="freguesia_enc" value="<?php 
+								<input id="freguesia_contribuinte_enc" class="input_enc required" name="freguesia_enc" onkeyup="soletras(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['freguesia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -836,7 +836,7 @@
 						</div>
 						<div>
 							<label>Concelho:</label>
-								<input id="concelho_contribuinte_enc" class="input_enc required" name="concelho_enc" value="<?php 
+								<input id="concelho_contribuinte_enc" class="input_enc required" name="concelho_enc" onkeyup="soletras(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['concelho']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -846,7 +846,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input id="cp_contribuinte_enc" class="input_enc required" name="cp_enc" value="<?php 
+								<input id="cp_contribuinte_enc" class="input_enc required" name="cp_enc" onkeyup="codigo_postalcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -856,7 +856,7 @@
 						</div>
 						<div>
 							<label>Email:</label>
-								<input id="email_contribuinte_enc" class="input_enc required" name="email_enc" value="<?php 
+								<input id="email_contribuinte_enc" class="input_enc required" name="email_enc" onkeyup="emailcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['email']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -866,7 +866,7 @@
 						</div>
 						<div>
 							<label>Telemovel:</label>
-								<input id="telemovel_contribuinte_enc" class="input_enc required" name="telefone_enc" value="<?php 
+								<input id="telemovel_contribuinte_enc" class="input_enc required" name="telefone_enc" onkeyup="telemovelcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['telemovel']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -876,7 +876,7 @@
 						</div>
 						<div>
 							<label>Telefone:</label>
-								<input id="telefone_contribuinte_enc" class="input_enc required" name="telemovel_enc" value="<?php 
+								<input id="telefone_contribuinte_enc" class="input_enc required" name="telemovel_enc" onkeyup="telemovelcheck(this)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['telefone']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1190,6 +1190,126 @@
 				}
 			}
 		}
+
+		function sonumeros(evt){
+			evt = (evt) ? evt : window.event;
+			var charCode = (evt.wich) ? evt.which: evt.keyCode;
+			if ((charCode==32) || (charCode==186) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255) || (charCode >= 48 && charCode <= 57)) {
+				return true;
+			}
+				return false;
+		}
+
+		function soletras(evt){
+			evt = (evt) ? evt : window.event;
+			var charCode = (evt.wich) ? evt.which: evt.keyCode;
+			if ((charCode==32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)) {
+				return true;
+			}
+				return false;
+		}
+
+		function nomecheck(evt){
+			//verifica se tem 9 digitos
+			if (document.getElementById("nome").value.length==40) { 
+				toastr.error('O nome só pode ter 40 caracteres');
+				return false;
+			};
+			
+			var confirmar=soletras(evt)
+			
+			if (confirmar==false) {
+				toastr.error('O nome só pode conter letras');
+				return false
+			}
+				return true;  
+		};
+
+		var isactive=false;
+		function emailcheck() {
+
+			if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))){
+				if (isactive==true) {
+					toastr.clear();
+					isactive=false	
+				}
+				toastr.error('Endereço de email invalido');
+
+			}else{
+
+				if (isactive==false) {
+					toastr.clear();
+					isactive=true
+				}
+				toastr.success('Endereço de email valido');
+
+			}
+		}
+
+		function moradacheck(evt){
+			//verifica se tem 9 digitos
+			if (document.getElementById("morada").value.length==60) {
+				toastr.error('A morada só pode ter 60 caracteres');
+				return false;
+			}
+
+			var confirmar=letras_numeros(evt);
+			
+			if (confirmar==false) {
+				toastr.error('A morada só pode conter letras numeros e caracteres como º');
+				return false
+			}else{
+				return true
+			};  
+		};
+
+		function codigo_postalcheck(evt){
+			//verifica se tem 9 digitos
+			if (document.getElementById("codigo_postal").value.length==7) {
+				toastr.error('O codigo postal só pode ter 7 caracteres');
+				return false;
+			}
+
+			var confirmar=sonumeros(evt);
+			if (confirmar==false) {
+				toastr.error('O código postal só pode conter numeros');
+				return false;
+			}else{
+				return true
+			};  
+		};
+
+		function telemovelcheck(evt){
+			//verifica se tem 9 digitos
+			if (document.getElementById("telemovel").value.length==9) {
+				toastr.error('O número de telemóvel só pode ter 9 caracteres');
+				return false;
+			};
+			//verifica se é numero ou não
+			var confirmar=sonumeros(evt);
+			if (confirmar==false) {
+				toastr.error('O número de telemóvel só pode conter numeros');
+				return false
+			}else{
+				return true
+			}
+		};
+
+		function telefonecheck(evt){
+			//verifica se tem 9 digitos
+			if (document.getElementById("telefone").value.length==9) {
+				toastr.error('O número de telefone só pode ter 9 caracteres');
+				return false;
+			};
+			//verifica se é numero ou não
+			var confirmar=sonumeros(evt);
+			if (confirmar==false) {
+				toastr.error('O número de telefone só pode conter numeros');
+				return false
+			}else{
+				return true
+			}
+		};
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {

@@ -478,7 +478,7 @@
 				</div>
 				<div>
 					<label>Salario:</label>
-						<input name="salario" value="<?php 
+						<input name="salario" onkeyup="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -488,7 +488,7 @@
 				</div>
 				<div>
 					<label>Nome:</label>
-						<input name="nome" value="<?php 
+						<input name="nome" onkeyup="nomecheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -498,7 +498,7 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input name="cc" value="<?php 
+						<input name="cc" onkeyup="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -508,7 +508,7 @@
 				</div>
 				<div>
 					<label>NIF:</label>
-						<input name="nif" value="<?php 
+						<input name="nif" onkeyup="sonumeros(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nif']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -547,7 +547,7 @@
 	      	    
 				<div>
 					<label>Morada:</label>
-						<input name="morada" value="<?php 
+						<input name="morada" onkeyup="moradacheck(this)"  value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['morada']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -557,7 +557,7 @@
 				</div>
 				<div>
 					<label>Localidade:</label>
-						<input name="localidade" value="<?php 
+						<input name="localidade" onkeyup="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['localidade']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -567,7 +567,7 @@
 				</div>
 				<div>
 					<label>Freguesia:</label>
-						<input name="freguesia" value="<?php 
+						<input name="freguesia" onkeyup="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['freguesia']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -577,7 +577,7 @@
 				</div>
 				<div>
 					<label>Concelho:</label>
-						<input name="concelho" value="<?php 
+						<input name="concelho" onkeyup="soletras(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['concelho']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -587,7 +587,7 @@
 				</div>
 				<div>
 					<label>CP:</label>
-						<input name="cp" value="<?php 
+						<input name="cp" onkeyup="codigo_postalcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cp']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -597,7 +597,7 @@
 				</div>
 				<div>
 					<label>Email:</label>
-						<input name="email" value="<?php 
+						<input name="email" onkeyup="emailcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['email']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -607,7 +607,7 @@
 				</div>
 				<div>
 					<label>Telemovel:</label>
-						<input name="telemovel" value="<?php 
+						<input name="telemovel" onkeyup="telemovelcheck(this)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['telemovel']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -792,6 +792,110 @@
 			}		
 		}
 	}
+
+	function sonumeros(evt){
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.wich) ? evt.which: evt.keyCode;
+		if ((charCode==32) || (charCode==186) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255) || (charCode >= 48 && charCode <= 57)) {
+			return true;
+		}
+			return false;
+	}
+
+	function soletras(evt){
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.wich) ? evt.which: evt.keyCode;
+		if ((charCode==32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)) {
+			return true;
+		}
+			return false;
+	}
+
+	function nomecheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("nome").value.length==40) { 
+			toastr.error('O nome só pode ter 40 caracteres');
+			return false;
+		};
+		
+		var confirmar=soletras(evt)
+		
+		if (confirmar==false) {
+			toastr.error('O nome só pode conter letras');
+			return false
+		}
+			return true;  
+	};
+
+	var isactive=false;
+	function emailcheck() {
+
+		if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))){
+			if (isactive==true) {
+				toastr.clear();
+				isactive=false	
+			}
+			toastr.error('Endereço de email invalido');
+
+		}else{
+
+			if (isactive==false) {
+				toastr.clear();
+				isactive=true
+			}
+			toastr.success('Endereço de email valido');
+
+		}
+	}
+
+	function moradacheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("morada").value.length==60) {
+			toastr.error('A morada só pode ter 60 caracteres');
+			return false;
+		}
+
+		var confirmar=letras_numeros(evt);
+		
+		if (confirmar==false) {
+			toastr.error('A morada só pode conter letras numeros e caracteres como º');
+			return false
+		}else{
+			return true
+		};  
+	};
+
+	function codigo_postalcheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("codigo_postal").value.length==7) {
+			toastr.error('O codigo postal só pode ter 7 caracteres');
+			return false;
+		}
+
+		var confirmar=sonumeros(evt);
+		if (confirmar==false) {
+			toastr.error('O código postal só pode conter numeros');
+			return false;
+		}else{
+			return true
+		};  
+	};
+
+	function telemovelcheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("telemovel").value.length==9) {
+			toastr.error('O número de telemóvel só pode ter 9 caracteres');
+			return false;
+		};
+		//verifica se é numero ou não
+		var confirmar=sonumeros(evt);
+		if (confirmar==false) {
+			toastr.error('O número de telemóvel só pode conter numeros');
+			return false
+		}else{
+			return true
+		}
+	};
 </script>
 <?php
 	if (!isset($_GET['id_colaborador'])) {
