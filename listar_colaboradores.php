@@ -53,6 +53,7 @@
 <script type="text/javascript">
   var procura='';
   var num_pagina=1;
+  var total_num_paginas=0;
 
   function tabela_colaboradores(num_pagina,procura){
     $.post(

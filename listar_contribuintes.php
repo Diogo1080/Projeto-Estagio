@@ -11,7 +11,7 @@
           <div class="card-header"> 
               <div class="row">
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                        <h3 class="panel-title">Lista de Colaboradores</h3>
+                        <h3 class="panel-title">Lista de Contribuintes</h3>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
                         <a href="contribuintes.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Contribuinte</a>      

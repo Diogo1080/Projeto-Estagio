@@ -11,19 +11,20 @@
 			$tipo=$_POST['tipo'];
 		}
 	//Busca o total de registos que existem com os valores dados
-		$total_registos=$con->prepare("SELECT * FROM `contribuintes` WHERE (nome like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte like ?) ");
+		$total_registos=$con->prepare("SELECT count(id_contribuinte) as total FROM `contribuintes` WHERE (nome like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte like ?) ");
 		$total_registos->bind_param("ssss",$procura,$procura,$procura,$tipo);
 		$total_registos->execute();
 
-		$t_registos=$total_registos->num_rows();
-		if ($t_registos=='') {
+		$t_registos=$total_registos->get_result();
+		$linha=$t_registos->fetch_assoc();
+		
+		if ($linha['total']==0) {
 			$total=0;
 		}else{
-			$total=$t_registos;
+			$total=$linha['total'];
 		}
 		$total_num_paginas = ceil($total / $registos_por_pagina);
 		echo $total_num_paginas."«";
-
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
 		$cargos=$con->prepare("SELECT * FROM `contribuintes` WHERE (nome like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte like ?) LIMIT $offset,$registos_por_pagina");

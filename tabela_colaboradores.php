@@ -6,15 +6,17 @@
 		$registos_por_pagina = 20;
 		$offset = ($num_pagina-1) * $registos_por_pagina;
 	//Busca o total de registos que existem com os valores dados
-		$total_registos=$con->prepare("SELECT * FROM `recursos_humanos` WHERE (nome like ? OR cc like ? OR nif like ?) ");
+		$total_registos=$con->prepare("SELECT count(id_recurso_humano) as total FROM `recursos_humanos` WHERE (nome like ? OR cc like ? OR nif like ?) ");
 		$total_registos->bind_param("sss",$procura,$procura,$procura);
 		$total_registos->execute();
 
-		$t_registos=$total_registos->num_rows();
-		if ($t_registos=='') {
+		$t_registos=$total_registos->get_result();
+		$linha=$t_registos->fetch_assoc();
+		
+		if ($linha['total']==0) {
 			$total=0;
 		}else{
-			$total=$t_registos;
+			$total=$linha['total'];
 		}
 		$total_num_paginas = ceil($total / $registos_por_pagina);
 		echo $total_num_paginas."«";
