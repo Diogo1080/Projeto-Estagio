@@ -30,29 +30,23 @@ toastr.options ={
 	"hideMethod": "hide"
 }
 
-function sonumeros(evt){
-	evt = (evt) ? evt : window.event;
-	var charCode = (evt.wich) ? evt.which: evt.keyCode;
-	if (charCode >= 48 && charCode <= 57){
-		return true;
-	}
-		return false;
-}
+function sonumeros(e) {
+        var charCode = e.charCode ? e.charCode : e.keyCode;
+        // charCode 8 = backspace   
+        // charCode 9 = tab
+        if (charCode != 8 && charCode != 9) {
+            // charCode 48 equivale a 0   
+            // charCode 57 equivale a 9
+            if (charCode < 48 || charCode > 57) {
+                return false;
+            }
+        }
+    }
 
 function soletras(evt){
 	evt = (evt) ? evt : window.event;
 	var charCode = (evt.wich) ? evt.which: evt.keyCode;
 	if ((charCode==32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)) {
-		return true;
-	}
-		return false;
-}
-
-
-function sonumeros(evt){
-	evt = (evt) ? evt : window.event;
-	var charCode = (evt.wich) ? evt.which: evt.keyCode;
-	if ((charCode==32) || (charCode==186) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255) || (charCode >= 48 && charCode <= 57)) {
 		return true;
 	}
 		return false;
@@ -197,3 +191,39 @@ function is_admin(){
 		header("Location: home.php");
 	}
 }
+
+function validadata(){
+	   var data = document.getElementById("nascimento").value; // pega o valor do input
+	   data = data.replace(/\//g, "-"); // substitui eventuais barras (ex. IE) "/" por hífen "-"
+	   var data_array = data.split("-"); // quebra a data em array
+	   
+	   // para o IE onde será inserido no formato dd/MM/yyyy
+	   if(data_array[0].length != 4){
+	      data = data_array[2]+"-"+data_array[1]+"-"+data_array[0]; // remonto a data no formato yyyy/MM/dd
+	   }
+	   
+	   // comparo as datas e calculo a idade
+	   var hoje = new Date();
+	   var nasc  = new Date(data);
+	   var idade = hoje.getFullYear() - nasc.getFullYear();
+	   var m = hoje.getMonth() - nasc.getMonth();
+	   if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+	   
+	   if(idade < 5){
+	      alert("Pessoas menores de 5 não podem ser inseridos.");
+	      return false;
+	   }
+
+	   if(idade >= 5 && idade <= 60){
+	      alert("Maior de 5 anos, podem ser inseridos.");
+	      return true;
+	   }
+	   
+	   // se for maior que 60 não vai acontecer nada!
+	   return false;
+	}
+
+	$(document).ready(function () { 
+        var $campo = $("#cp");
+        $campo.mask('00000-000', {reverse: true});
+    });

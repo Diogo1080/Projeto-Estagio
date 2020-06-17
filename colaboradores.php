@@ -281,6 +281,8 @@
 		}
 		$querry->close();
 	}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -288,6 +290,8 @@
 	<head>
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Colaboradores</title>
 	</head>
 	<body>
@@ -317,7 +321,7 @@
 
 	      	<div class="card"style="margin-top: 30px">
 	      	  <div class="card-header"> 
-	      	    <h3 class="panel-title">Informações Básicas</h3>
+				<h3 class="panel-title">Informações Básicas</h3>
 	      	  </div>
 	      	  <div class="card-body">
 	      	    
@@ -432,7 +436,7 @@
 				?>
 				<div id="treinador_campos" style="display: none;">
 					<div>
-						<label>Numero de treinador:</label><input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]">
+						<label>Numero de treinador:</label><input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input onkeypress="return sonumeros(event)" value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]">
 					</div>
 					<div>
 						<label>Palavra-passe:</label><input disabled class="disable required" name="password">
@@ -478,7 +482,7 @@
 				</div>
 				<div>
 					<label>Salario:</label>
-						<input name="salario" value="<?php 
+						<input name="salario" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -488,7 +492,7 @@
 				</div>
 				<div>
 					<label>Nome:</label>
-						<input name="nome" value="<?php 
+						<input name="nome" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -498,7 +502,7 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input name="cc" value="<?php 
+						<input name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -508,7 +512,7 @@
 				</div>
 				<div>
 					<label>NIF:</label>
-						<input name="nif" value="<?php 
+						<input name="nif" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nif']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -526,12 +530,17 @@
 				</div>
 				<div>
 					<label>Data de nascimento:</label>
-						<input type="date" name="dt_nasc" value="<?php 
+						<?php 
+							$thisyear=date('Y',strtotime('-17 years'));
+						?>
+						<input type="date" name="dt_nasc" max="<?php echo date('Y-m-d',mktime(00,00,00, 12, 31,$thisyear)); ?>" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['dt_nasc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['dt_nasc']);
-								} 
+								}else{
+									echo date('Y-m-d',mktime(0,0,0, 12, 31,$thisyear));
+								}
 							?>"><br>
 				</div>
 
@@ -547,7 +556,7 @@
 	      	    
 				<div>
 					<label>Morada:</label>
-						<input name="morada" value="<?php 
+						<input name="morada" onkeypress="return moradacheck(event)"  value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['morada']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -557,7 +566,7 @@
 				</div>
 				<div>
 					<label>Localidade:</label>
-						<input name="localidade" value="<?php 
+						<input name="localidade" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['localidade']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -567,7 +576,7 @@
 				</div>
 				<div>
 					<label>Freguesia:</label>
-						<input name="freguesia" value="<?php 
+						<input name="freguesia" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['freguesia']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -577,7 +586,7 @@
 				</div>
 				<div>
 					<label>Concelho:</label>
-						<input name="concelho" value="<?php 
+						<input name="concelho" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['concelho']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -587,7 +596,7 @@
 				</div>
 				<div>
 					<label>CP:</label>
-						<input name="cp" value="<?php 
+						<input id="cp" name="cp" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cp']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -597,7 +606,7 @@
 				</div>
 				<div>
 					<label>Email:</label>
-						<input name="email" value="<?php 
+						<input name="email" onkeypress="return emailcheck(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['email']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -607,7 +616,7 @@
 				</div>
 				<div>
 					<label>Telemovel:</label>
-						<input name="telemovel" value="<?php 
+						<input name="telemovel" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['telemovel']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -792,6 +801,119 @@
 			}		
 		}
 	}
+
+	function sonumeros(e) {
+        var charCode = e.charCode ? e.charCode : e.keyCode;
+        // charCode 8 = backspace   
+        // charCode 9 = tab
+        if (charCode != 8 && charCode != 9) {
+            // charCode 48 equivale a 0   
+            // charCode 57 equivale a 9
+            if (charCode < 48 || charCode > 57) {
+                return false;
+            }
+        }
+    }
+
+	function soletras(evt){
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.wich) ? evt.which: evt.keyCode;
+		if ((charCode==32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)) {
+			return true;
+		}
+			return false;
+	}
+
+	function nomecheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("nome").value.length==40) { 
+			toastr.error('O nome só pode ter 40 caracteres');
+			return false;
+		};
+		
+		var confirmar=soletras(evt)
+		
+		if (confirmar==false) {
+			toastr.error('O nome só pode conter letras');
+			return false
+		}
+			return true;  
+	};
+
+	var isactive=false;
+	function emailcheck() {
+
+		if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))){
+			if (isactive==true) {
+				toastr.clear();
+				isactive=false	
+			}
+			toastr.error('Endereço de email invalido');
+
+		}else{
+
+			if (isactive==false) {
+				toastr.clear();
+				isactive=true
+			}
+			toastr.success('Endereço de email valido');
+
+		}
+	}
+
+	function moradacheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("morada").value.length==60) {
+			toastr.error('A morada só pode ter 60 caracteres');
+			return false;
+		}
+
+		var confirmar=letras_numeros(evt);
+		
+		if (confirmar==false) {
+			toastr.error('A morada só pode conter letras numeros e caracteres como º');
+			return false
+		}else{
+			return true
+		};  
+	};
+
+	function codigo_postalcheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("codigo_postal").value.length==7) {
+			toastr.error('O codigo postal só pode ter 7 caracteres');
+			return false;
+		}
+
+		var confirmar=sonumeros(evt);
+		if (confirmar==false) {
+			toastr.error('O código postal só pode conter numeros');
+			return false;
+		}else{
+			return true
+		};  
+	};
+
+	function telemovelcheck(evt){
+		//verifica se tem 9 digitos
+		if (document.getElementById("telemovel").value.length==9) {
+			toastr.error('O número de telemóvel só pode ter 9 caracteres');
+			return false;
+		};
+		//verifica se é numero ou não
+		var confirmar=sonumeros(evt);
+		if (confirmar==false) {
+			toastr.error('O número de telemóvel só pode conter numeros');
+			return false
+		}else{
+			return true
+		}
+	};
+
+	$(document).ready(function () { 
+        var $campo = $("#cp");
+        $campo.mask('0000-000', {reverse: true});
+    });
 </script>
 <?php
 	if (!isset($_GET['id_colaborador'])) {

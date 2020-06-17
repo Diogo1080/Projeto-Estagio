@@ -1,28 +1,118 @@
+function dateTime_now(){
+    var today = new Date();
+    return today;
+}
+function transformar_data(data){
+    var nova_data = new Date(data);
+    nova_data=nova_data.getDate()+"/"+(nova_data.getMonth()+1)+"/"+nova_data.getFullYear()+", "+nova_data.getHours()+":"+nova_data.getMinutes()+":"+nova_data.getSeconds();
+    return nova_data;
+};
+//Começa o tempo
+var Now=dateTime_now();
+var picker;
+var clickCnt=0;
+var calendar;
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'pt-br',
-
+        customButtons: {
+            datepicker: {
+                text: 'Escolher data',
+                click: ()=>{
+                    if (picker==null) {
+                        picker = new Pikaday({
+                            field: document.querySelector('.fc-datepicker-button'),
+                            format: 'yy-mm-dd',
+                            onSelect: function(dateString) {
+                                calendar.gotoDate(dateString);
+                                picker=null;
+                            }
+                        });
+                    }
+                    picker.show();
+                }
+            }
+        },
+        lazyFetching: true,
+        selectable: true,
+        contentHeight: 420,
+        aspectRatio: 0.5, 
+        defaultView: 'dayGridMonth', 
+        defaultDate: Now, 
+        minTime: '07:30:00',
+        maxTime: '21:30:00',
+        slotDuration: '00:30:00',
+        slotLabelInterval: 15,
         plugins: ['interaction', 'dayGrid', 'timeGrid', 'bootstrap'],
         header: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,dayGridWeek,dayGridDay'
-          },
-        timeZone: 'UTC',  
+            right: 'datepicker dayGridMonth,dayGridWeek,timeGridDay'
+          },  
         weekNumbers: true,
         themeSystem: 'bootstrap',
+        nowIndicator: true,
         navLinks: true,
         editable: true,
         eventLimit: true,
-        events: 'list_eventos.php',
+        events: 'calend_list_eventos.php',
         extraParams: function () {
             return {
                 cachebuster: new Date().valueOf()
             };
         },
-        eventClick: function (info) {
+        eventRender: function (info,event,element) {
+            //Handles double click e o click
+            info.el.addEventListener('click', 
+                function() {
+                    clickCnt++;     
+                    //Clicou 1 vez  
+                    if (clickCnt === 1) {
+                        oneClickTimer = setTimeout(function() {
+                            clickCnt = 0;
+                            alert("single");  
+                        }, 220);
+                    }else if (clickCnt === 2){
+                        clearTimeout(oneClickTimer);
+                        clickCnt = 0;
+                        Now=dateTime_now();     
+                        alert("double");
+                    }   
+                }
+            );
+        },
+        select: function(info) {
+            if (calendar.view.type=="dayGridMonth") {
+                calendar.changeView('timeGridDay',info.startStr);
+            }else{
+                buscar_atletas('');
+                document.getElementById("select_equipa").options.selectedIndex=0;
+                $('#cadastrar #start').val(info.start.toLocaleString());
+                $('#cadastrar #end').val(info.end.toLocaleString());
+                $('#cadastrar').modal('show');
+            }
+        },
+        eventDrop : function(info){
+            var dt_inicio=transformar_data(info.event.start);
+            var dt_fim=transformar_data(info.event.end);
+            $.post(
+                'calend_update.php', 
+                {
+                    'id': info.event.id,
+                    'titulo': info.event.title,
+                    'cor': info.event.backgroundColor,
+                    'dt_inicio': dt_inicio,
+                    'dt_fim':dt_fim
+                }, 
+                function(response) {
+                    $('#warning').html(response);
+                    setTimeout(function(){ document.getElementById("warning").style.display='none' }, 3000);
+                }
+            )
+        },
+        /*eventClick: function (info) {
             $("#apagar_evento").attr("href", "proc_apagar_evento.php?id=" + info.event.id);
             info.jsEvent.preventDefault(); // don't let the browser navigate
             console.log(info.event);
@@ -37,13 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#visualizar #color').val(info.event.backgroundColor);
             $('#visualizar').modal('show');
         },
-        selectable: true,
         select: function (info) {
             //alert('Início do evento: ' + info.start.toLocaleString());
-            $('#cadastrar #start').val(info.start.toLocaleString());
-            $('#cadastrar #end').val(info.end.toLocaleString());
-            $('#cadastrar').modal('show');
-        }
+           
+        }*/
     });
 
     calendar.render();
@@ -85,19 +172,17 @@ function DataHora(evento, objeto) {
 $(document).ready(function () {
     $("#addevent").on("submit", function (event) {
         event.preventDefault();
-       $.ajax({
+        $.ajax({
             method: "POST",
-            url: "cad_event.php",
+            url: "calend_insert.php",
             data: new FormData(this),
             contentType: false,
             processData: false,
-            success: function (retorna) {
-                if (retorna['sit']) {
-                    //$("#msg-cad").html(retorna['msg']);
-                    location.reload();
-                } else {
-                    $("#msg-cad").html(retorna['msg']);
-                }
+            success: function (response) {
+                $('#warning').html(response);
+                $('#cadastrar').modal('hide');
+                calendar.refetchEvents();
+                setTimeout(function(){ document.getElementById("warning").style.display='none' }, 3000);
             }
         })
     });
@@ -114,7 +199,7 @@ $(document).ready(function () {
     
     $("#editevent").on("submit", function (event) {
         event.preventDefault();
-       $.ajax({
+        $.ajax({
             method: "POST",
             url: "edit_event.php",
             data: new FormData(this),

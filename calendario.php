@@ -19,17 +19,28 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         
+
+        <link href="https://unpkg.com/@fullcalendar/core@4.4.0/main.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+        <script src="https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js"></script>
+        <script src="https://unpkg.com/@fullcalendar/core@4.4.0/locales-all.min.js"></script>
+        <script src="https://unpkg.com/@fullcalendar/interaction@4.4.0/main.min.js"></script>
+        <script src="https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.js"></script>
+        <script src="https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js"></script>
+        <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>    
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+
         <script src="js/personalizado.js"></script>
         <script src="js/bootstrap.main.min.js"></script>
     </head>
     <body>
-
         <?php
-        if (isset($_SESSION['msg'])) {
-            echo $_SESSION['msg'];
-            unset($_SESSION['msg']);
-        }
+            require 'nav.php';  
         ?>
+        <div id="warning" onchange="setTimeout(function () {this.style.display='none';}, 1);"onclick="this.style.display='none'"></div>
+
         <div id='calendar'></div>
 
         <div class="modal fade" id="visualizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -157,7 +168,24 @@
                                     <input type="text" name="end" class="form-control" id="end"  onkeypress="DataHora(event, this)">
                                 </div>
                             </div>
-
+                            <div>
+                                <label>Equipa</label>
+                                <select id="select_equipa" name="equipa" onchange="buscar_atletas(this.value)" required>
+                                    <option  disabled selected>--Selecione uma equipa--</option>
+                                    <?php 
+                                        $equipas=$con->prepare("SELECT * FROM equipas");
+                                        $equipas->execute();
+                                        $equipas=$equipas->get_result();
+                                        while ($linha=$equipas->fetch_assoc()) {
+                                            ?>
+                                                <option value="<?php echo $linha['id_equipa']; ?>"><?php echo $linha['nome']; ?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div id="mostrar_atletas">
+                            </div>
                             <div class="form-group row">
                                 <div class="col-sm-10">
                                     <button type="submit" name="CadEvent" id="CadEvent" value="CadEvent" class="btn btn-success">Adicionar</button>
@@ -170,4 +198,17 @@
         </div>
     </body>
 </html>
+<script type="text/javascript">
+    function buscar_atletas(id_equipa){
+        $.post(
+            'calend_buscar_atletas.php', 
+            {
+                'id_equipa': id_equipa,
+            }, 
+            function(response) {
+                $('#mostrar_atletas').html(response);
+            }
+        )
+    }
+</script>
 

@@ -52,7 +52,7 @@
 								<td>'.$linha['nome'].'</td>
 								<td>'.$linha['cc'].'</td>
 								<td>'.$linha['nif'].'</td>
-								<td><button onclick="window.location.href=\'colaboradores.php?id_colaborador='.$linha['id_recurso_humano'].'\'">Selecionar</button></td>
+								<td><button class="btn btn-default" onclick="window.location.href=\'colaboradores.php?id_colaborador='.$linha['id_recurso_humano'].'\'">Selecionar</button></td>
 							</tr>
 							';
 						}

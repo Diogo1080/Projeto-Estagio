@@ -18,8 +18,18 @@
                     </div>
                 </div>
           </div>
-        <div>
-          Procura: <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
+
+        <div class="d-flex justify-content-center" style="margin-top:30px;">
+
+        <!-- Input da Procura -->
+        <div class="form-label-group" >
+                  <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);" type="text"  class="form-control" placeholder="Pesquisa" autofocus>
+                  <label for="inputEmail">Pesquisa</label>
+        </div>
+          <!-- Procura: <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);"> -->
+
+        <!-- Filtro de Procura -->
+        
           Tipo: 
           <select onchange="definir_tipo(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
             <option></option>
@@ -28,18 +38,19 @@
             <option>Encarregado de educação</option>
           </select>
         </div>
-        <div class="card-body" id="tabela_contribuintes"></div>
-        <div>
-        <button type="button" class="w3-btn page_btn" onclick="first_page();tabela_contribuintes(num_pagina,procura,tipo); ">
+
+        <div class="card-body " id="tabela_contribuintes"></div>
+        <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-default" onclick="first_page();tabela_contribuintes(num_pagina,procura,tipo); ">
           <<
         </button>
-        <button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_contribuintes(num_pagina,procura,tipo);">
+        <button type="button" class="btn btn-default" onclick="prev_page();tabela_contribuintes(num_pagina,procura,tipo);">
           <
         </button>
-        <button type="button" class="w3-btn page_btn" onclick="next_page();tabela_contribuintes(num_pagina,procura,tipo);">
+        <button type="button" class="btn btn-default" onclick="next_page();tabela_contribuintes(num_pagina,procura,tipo);">
           >
         </button>
-        <button type="button" class="w3-btn page_btn" onclick="last_page();tabela_contribuintes(num_pagina,procura,tipo);">
+        <button type="button" class="btn btn-default" onclick="last_page();tabela_contribuintes(num_pagina,procura,tipo);">
           >>
         </button> 
       </div>
