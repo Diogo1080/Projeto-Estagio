@@ -186,11 +186,6 @@ function confirma() {
     return confirm('Tem a certeza que deseja fazer isto?');
 }
 
-function is_admin(){
-	if ($_SESSION['permissao']<>1) {
-		header("Location: home.php");
-	}
-}
 
 function validadata(){
 	   var data = document.getElementById("nascimento").value; // pega o valor do input
@@ -227,3 +222,29 @@ function validadata(){
         var $campo = $("#cp");
         $campo.mask('00000-000', {reverse: true});
     });
+
+    $("#tele").inputmask({
+            mask: "999-999-999",
+    });
+
+$(document).ready(function(){
+    $('body').on('focus', '.phone', function(){
+        var maskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '000-000-000';
+        },
+        options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(maskBehavior.apply({}, arguments), options);
+
+                if(field[0].value.length >= 14){
+                    var val = field[0].value.replace(/\D/g, '');
+                    if(/\d\d(\d)\1{7,8}/.test(val)){
+                        field[0].value = '';
+                        alert('Telefone Invalido');
+                    }
+                }
+            }
+        };
+        $(this).mask(maskBehavior, options);
+    });
+});
