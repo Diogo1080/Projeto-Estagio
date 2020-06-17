@@ -84,17 +84,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label" for="color">Color</label>
                                     <div class="col-sm-10">
-                                        <select name="color" class="form-control" id="color">
-                                            <option value="">Selecione</option>         
-                                            <option style="color:#FFD700;" value="#FFD700">Amarelo</option>
-                                            <option style="color:#0071c5;" value="#0071c5">Azul Turquesa</option>
-                                            <option style="color:#FF4500;" value="#FF4500">Laranja</option>
-                                            <option style="color:#436EEE;" value="#436EEE">Royal Blue</option>
-                                            <option style="color:#A020F0;" value="#A020F0">Roxo</option>
-                                            <option style="color:#40E0D0;" value="#40E0D0">Turquesa</option>
-                                            <option style="color:#228B22;" value="#228B22">Verde</option>
-                                            <option style="color:#8B0000;" value="#8B0000">Vermelho</option>
-                                        </select>
+                                        <input hidden name="color"><i class="fas fa-circle"></i>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -127,72 +117,75 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Adicionar Treino</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Adicionar Evento</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <span id="msg-cad"></span>
-                        <form id="addevent" method="POST" enctype="multipart/form-data">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Título</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="title" class="form-control" id="title" placeholder="Título do Treino">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Color</label>
-                                <div class="col-sm-10">
-                                    <select name="color" class="form-control" id="color">
-                                        <option value="">Selecione</option>         
-                                        <option style="color:#FFD700;" value="#FFD700">Amarelo</option>
-                                        <option style="color:#0071c5;" value="#0071c5">Azul Turquesa</option>
-                                        <option style="color:#FF4500;" value="#FF4500">Laranja</option>                                     
-                                        <option style="color:#436EEE;" value="#436EEE">Royal Blue</option>
-                                        <option style="color:#A020F0;" value="#A020F0">Roxo</option>
-                                        <option style="color:#40E0D0;" value="#40E0D0">Turquesa</option>
-                                        <option style="color:#228B22;" value="#228B22">Verde</option>
-                                        <option style="color:#8B0000;" value="#8B0000">Vermelho</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label" for="start">Início do Treino</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="start" class="form-control" id="start" onkeypress="DataHora(event, this)">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label" for="end">Final do Treino</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="end" class="form-control" id="end" onkeypress="DataHora(event, this)">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="select_equipa">Equipa</label>
-                                <select id="select_equipa" name="equipa" onchange="buscar_atletas(this.value)" required>
-                                    <option  disabled selected>--Selecione uma equipa--</option>
-                                    <?php 
-                                        $equipas=$con->prepare("SELECT * FROM equipas");
-                                        $equipas->execute();
-                                        $equipas=$equipas->get_result();
-                                        while ($linha=$equipas->fetch_assoc()) {
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item" ><a class="nav-link active" data-toggle="tab" href="#Treinos">Treinos</a></li>
+                            <li class="nav-item" ><a class="nav-link" data-toggle="tab" href="#Jogos">Jogos</a></li>
+                        </ul>
+              
+                        <div class="tab-content">
+                            <div id="Treinos" class="tab-pane fade show active">
+                                <h3>Treinos</h3>
+                                <form id="addevent" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Título</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="title" class="form-control" id="title" placeholder="Título do Treino">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Color</label>
+                                        <div class="col-sm-10">
+                                            <input id="input_color" hidden name="color">
+                                            <i id="color" class="fas fa-square"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="start">Início do Treino</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="start" class="form-control" id="start" onkeypress="DataHora(event, this)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="end">Final do Treino</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="end" class="form-control" id="end" onkeypress="DataHora(event, this)">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="select_equipa">Equipa</label>
+                                        <select id="select_equipa" name="equipa" onchange="buscar_atletas(this.value,data_final)" required>
+                                            <option  disabled selected>--Selecione uma equipa--</option>
+                                            <?php 
+                                                $equipas=$con->prepare("SELECT * FROM equipas");
+                                                $equipas->execute();
+                                                $equipas=$equipas->get_result();
+                                                while ($linha=$equipas->fetch_assoc()) {
+                                                    ?>
+                                                        <option value="<?php echo $linha['id_equipa']; ?>"><?php echo $linha['nome']; ?></option>
+                                                    <?php
+                                                }
                                             ?>
-                                                <option value="<?php echo $linha['id_equipa']; ?>"><?php echo $linha['nome']; ?></option>
-                                            <?php
-                                        }
-                                    ?>
-                                </select>
+                                        </select>
+                                    </div>
+                                    <div id="mostrar_atletas">
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-10">
+                                            <button type="submit" name="CadEvent" id="CadEvent" value="CadEvent" class="btn btn-success">Adicionar</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div id="mostrar_atletas">
+                            <div id="Jogos" class="tab-pane fade">
+                                <h3>Jogos</h3>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <button type="submit" name="CadEvent" id="CadEvent" value="CadEvent" class="btn btn-success">Adicionar</button>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,14 +193,18 @@
     </body>
 </html>
 <script type="text/javascript">
-    function buscar_atletas(id_equipa){
+    function buscar_atletas(id_equipa,data_final){
         $.post(
             'calend_buscar_atletas.php', 
             {
                 'id_equipa': id_equipa,
+                'data_final': data_final
             }, 
             function(response) {
-                $('#mostrar_atletas').html(response);
+                var resposta=response.split("«");
+                document.getElementById('color').style.color=resposta[1];
+                document.getElementById('input_color').value=resposta[1];
+                $('#mostrar_atletas').html(resposta[0]);
             }
         )
     }

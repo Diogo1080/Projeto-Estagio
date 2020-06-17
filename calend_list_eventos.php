@@ -1,7 +1,7 @@
 <?php
     include 'ligacao.php';
 
-    $resultado_events = $con->prepare("SELECT * FROM treinos");
+    $resultado_events = $con->prepare("SELECT DISTINCT treinos.*,equipas.cor FROM treinos INNER JOIN equipa_treinos ON treinos.id_treino=equipa_treinos.id_treino INNER JOIN equipas ON equipa_treinos.id_equipa=equipas.id_equipa");
     $resultado_events->execute();
     $resultado_events=$resultado_events->get_result();
     $eventos = [];
@@ -23,3 +23,4 @@
     }
 
     echo json_encode($eventos);
+?>

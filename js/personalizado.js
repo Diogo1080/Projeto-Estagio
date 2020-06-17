@@ -7,6 +7,7 @@ function transformar_data(data) {
     return nova_data
 }
 //Começa o tempo
+let data_final
 let Now = dateTime_now()
 let picker
 let clickCnt = 0
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             format: 'yy-mm-dd',
                             onSelect: (dateString) => {
                                 calendar.gotoDate(dateString)
+                                calendar.changeView('timeGridDay',dateString)
                                 picker = null
                             }
                         })
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (clickCnt === 1) {
                         oneClickTimer = setTimeout(function() {
                             clickCnt = 0;
-                            alert("single");  
+
                         }, 220);
                     } else if (clickCnt === 2) {
                         clearTimeout(oneClickTimer)
@@ -85,11 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (calendar.view.type === "dayGridMonth") {
                 calendar.changeView('timeGridDay',info.startStr)
             } else {
-                buscar_atletas('')
                 document.getElementById("select_equipa").options.selectedIndex = 0
                 $('#cadastrar #start').val(info.start.toLocaleString())
                 $('#cadastrar #end').val(info.end.toLocaleString())
                 $('#cadastrar').modal('show')
+                data_final=info.end.toLocaleString();
+                buscar_atletas('')
             }
         },
         eventDrop : (info) => {
@@ -168,16 +171,19 @@ function DataHora(evento, objeto) {
 $(document).ready(function () {
     $("#addevent").on("submit", (event) => {
         event.preventDefault();
+
         $.ajax({
             method: "POST",
             url: "calend_insert.php",
-            data: new FormData(this),
+            data: new FormData($("#addevent")[0]),   
             contentType: false,
             processData: false,
             success: function (response) {
-                $('#warning').html(response);
-                $('#cadastrar').modal('hide');
-                calendar.refetchEvents();
+                document.getElementById("title").value="";
+                document.getElementById("color").style.color=""
+                $('#warning').html(response)
+                $('#cadastrar').modal('hide')
+                calendar.refetchEvents()
                 setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
             }
         })
