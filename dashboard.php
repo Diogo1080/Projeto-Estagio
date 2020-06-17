@@ -47,7 +47,7 @@
             </div>
             <div class="card-body">
               <?php 
-                $treinadores=$con->prepare("SELECT COUNT(recursos_humanos.id_recurso_humano) as total_treinadores FROM recursos_humanos INNER JOIN cargos_recursos ON recursos_humanos.id_recurso_humano=cargos_recursos.id_recurso_humano INNER JOIN cargos ON cargos_recursos.id_cargo=cargos.id_cargo WHERE cargo like 'treinado' ");
+                $treinadores=$con->prepare("SELECT COUNT(recursos_humanos.id_recurso_humano) as total_treinadores FROM recursos_humanos INNER JOIN cargos_recursos ON recursos_humanos.id_recurso_humano=cargos_recursos.id_recurso_humano INNER JOIN cargos ON cargos_recursos.id_cargo=cargos.id_cargo WHERE is_treinador=1 ");
                 $treinadores->execute();
                 $resultado_treinadores=$treinadores->get_result();
                 $linha_treinadores=$resultado_treinadores->fetch_assoc();
