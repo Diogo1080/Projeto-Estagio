@@ -11,7 +11,7 @@ $data_end = str_replace('/', '-', $dados['end']);
 $data_end_conv = date("Y-m-d H:i:s", strtotime($data_end));
 
 $insert_event = $con->prepare("INSERT INTO treinos (titulo, cor, data_inicio, data_fim) VALUES (?,?,?,?)");
-$insert_event->bindParam('ssss', $dados['title'],$dados['color'],$data_start_conv,$data_end_conv);
+$insert_event->bind_param('ssss', $dados['title'],$dados['color'],$data_start_conv,$data_end_conv);
 
 if ($insert_event->execute()) {
     $retorna = ['sit' => true, 'msg' => '<div class="alert alert-success" role="alert">Treino adicionado com sucesso!</div>'];
