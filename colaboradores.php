@@ -502,7 +502,7 @@
 				</div>
 				<div>
 					<label>CC:</label>
-						<input name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
+						<input name="cc" maxlength="8" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cc']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
