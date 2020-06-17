@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (calendar.view.type=="dayGridMonth") {
                 calendar.changeView('timeGridDay',info.startStr);
             }else{
+                buscar_atletas('');
+                document.getElementById("select_equipa").options.selectedIndex=0;
                 $('#cadastrar #start').val(info.start.toLocaleString());
                 $('#cadastrar #end').val(info.end.toLocaleString());
                 $('#cadastrar').modal('show');

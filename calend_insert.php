@@ -12,7 +12,7 @@
 
 	$insert_event = $con->prepare("INSERT INTO treinos (titulo, cor, dt_inicio, dt_fim) VALUES (?,?,?,?)");
 	$insert_event->bind_Param('ssss', $dados['title'],$dados['color'],$data_start_conv,$data_end_conv);
-
+	
 	if ($insert_event->execute()) {
 	    $retorna = '<div class="alert alert-success" role="alert">Treino inserido com sucesso!</div>';
 	} else {

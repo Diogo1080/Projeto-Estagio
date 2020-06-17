@@ -170,7 +170,7 @@
                             </div>
                             <div>
                                 <label>Equipa</label>
-                                <select onchange="buscar_atletas(this.value)" required>
+                                <select id="select_equipa" name="equipa" onchange="buscar_atletas(this.value)" required>
                                     <option  disabled selected>--Selecione uma equipa--</option>
                                     <?php 
                                         $equipas=$con->prepare("SELECT * FROM equipas");
@@ -185,7 +185,6 @@
                                 </select>
                             </div>
                             <div id="mostrar_atletas">
-                                
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-10">
@@ -201,7 +200,15 @@
 </html>
 <script type="text/javascript">
     function buscar_atletas(id_equipa){
-
+        $.post(
+            'calend_buscar_atletas.php', 
+            {
+                'id_equipa': id_equipa,
+            }, 
+            function(response) {
+                $('#mostrar_atletas').html(response);
+            }
+        )
     }
 </script>
 
