@@ -356,7 +356,6 @@
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
 		<script src="//code.jquery.com/jquery.min.js"></script>
-		<title>Contribuintes</title>
 	</head>
 	<body>
 		<!--Popup dos enc edu-->
@@ -427,9 +426,33 @@
 					</footer>
 				</div>
 			</div>
-		<?php require ('nav.php'); ?>
+
+		<!-- Ligação aos links e config da Head -->
+		<?php include('head.php'); ?>
 		<div>
+
+
+
+
+		<!-- Começa aqui o form -->
+		<div class="container">
+
+			<!-- Conexão da navbar -->
+			<?php include('navbar_dashboard.php'); ?>
+
+			<center style=" margin-top:25px;"><h1>Inserir Contribuintes</h1></center>
 			<form method="POST" enctype="multipart/form-data">
+			<!-- Conteúdo da página -->
+			<div class="card" style=" margin-top:25px;">
+
+				<!-- Titulo + Botões  -->
+				<div class="card-header">
+					<h3 class="panel-title">Informações Básicas</h3>
+				</div>
+
+				<!-- Tabelas / Forms / TUDO -->
+				<div class="card-body">
+
 				<div>
 					<h1>Contribuinte</h1>
 					<?php if (isset($_GET['id_contribuinte'])) {	?>
@@ -631,86 +654,7 @@
 										} 
 									?>"><br>
 						</div>
-						<div>
-							<label>Morada:</label>
-								<input required name="morada" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['morada']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['morada']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Localidade:</label>
-								<input required name="localidade" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['localidade']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['localidade']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Freguesia:</label>
-								<input required name="freguesia" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['freguesia']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['freguesia']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Concelho:</label>
-								<input required name="concelho" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['concelho']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['concelho']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>CP:</label>
-								<input required name="cp" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['cp']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['cp']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Email:</label>
-								<input required name="email" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['email']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['email']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Telemovel:</label>
-								<input required name="telefone" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['telemovel']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['telemovel']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Telefone:</label>
-								<input required name="telemovel" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['telefone']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['telefone']);
-										} 
-									?>"><br>
-						</div>
+			
 						<div>
 							<label>Sexo:</label>
 								<select id="sexo" name="sexo" onchange="mudar_imagem()">
@@ -906,14 +850,117 @@
 								<input id="receber_emails_contribuinte_enc" class="input_enc" type="checkbox" name="receber_email_enc">
 						</div>
 				</div>
-				<div>
-					<?php if (isset($_GET['id_contribuinte'])) {?>
-						<input type="submit" name="update" value="Atualizar">
-					<?php }else{?>
-						<input type="submit" name="insert" value="Inserir">
-					<?php } ?>
-					<button type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
+
 				</div>
+			</div>
+
+			<!-- Conteúdo da página -->
+			<div class="card" style=" margin-top:25px;">
+
+				<!-- Titulo + Botões  -->
+				<div class="card-header">
+					<h3 class="panel-title">Informações de Contacto</h3>
+				</div>
+
+				<!-- Tabelas / Forms / TUDO -->
+				<div class="card-body">
+
+				<div>
+							<label>Morada:</label>
+								<input required name="morada" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['morada']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['morada']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Localidade:</label>
+								<input required name="localidade" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['localidade']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['localidade']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Freguesia:</label>
+								<input required name="freguesia" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['freguesia']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['freguesia']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Concelho:</label>
+								<input required name="concelho" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['concelho']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['concelho']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>CP:</label>
+								<input required name="cp" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['cp']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['cp']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Email:</label>
+								<input required name="email" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['email']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['email']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Telemovel:</label>
+								<input required name="telefone" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['telemovel']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['telemovel']);
+										} 
+									?>"><br>
+						</div>
+						<div>
+							<label>Telefone:</label>
+								<input required name="telemovel" value="<?php 
+										if (isset($_GET['id_contribuinte'])) {
+											echo($linha['telefone']);
+										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+											echo($_POST['telefone']);
+										} 
+									?>"><br>
+						</div>
+
+				</div>
+			</div>
+
+				<div class="d-flex justify-content-center">				
+					<?php if (isset($_GET['id_contribuinte'])) {?>
+						<input class="btn btn-default" type="submit" name="update" value="Atualizar">
+					<?php }else{?>
+						<input class="btn btn-default" type="submit" name="insert" value="Inserir">
+					<?php } ?>
+					<button class="btn btn-default" type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
+				</div>
+
+		</div>
+
+			<!-- <form method="POST" enctype="multipart/form-data"> -->
 			</form>
 		</div>
 	</body>
