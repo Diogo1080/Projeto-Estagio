@@ -58,22 +58,22 @@
 			$update_cargo->close();
 			?>
 				<script type="text/javascript">
-					alert("Ocurreu algo não esperado.");
+					alert("Ocurreu algo não esperado.")
 				</script>
 			<?php
 		}else{
 			$update_cargo->close();
 			?>
 				<script type="text/javascript">
-					alert("Dados inseridos com sucesso.");
-					window.location.href="cargos.php?id_cargo=<?php echo $id_cargo ?>";
+					alert("Dados inseridos com sucesso.")
+					window.location.href="cargos.php?id_cargo=<?php echo $id_cargo ?>"
 				</script>
 			<?php
 		}
 	}
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 	<head>
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -91,20 +91,21 @@
 					<!--Form secundario-->
 						<h1>Cargos</h1>
 						<div>
-							<label>Nome do cargo:</label>
-								<input name="cargo" value="<?php 
+							<label>Nome do cargo:
+								<input name="cargo" value="<?php
 										if (isset($_GET['id_cargo'])) {
 											echo($linha['cargo']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+										} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
 											echo($_POST['cargo']);
-										} 
-									?>"><br>			
+										}
+									?>"><br>
+                            </label>
 						</div>
 				</div>
 				<div>
 					<?php if (isset($_GET['id_cargo'])) {?>
 						<input type="submit" name="update" value="Atualizar">
-					<?php }else{?>
+					<?php } else {?>
 						<input type="submit" name="insert" value="Inserir">
 					<?php } ?>
 				</div>
@@ -113,20 +114,22 @@
 		<div>
 			<h1>Tabela</h1>
 			<div>
-				Procura: <input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura);">
-			</div>
+				<label>Procura:
+                    <input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
+                </label>
+            </div>
 			<div id="tabela_cargos"></div>
 			<div>
-				<button type="button" class="w3-btn page_btn" onclick="first_page();tabela_cargos(num_pagina,procura); ">
+				<button type="button" class="w3-btn page_btn" onclick="first_page();tabela_cargos(num_pagina,procura)">
 					<<
 				</button>
-				<button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_cargos(num_pagina,procura);">
+				<button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_cargos(num_pagina,procura)">
 					<
 				</button>
-				<button type="button" class="w3-btn page_btn" onclick="next_page();tabela_cargos(num_pagina,procura);">
+				<button type="button" class="w3-btn page_btn" onclick="next_page();tabela_cargos(num_pagina,procura)">
 					>
 				</button>
-				<button type="button" class="w3-btn page_btn" onclick="last_page();tabela_cargos(num_pagina,procura);">
+				<button type="button" class="w3-btn page_btn" onclick="last_page();tabela_cargos(num_pagina,procura)">
 					>>
 				</button>	
 			</div>
@@ -134,44 +137,44 @@
 	</body>
 </html>
 <script type="text/javascript">
-	var procura='';
-	var num_pagina=1;
-	function tabela_cargos(num_pagina,procura){
+	let procura = ''
+	let num_pagina = 1
+	function tabela_cargos(num_pagina,procura) {
 		$.post(
 			'tabela_cargos.php', 
 			{
 				'num_pagina': num_pagina,
 				'procura':procura
 			}, 
-			function(response) {
-				var resposta=response.split("«");
-				total_num_paginas=resposta[0];
-				$('#tabela_cargos').html(resposta[1]);
+			(response) => {
+				let resposta=response.split("«")
+				total_num_paginas=resposta[0]
+				$('#tabela_cargos').html(resposta[1])
 			}
 		)
 	}
-	function definir_procura(value){
-		procura=value;
+	function definir_procura(value) {
+		procura = value
 	}
-	function first_page(){
-		num_pagina=1;
+	function first_page() {
+		num_pagina = 1
 	}
 
-	function prev_page(){
+	function prev_page() {
 		if (num_pagina>1) {
-			num_pagina--;
+			num_pagina--
 		}
 	}
 
-	function next_page(){
+	function next_page() {
 		if (num_pagina<total_num_paginas) {
-			num_pagina++;
+			num_pagina++
 		}
 	}
 
-	function last_page(){
-		num_pagina=total_num_paginas;
+	function last_page() {
+		num_pagina = total_num_paginas
 	}
 
-	tabela_cargos(num_pagina,procura)
+	tabela_cargos(num_pagina, procura)
 </script>

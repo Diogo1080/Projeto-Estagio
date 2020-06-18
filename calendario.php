@@ -2,7 +2,7 @@
     require ('ligacao.php');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt">
     <head>
         <meta charset='utf-8' />
         <link href='css/core/main.min.css' rel='stylesheet' />
@@ -34,12 +34,13 @@
 
         <script src="js/personalizado.js"></script>
         <script src="js/bootstrap.main.min.js"></script>
+        <title>Calendario</title>
     </head>
     <body>
         <?php
             require 'nav.php';  
         ?>
-        <div id="warning" onchange="setTimeout(function () {this.style.display='none';}, 1);"onclick="this.style.display='none'"></div>
+        <div id="warning" onchange="setTimeout(() => {this.style.display='none';}, 1);" onclick="this.style.display='none'"></div>
 
         <div id='calendar'></div>
 
@@ -75,13 +76,13 @@
                             <form id="editevent" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="id" id="id" >
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Título</label>
+                                    <label class="col-sm-2 col-form-label" for="title">Título</label>
                                     <div class="col-sm-10">
                                         <input type="text" name="title" class="form-control" id="title" placeholder="Título do Treino">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Color</label>
+                                    <label class="col-sm-2 col-form-label" for="color">Color</label>
                                     <div class="col-sm-10">
                                         <select name="color" class="form-control" id="color">
                                             <option value="">Selecione</option>         
@@ -157,19 +158,19 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Início do Treino</label>
+                                <label class="col-sm-2 col-form-label" for="start">Início do Treino</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="start" class="form-control" id="start" onkeypress="DataHora(event, this)">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Final do Treino</label>
+                                <label class="col-sm-2 col-form-label" for="end">Final do Treino</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="end" class="form-control" id="end"  onkeypress="DataHora(event, this)">
+                                    <input type="text" name="end" class="form-control" id="end" onkeypress="DataHora(event, this)">
                                 </div>
                             </div>
                             <div>
-                                <label>Equipa</label>
+                                <label for="select_equipa">Equipa</label>
                                 <select id="select_equipa" name="equipa" onchange="buscar_atletas(this.value)" required>
                                     <option  disabled selected>--Selecione uma equipa--</option>
                                     <?php 

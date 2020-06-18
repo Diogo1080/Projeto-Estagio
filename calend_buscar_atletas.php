@@ -20,7 +20,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><img height="100" width="100" src="data:image/jpeg;base64,'.base64_encode($linha["foto"]).'"></td>
+							<td><img height="100" width="100" src="data:image/jpeg;base64,'.base64_encode($linha["foto"]).'" alt=""></td>
 							<td>'.$linha['nome'].'</td>
 							<td><input type="checkbox" name="presenca[]"></td>
 							<td><input type="checkbox" name="justificacao[]"></td>
@@ -30,4 +30,3 @@
 			';
 		}
 	}
-?>
