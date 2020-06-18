@@ -36,8 +36,8 @@
 							';
 							if($data_final<$hoje){
 								if(!empty($_POST['id_treino'])){
-									$presenca=$con->prepare("SELECT presente,justificacao FROM equipa_treinos WHERE id_treino=? AND id_atleta=?");
-									$presenca->bind_param("ii",$_POST['id_treino'],$linha['id_atleta']);
+									$presenca=$con->prepare("SELECT presente,justificacao FROM equipa_convocados WHERE id_jogo=? AND id_atleta=?");
+									$presenca->bind_param("ii",$_POST['id_jogo'],$linha['id_atleta']);
 									$presenca->execute();
 									$presenca=$presenca->get_result();
 									$linha_presenca=$presenca->fetch_assoc();

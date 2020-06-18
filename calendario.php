@@ -171,9 +171,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div>
-                                        
-                                    </div>
                                     <div id="jogos_mostrar_atletas">
                                     </div>
                                     <div class="form-group row">
@@ -209,6 +206,22 @@
                 document.getElementById('treino_color').style.color=resposta[1];
                 document.getElementById('treino_input_color').value=resposta[1];
                 $('#treino_mostrar_atletas').html(resposta[0]);
+            }
+        )
+    }
+    function buscar_atletas_jogos(id_equipa,data_final,id_jogo){
+        $.post(
+            'calend_buscar_atletas_jogo.php', 
+            {
+                'id_equipa': id_equipa,
+                'data_final': data_final,
+                'id_jogo': id_jogo
+            }, 
+            function(response) {
+                var resposta=response.split("«");
+                document.getElementById('jogo_color').style.color=resposta[1];
+                document.getElementById('jogo_input_color').value=resposta[1];
+                $('#jogos_mostrar_atletas').html(resposta[0]);
             }
         )
     }

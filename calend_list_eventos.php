@@ -24,15 +24,15 @@
     $jogos=$jogos->get_result();
 
     while($row_events = $jogos->fetch_assoc()){
-        array_push($eventos[],[
-            'id' => $row_events['id_treino'], 
+        array_push($eventos,[
+            'id' => $row_events['id_jogo'], 
             'title' => $row_events['titulo'], 
             'color' => $row_events['cor'], 
             'start' => $row_events['dt_inicio'], 
             'end' => $row_events['dt_fim'], 
             'extendedProps'=>[
                 'id_equipa'=>$row_events['id_equipa'],
-                'tipo'=>'jogo'
+                'tipo'=>'Jogo'
             ]
         ]);
     }
