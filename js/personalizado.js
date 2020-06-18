@@ -1,3 +1,4 @@
+
 function dateTime_now() {
     return new Date()
 }
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         defaultDate: Now, 
         minTime: '07:30:00',
         maxTime: '21:30:00',
-        slotDuration: '00:30:00',
+        slotDuration: '00:15:00',
         slotLabelInterval: 15,
         plugins: ['interaction', 'dayGrid', 'timeGrid', 'bootstrap'],
         header: {
@@ -72,7 +73,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (clickCnt === 1) {
                         oneClickTimer = setTimeout(function() {
                             clickCnt = 0;
+                            
+                            $("#nav_treinos, #nav_jogos").removeClass("active disabled");
 
+                            if (info.event.extendedProps.tipo=="Treino") {
+                                $("#nav_treinos").addClass("active")
+                                $("#nav_jogos").addClass("disabled")
+                            }else{
+                                $("#nav_treinos").addClass("disabled")
+                                $("#nav_jogos").addClass("active")
+                            }
+
+                            $('#treino_update').attr({disabled: false, style: 'display:block'})
+                            $('#treino_insert').attr({disabled: true, style: 'display:none'})
+
+                            $('#treino_id').val(info.event.id)
+                            $('#treino_titulo').val(info.event.title)
+                            $('#treino_input_color').val(info.event.color)
+                            $('#treino_select_equipa').val(info.event.extendedProps.id_equipa)
+                            $('#treino_dt_inicio').val(info.event.start.toLocaleString())
+                            $('#treino_dt_fim').val(info.event.end.toLocaleString())
+
+                            buscar_atletas_treino(info.event.extendedProps.id_equipa,info.event.end,info.event.id)
+                            
+                            $('#modal_calendario').modal('show')
                         }, 220);
                     } else if (clickCnt === 2) {
                         clearTimeout(oneClickTimer)
@@ -87,12 +111,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (calendar.view.type === "dayGridMonth") {
                 calendar.changeView('timeGridDay',info.startStr)
             } else {
-                document.getElementById("select_equipa").options.selectedIndex = 0
-                $('#cadastrar #start').val(info.start.toLocaleString())
-                $('#cadastrar #end').val(info.end.toLocaleString())
-                $('#cadastrar').modal('show')
-                data_final=info.end.toLocaleString();
-                buscar_atletas('')
+                
+                $("#nav_treinos, #nav_jogos").removeClass("active disabled")
+
+                $("#nav_treinos").addClass("active")
+                
+                $('#jogo_update').attr({disabled: true, style: 'display:none'})
+                $('#jogo_insert').attr({disabled: false, style: 'display:block'})
+                $('#treino_update').attr({disabled: true, style: 'display:none'})
+                $('#treino_insert').attr({disabled: false, style: 'display:block'})
+
+                $('#jogo_id').val('')
+                $('#jogo_dt_fim').val(info.end.toLocaleString())
+                $('#jogo_dt_inicio').val(info.start.toLocaleString())
+                $('#treino_id').val('')
+                $('#treino_dt_fim').val(info.end.toLocaleString())
+                $('#treino_dt_inicio').val(info.start.toLocaleString())
+                $('#modal_calendario').modal('show')
+
+                document.getElementById("treino_select_equipa").options.selectedIndex = 0
+                data_final=info.end
+                buscar_atletas_treino('','','')
+
             }
         },
         eventDrop : (info) => {
@@ -169,25 +209,48 @@ function DataHora(evento, objeto) {
 }
 
 $(document).ready(function () {
-    $("#addevent").on("submit", (event) => {
-        event.preventDefault();
 
-        $.ajax({
-            method: "POST",
-            url: "calend_insert.php",
-            data: new FormData($("#addevent")[0]),   
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                document.getElementById("title").value="";
-                document.getElementById("color").style.color=""
-                $('#warning').html(response)
-                $('#cadastrar').modal('hide')
-                calendar.refetchEvents()
-                setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
-            }
-        })
-    });
+    $("#treino").on("submit", (event) => {
+        event.preventDefault();
+        
+        var form = new FormData($("#treino")[0])
+
+        if (event.originalEvent.submitter.id=="treino_insert") {
+            $.ajax({
+                method: "POST",
+                url: "calend_insert.php",
+                data: form,   
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    $('#modal_calendario').modal('hide')
+                    document.getElementById("treino_titulo").value=""
+                    document.getElementById("treino_color").style.color=""
+                    document.getElementById("warning").style.display='block'
+                    $('#warning').html(response)
+                    calendar.refetchEvents()
+                    setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
+                }
+            })
+        }else if(event.originalEvent.submitter.id=="treino_update"){
+            $.ajax({
+                method: "POST",
+                url: "calend_update.php",
+                data: form,
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    $('#modal_calendario').modal('hide')
+                    document.getElementById("treino_titulo").value=""
+                    document.getElementById("treino_color").style.color=""
+                    document.getElementById("warning").style.display='block'
+                    $('#warning').html(response)
+                    calendar.refetchEvents()
+                    setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
+                }
+            })
+        }
+    })
     
     $('.btn-canc-vis').on("click", () => {
         $('.visevent').slideToggle();
@@ -199,22 +262,4 @@ $(document).ready(function () {
         $('.visevent').slideToggle();
     });
     
-    $("#editevent").on("submit", (event) => {
-        event.preventDefault()
-        $.ajax({
-            method: "POST",
-            url: "edit_event.php",
-            data: new FormData(this),
-            contentType: false,
-            processData: false,
-            success: (retorna) => {
-                if (retorna['sit']) {
-                    //$("#msg-cad").html(retorna['msg'])
-                    location.reload()
-                } else {
-                    $("#msg-edit").html(retorna['msg'])
-                }
-            }
-        })
-    })
 })
