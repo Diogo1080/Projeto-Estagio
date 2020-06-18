@@ -7,7 +7,7 @@
 		$offset = ($num_pagina-1) * $registos_por_pagina;
 
 	//Busca o total de registos que existem com os valores dados
-		$total_registos=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Encarregado de educação')");
+		$total_registos=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR `cc` like ? OR `nif` like ?) AND (`tipo_contribuinte`='Encarregado de educação')");
 		$total_registos->bind_param("sss",$procura,$procura,$procura);
 		$total_registos->execute();
 
@@ -23,10 +23,10 @@
 
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		$atletas=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR cc like ? OR nif like ?) AND (tipo_contribuinte='Encarregado de educação') LIMIT $offset, $registos_por_pagina");
-		$atletas->bind_param("sss",$procura,$procura,$procura);
-		$atletas->execute();
-		$resultado=$atletas->get_result();
+		$enc_edu=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR `cc` like ? OR `nif` like ?) AND (`tipo_contribuinte`='Encarregado de educação') LIMIT $offset, $registos_por_pagina");
+		$enc_edu->bind_param("sss",$procura,$procura,$procura);
+		$enc_edu->execute();
+		$resultado=$enc_edu->get_result();
 		echo '
 			<div class="table-responsive">
 				<table border class="table table-striped table-sm">

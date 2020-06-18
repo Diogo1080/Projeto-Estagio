@@ -285,7 +285,7 @@
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 	<?php include('head.php'); ?>
 	<head>
 		<script src="//code.jquery.com/jquery.min.js"></script>
@@ -319,7 +319,7 @@
 	        <!-- Inicio do Form -->
 			<form method="POST" enctype="multipart/form-data">
 
-	      	<div class="card"style="margin-top: 30px">
+	      	<div class="card" style="margin-top: 30px">
 	      	  <div class="card-header"> 
 				<h3 class="panel-title">Informações Básicas</h3>
 	      	  </div>
@@ -327,8 +327,10 @@
 	      	    
 
 				<?php if (isset($_GET['id_colaborador'])) { ?>
-					<input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
-				<?php } ?>
+                    <label>
+                        <input name="id_colaborador" hidden value="<?php echo $linha['id_recurso_humano']; ?>">
+                    </label>
+                <?php } ?>
 				<div>
 					<img id="foto_place" src="
 						<?php 
@@ -436,10 +438,10 @@
 				?>
 				<div id="treinador_campos" style="display: none;">
 					<div>
-						<label>Numero de treinador:</label><input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input onkeypress="return sonumeros(event)" value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]">
+						<label>Numero de treinador:<input disabled value="T"><input hidden name="num_treinador[]" disabled class="disable" value="T"><input onkeypress="return sonumeros(event)" value="<?php if(isset($is_treinador)){$num=explode("T",$linha_treinador['num_treinador']);echo (end($num));} ?>" disabled class="disable required" name="num_treinador[]"></label>
 					</div>
 					<div>
-						<label>Palavra-passe:</label><input disabled class="disable required" name="password">
+						<label>Palavra-passe:<input disabled class="disable required" name="password"></label>
 					</div>
 					<div>
 						<?php 
@@ -477,11 +479,11 @@
 						?>
 					</div>
 					<div>
-						<label>Clubes anteriores:</label><textarea disabled class="disable" name="clubes_anteriores"><?php if (isset($is_treinador)) {echo $linha_treinador['clubles_anteriores'];} ?></textarea>
+						<label>Clubes anteriores:<textarea disabled class="disable" name="clubes_anteriores"><?php if (isset($is_treinador)) {echo $linha_treinador['clubles_anteriores'];} ?></textarea></label>
 					</div>
 				</div>
 				<div>
-					<label>Salario:</label>
+					<label>Salario:
 						<input name="salario" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['salario']);
@@ -489,19 +491,21 @@
 									echo($_POST['salario']);
 								} 
 							?>">€<br>
+                    </label>
 				</div>
 				<div>
-					<label>Nome:</label>
+					<label>Nome:
 						<input name="nome" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nome']);
 								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
 									echo($_POST['nome']);
 								} 
-							?>"><br>			
+							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>CC:</label>
+					<label>CC:
 						<input name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cc']);
@@ -509,9 +513,10 @@
 									echo($_POST['cc']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>NIF:</label>
+					<label>NIF:
 						<input name="nif" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['nif']);
@@ -519,43 +524,47 @@
 									echo($_POST['nif']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 
 				<div>
-					<label>Sexo:</label>
+					<label>Sexo:
 						<select id="sexo" name="sexo" onchange="mudar_imagem()">
 							<option value="Masculino">Masculino</option>
 							<option value="Feminino">Feminino</option>
 						</select><br>
+                    </label>
 				</div>
 				<div>
 					<label>Data de nascimento:</label>
 						<?php 
 							$thisyear=date('Y',strtotime('-17 years'));
 						?>
-						<input type="date" name="dt_nasc" max="<?php echo date('Y-m-d',mktime(00,00,00, 12, 31,$thisyear)); ?>" value="<?php 
-								if (isset($_GET['id_colaborador'])) {
-									echo($linha['dt_nasc']);
-								}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-									echo($_POST['dt_nasc']);
-								}else{
-									echo date('Y-m-d',mktime(0,0,0, 12, 31,$thisyear));
-								}
-							?>"><br>
+                    <label>
+                        <input type="date" name="dt_nasc" max="<?php echo date('Y-m-d',mktime(00,00,00, 12, 31,$thisyear)); ?>" value="<?php
+                                if (isset($_GET['id_colaborador'])) {
+                                    echo($linha['dt_nasc']);
+                                }elseif (isset($_POST['insert']) || isset($_POST['update'])){
+                                    echo($_POST['dt_nasc']);
+                                }else{
+                                    echo date('Y-m-d',mktime(0,0,0, 12, 31,$thisyear));
+                                }
+                            ?>">
+                    </label><br>
 				</div>
 
 
 	      	  </div>
 	      	</div>
 
-	      	<div class="card"style="margin-top: 30px">
+	      	<div class="card" style="margin-top: 30px">
 	      	  <div class="card-header"> 
 	      	    <h3 class="panel-title">Informações de Contacto</h3>
 	      	  </div>
 	      	  <div class="card-body">
 	      	    
 				<div>
-					<label>Morada:</label>
+					<label>Morada:
 						<input name="morada" onkeypress="return moradacheck(event)"  value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['morada']);
@@ -563,9 +572,10 @@
 									echo($_POST['morada']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>Localidade:</label>
+					<label>Localidade:
 						<input name="localidade" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['localidade']);
@@ -573,9 +583,10 @@
 									echo($_POST['localidade']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>Freguesia:</label>
+					<label>Freguesia:
 						<input name="freguesia" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['freguesia']);
@@ -583,9 +594,10 @@
 									echo($_POST['freguesia']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>Concelho:</label>
+					<label>Concelho:
 						<input name="concelho" onkeypress="return soletras(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['concelho']);
@@ -593,9 +605,10 @@
 									echo($_POST['concelho']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>CP:</label>
+					<label>CP:
 						<input id="cp" name="cp" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['cp']);
@@ -603,9 +616,10 @@
 									echo($_POST['cp']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>Email:</label>
+					<label>Email:
 						<input name="email" onkeypress="return emailcheck(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['email']);
@@ -613,9 +627,10 @@
 									echo($_POST['email']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 				<div>
-					<label>Telemovel:</label>
+					<label>Telemovel:
 						<input name="telemovel" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 								if (isset($_GET['id_colaborador'])) {
 									echo($linha['telemovel']);
@@ -623,12 +638,13 @@
 									echo($_POST['telemovel']);
 								} 
 							?>"><br>
+                    </label>
 				</div>
 
 	      	  </div>
 	      	</div>
 
-	      	<div class="card"style="margin-top: 30px">
+	      	<div class="card" style="margin-top: 30px">
 	      	  <div class="card-header"> 
 	      	    <h3 class="panel-title">Ficheiros Relevantes</h3>
 	      	  </div>
@@ -757,7 +773,6 @@
 					<?php } ?>
 				</div>
 			</div>
-			</form>
 		</div>
 	</body>
 </html>
@@ -766,154 +781,151 @@
 <script type="text/javascript">
 	function readURL(input) {
 		if (input.files && input.files[0]) {
-			var reader = new FileReader();
+			var reader = new FileReader()
 
-			reader.onload = function(e) {
-				$('#foto_place').attr('src', e.target.result);
+			reader.onload = (e) => {
+				$('#foto_place').attr('src', e.target.result)
 			}
-			reader.readAsDataURL(input.files[0]);
+			reader.readAsDataURL(input.files[0])
 		}
 	}
 
-	$("#foto").change(function() {
-		readURL(this);
-	});
+	$("#foto").change(() => {
+		readURL(this)
+	})
 </script>
 <script type="text/javascript">
-	function toogle_treinador_campos(){
-		var inputs_required=document.getElementsByClassName("required");
-		var inputs_disable=document.getElementsByClassName("disable");
-		if (document.getElementById("treinador_campos").style.display=="none") {
-			document.getElementById("treinador_campos").style.display="block";
-			for (var i = inputs_disable.length - 1; i >= 0; i--) {
-				inputs_disable[i].disabled=false;
+	function toogle_treinador_campos() {
+		let inputs_required=document.getElementsByClassName("required")
+		let  inputs_disable=document.getElementsByClassName("disable")
+		if (document.getElementById("treinador_campos").style.display === "none") {
+			document.getElementById("treinador_campos").style.display="block"
+			for (i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled = false
 			}
-			for (var i = inputs_required.length - 1; i >= 0; i--) {
-				inputs_required[i].required=true;
+			for (i = inputs_required.length - 1; i >= 0; i--) {
+				inputs_required[i].required = true
 			}
 		}else{
 			document.getElementById("treinador_campos").style.display="none";	
-			for (var i = inputs_disable.length - 1; i >= 0; i--) {
-				inputs_disable[i].disabled=true;
+			for (i = inputs_disable.length - 1; i >= 0; i--) {
+				inputs_disable[i].disabled = true
 			}
 			for (var i = inputs_required.length - 1; i >= 0; i--) {
-				inputs_required[i].required=false;
+				inputs_required[i].required = false
 			}		
 		}
 	}
 
 	function sonumeros(e) {
-        var charCode = e.charCode ? e.charCode : e.keyCode;
+        let charCode = e.charCode ? e.charCode : e.keyCode
         // charCode 8 = backspace   
         // charCode 9 = tab
-        if (charCode != 8 && charCode != 9) {
+        if (charCode !== 8 && charCode !== 9) {
             // charCode 48 equivale a 0   
             // charCode 57 equivale a 9
             if (charCode < 48 || charCode > 57) {
-                return false;
+                return false
             }
         }
     }
 
 	function soletras(evt){
-		evt = (evt) ? evt : window.event;
-		var charCode = (evt.wich) ? evt.which: evt.keyCode;
-		if ((charCode==32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)) {
-			return true;
-		}
-			return false;
+		evt = (evt) ? evt : window.event
+		var charCode = (evt.wich) ? evt.which: evt.keyCode
+		return (charCode === 32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)
 	}
 
 	function nomecheck(evt){
 		//verifica se tem 9 digitos
-		if (document.getElementById("nome").value.length==40) { 
-			toastr.error('O nome só pode ter 40 caracteres');
-			return false;
-		};
-		
-		var confirmar=soletras(evt)
-		
-		if (confirmar==false) {
-			toastr.error('O nome só pode conter letras');
+		if (document.getElementById("nome").value.length === 40) {
+			toastr.error('O nome só pode ter 40 caracteres')
 			return false
 		}
-			return true;  
+		
+		let confirmar = soletras(evt)
+		
+		if (!confirmar) {
+			toastr.error('O nome só pode conter letras')
+			return false
+		}
+			return true
 	};
 
-	var isactive=false;
+	let isactive = false
 	function emailcheck() {
 
-		if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))){
-			if (isactive==true) {
-				toastr.clear();
-				isactive=false	
+		if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))) {
+			if (isactive === true) {
+				toastr.clear()
+				isactive = false
 			}
-			toastr.error('Endereço de email invalido');
+			toastr.error('Endereço de email invalido')
 
-		}else{
+		} else {
 
-			if (isactive==false) {
-				toastr.clear();
-				isactive=true
+			if (!isactive) {
+				toastr.clear()
+				isactive = true
 			}
-			toastr.success('Endereço de email valido');
+			toastr.success('Endereço de email valido')
 
 		}
 	}
 
-	function moradacheck(evt){
+	function moradacheck(evt) {
 		//verifica se tem 9 digitos
-		if (document.getElementById("morada").value.length==60) {
-			toastr.error('A morada só pode ter 60 caracteres');
-			return false;
-		}
-
-		var confirmar=letras_numeros(evt);
-		
-		if (confirmar==false) {
-			toastr.error('A morada só pode conter letras numeros e caracteres como º');
+		if (document.getElementById("morada").value.length === 60) {
+			toastr.error('A morada só pode ter 60 caracteres')
 			return false
-		}else{
-			return true
-		};  
-	};
-
-	function codigo_postalcheck(evt){
-		//verifica se tem 9 digitos
-		if (document.getElementById("codigo_postal").value.length==7) {
-			toastr.error('O codigo postal só pode ter 7 caracteres');
-			return false;
 		}
 
-		var confirmar=sonumeros(evt);
-		if (confirmar==false) {
-			toastr.error('O código postal só pode conter numeros');
-			return false;
-		}else{
+		let confirmar = letras_numeros(evt)
+		
+		if (!confirmar) {
+			toastr.error('A morada só pode conter letras numeros e caracteres como º')
+			return false
+		} else {
 			return true
-		};  
-	};
+		}
+	}
+
+	function codigo_postalcheck(evt) {
+		//verifica se tem 9 digitos
+		if (document.getElementById("codigo_postal").value.length === 7) {
+			toastr.error('O codigo postal só pode ter 7 caracteres')
+			return false
+		}
+
+		let confirmar = sonumeros(evt)
+		if (!confirmar) {
+			toastr.error('O código postal só pode conter numeros')
+			return false
+		} else {
+			return true
+		}
+	}
 
 	function telemovelcheck(evt){
 		//verifica se tem 9 digitos
-		if (document.getElementById("telemovel").value.length==9) {
-			toastr.error('O número de telemóvel só pode ter 9 caracteres');
-			return false;
-		};
-		//verifica se é numero ou não
-		var confirmar=sonumeros(evt);
-		if (confirmar==false) {
-			toastr.error('O número de telemóvel só pode conter numeros');
+		if (document.getElementById("telemovel").value.length === 9) {
+			toastr.error('O número de telemóvel só pode ter 9 caracteres')
 			return false
-		}else{
+		}
+		//verifica se é numero ou não
+		let confirmar = sonumeros(evt)
+		if (!confirmar) {
+			toastr.error('O número de telemóvel só pode conter numeros')
+			return false
+		} else {
 			return true
 		}
-	};
+	}
 
-	$(document).ready(function () { 
-        var $campo = $("#cp");
-        $campo.mask('0000-000', {reverse: true});
-    });
+	$(document).ready(() => {
+        let $campo = $("#cp")
+        $campo.mask('0000-000', {reverse: true})
+    })
 </script>
 <?php
 	if (!isset($_GET['id_colaborador'])) {
@@ -921,29 +933,29 @@
 		<script>
 			//Função de escolher a imagem consuante o sexo
 			function mudar_imagem(){
-				if ((document.getElementById("foto").value=='')) {
-					if (document.getElementById('sexo').value=="Masculino") {
+				if ((document.getElementById("foto").value === '')) {
+					if (document.getElementById('sexo').value === "Masculino") {
 						document.getElementById('foto_place').src="fotos/Male_user.png"
-					}else{
+					} else {
 						document.getElementById('foto_place').src="fotos/Female_user.png"
 					}
 				}
 			}
 		</script>
 		<?php
-	}else{
+	} else {
 		if (isset($is_treinador)) {
 			?><script type="text/javascript">toogle_treinador_campos()</script><?php
 		}
 		?>
 			<script>
 				//Escolher o sexo 
-					if ("<?php echo ($linha['sexo']); ?>"=="Masculino") {
-						document.getElementById("sexo").options.selectedIndex=0;
-					};
-					if ("<?php echo ($linha['sexo']); ?>"=="Feminino") {
-						document.getElementById("sexo").options.selectedIndex=1;
-					};
+					if ("<?php echo ($linha['sexo']); ?>" === "Masculino") {
+						document.getElementById("sexo").options.selectedIndex = 0
+					}
+					if ("<?php echo ($linha['sexo']); ?>" === "Feminino") {
+						document.getElementById("sexo").options.selectedIndex = 1
+					}
 			</script>
 		<?php 
 	}
