@@ -615,7 +615,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input required name="cc" onkeypress="return sonumeros(event)" value="<?php 
+								<input required name="cc" maxlength="8" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -625,7 +625,7 @@
 						</div>
 						<div>
 							<label>NIF:</label>
-								<input required name="nif" onkeypress="return sonumeros(event)" value="<?php 
+								<input required name="nif" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['nif']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
