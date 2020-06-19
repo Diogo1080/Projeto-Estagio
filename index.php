@@ -174,7 +174,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-9 col-lg-8 mx-auto">
-              <h3 class="login-heading mb-4">Bem-Vindo ao Estrela Azul!</h3>
+              <h3 class="login-heading mb-4">Bem-Vindo ao Estrela Azul!!!</h3>
               <form method="POST">
                 <div class="form-label-group">
                   <input type="text" id="inputEmail" class="form-control" placeholder="Username" name="username" required autofocus>
