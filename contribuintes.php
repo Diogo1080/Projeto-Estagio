@@ -792,7 +792,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input id="cp_enc" name="cp_enc" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
+								<input id="cp" name="cp_enc" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1366,11 +1366,6 @@
 
 		$(document).ready(() => {
 	        let $campo = $("#cp")
-	        $campo.mask('0000-000', {reverse: true})
-	    })
-
-	    $(document).ready(() => {
-	        let $campo = $("#cp_enc")
 	        $campo.mask('0000-000', {reverse: true})
 	    })
 
