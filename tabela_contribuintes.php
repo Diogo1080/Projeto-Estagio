@@ -33,7 +33,7 @@
 		$resultado=$cargos->get_result();
 		echo '
 			<div class="table-responsive">
-				<table border class="table table-striped table-sm">
+				<table border class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Nome</th>
@@ -56,7 +56,7 @@
 								<td>'.$linha['nome'].'</td>
 								<td>'.$linha['cc'].'</td>
 								<td>'.$linha['nif'].'</td>
-								<td><button onclick="window.location.href=\'contribuintes.php?id_contribuinte='.$linha['id_contribuinte'].'\'">Selecionar</button></td>
+								<td><button class="btn btn-default" onclick="window.location.href=\'contribuintes.php?id_contribuinte='.$linha['id_contribuinte'].'\'">Selecionar</button></td>
 							</tr>
 							';
 						}
