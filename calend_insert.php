@@ -9,7 +9,7 @@
 		$data_end = str_replace('/', '-', $dados['end']);
 		$data_end_conv = date("Y-m-d H:i:s", strtotime($data_end));
 
-		$insert_event = $con->prepare("INSERT INTO treinos (titulo, dt_inicio, dt_fim) VALUES (?,?,?)");
+		$insert_event = $con->prepare("INSERT INTO treinos (titulo, is_cancelado, dt_inicio, dt_fim) VALUES (?,0,?,?)");
 		$insert_equipa_treino = $con->prepare("INSERT INTO `equipa_treinos`(`id_equipa`, `id_atleta`, `id_treino`, `presente`, `justificacao`) VALUES (?,?,?,?,?)");
 
 		$retorna = '<div class="alert alert-danger" role="alert">Erro: Treino não foi inserido com sucesso!</div>';
