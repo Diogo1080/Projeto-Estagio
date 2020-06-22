@@ -355,9 +355,13 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
+		<script src="//code.jquery.com/jquery.min.js"></script>
+<<<<<<< HEAD
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Contribuintes</title>
+=======
+>>>>>>> master
 	</head>
 	<body>
 		<!--Popup dos enc edu-->
@@ -371,7 +375,7 @@
 					</header>
 					<div class="w3-container">
 						<div style="position: relative;overflow: auto; height: 85%">
-							<input name="tabela_enc_edu_procura" onkeyup="definir_procura_enc_edu(this.value);first_page();atualizar_tabela_popup_enc_edu(num_pagina,this.value);">
+							<input name="tabela_enc_edu_procura" onkeyup="return definir_procura_enc_edu(this.value);first_page();atualizar_tabela_popup_enc_edu(num_pagina,this.value);">
 							<div id="tabela_enc_edu">
 							</div>
 						</div>  
@@ -405,7 +409,7 @@
 					</header>
 					<div class="w3-container">
 						<div style="position: relative;overflow: auto; height: 85%">
-							<input name="tabela_atletas_procura" onkeyup="definir_procura_atletas(this.value);first_page();atualizar_tabela_popup_atletas(num_pagina,this.value);">
+							<input name="tabela_atletas_procura" onkeyup="return definir_procura_atletas(this.value);first_page();atualizar_tabela_popup_atletas(num_pagina,this.value);">
 							<div id="tabela_atletas">
 							</div>
 						</div>  
@@ -493,7 +497,7 @@
 						<div id="container_socio" style="display: none">
 							<div>
 								<label>Numero de socio:</label>
-									<input class="input_socio" name="num_socio" value="<?php 
+									<input class="input_socio" name="num_socio" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['num_socio']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -600,7 +604,7 @@
 										</div>
 										<div>
 											<label>Nome do atleta:</label>
-												<input readonly required id="required_edu_nome" class="input_enc required_edu" value="<?php 
+												<input readonly required id="required_edu_nome" class="input_enc required_edu" onkeypress="return soletras(event)" value="<?php 
 													if (isset($_GET['id_contribuinte'])) {
 														echo($linha_atleta['nome']);
 													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -610,7 +614,7 @@
 										</div>
 										<div>
 											<label>CC do atleta:</label>
-												<input readonly required id="required_edu_cc" class=" input_enc required_edu" value="<?php 
+												<input readonly required id="required_edu_cc" class=" input_enc required_edu" maxlength="8" onkeypress="return sonumeros(event)" value="<?php 
 													if (isset($_GET['id_contribuinte'])) {
 														echo($linha_atleta['cc']);
 													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -638,7 +642,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input required name="cc" maxlength="8" onkeypress="return sonumeros(event)" value="<?php 
+								<input required name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -721,7 +725,7 @@
 						</div>
 						<div>
 							<label>Nome:</label>
-								<input id="nome_contribuinte_enc" class="input_enc required" name="nome_enc" onkeyup="soletras(this)" value="<?php 
+								<input id="nome_contribuinte_enc" class="input_enc required" name="nome_enc" onkeypress="return soletras(event)"  value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['nome']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -731,7 +735,7 @@
 						</div>
 						<div>
 							<label>CC:</label>
-								<input id="cc_contribuinte_enc" class="input_enc required" name="cc_enc" onkeypress="return sonumeros(event)" value="<?php 
+								<input id="cc_contribuinte_enc" class="input_enc required" maxlength="8" name="cc_enc" onkeypress="return sonumeros(event)"  value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cc']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -741,7 +745,7 @@
 						</div>
 						<div>
 							<label>NIF:</label>
-								<input id="nif_contribuinte_enc" class="input_enc required" name="nif_enc" onkeypress="return sonumeros(event)" value="<?php 
+								<input id="nif_contribuinte_enc" class="input_enc required" maxlength="9" name="nif_enc" onkeypress="return sonumeros(event)"  value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['nif']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -751,7 +755,7 @@
 						</div>
 						<div>
 							<label>Morada:</label>
-								<input id="morada_contribuinte_enc" class="input_enc required" name="morada_enc" onkeypress="return sonumeros(event)" value="<?php 
+								<input id="morada_contribuinte_enc" class="input_enc required" name="morada_enc" onkeypress="return moradacheck(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['morada']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -791,7 +795,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input id="cp" name="cp_enc" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
+								<input id="cp_enc" class="input_enc required"  name="cp_enc" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -801,7 +805,7 @@
 						</div>
 						<div>
 							<label>Email:</label>
-								<input id="email_contribuinte_enc" class="input_enc required" name="email_enc" onkeyup="emailcheck(this)" value="<?php 
+								<input id="email_contribuinte_enc" class="input_enc required" name="email_enc" onkeypress="return emailcheck(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['email']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -821,7 +825,7 @@
 						</div>
 						<div>
 							<label>Telefone:</label>
-								<input id="telefone_contribuinte_enc" class="input_enc required" name="telefone_enc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
+								<input id="telefone_contribuinte_enc" class="input_enc required" maxlength="9" name="telefone_enc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['telefone']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1363,10 +1367,16 @@
 			}
 		};
 
-		$(document).ready(() => {
-	        let $campo = $("#cp")
-	        $campo.mask('0000-000', {reverse: true})
-	    })
+		$(document).ready(function () { 
+		    var $campo = $("#cp");
+		    $campo.mask('0000-000', {reverse: true});
+		});
+
+		$(document).ready(function () { 
+		    var $campo = $("#cp_enc");
+		    $campo.mask('0000-000', {reverse: true});
+		});
+
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {
