@@ -356,12 +356,10 @@
 		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
 		<script src="//code.jquery.com/jquery.min.js"></script>
-<<<<<<< HEAD
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Contribuintes</title>
-=======
->>>>>>> master
 	</head>
 	<body>
 		<!--Popup dos enc edu-->
