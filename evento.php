@@ -57,6 +57,12 @@
 	 	height:600,
 	 	layout:"fitColumns",
 	 	data:tabledata, //assign data to table
+		keybindings:{
+			"navLeft" : "shift + 37", 
+			"navUp":"shift +38",
+			"navRight":"shift + 39",
+			"navDown":"shift + 40"
+		},
 	 	columns:[ //Define Table Columns
 		 	{title:"Jogadores", field:"name", width:150 ,frozen:true},
 		 	<?php 
@@ -77,8 +83,7 @@
 			}
 			?>
 	 	],
-	 	rowClick:function(e, row){ //trigger an alert message when the row is clicked
-	 		alert("Row " + row.getData().id + " Clicked!!!!");
+	 	cellEdited:function(e, row){ //trigger an alert message when the row is clicked
 	 	},
 	});
 </script>

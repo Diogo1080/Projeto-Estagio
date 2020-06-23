@@ -27,8 +27,8 @@
 		$cargos->execute();
 		$resultado=$cargos->get_result();
 		echo '
-			<div class="table-responsive">
-				<table border class="table table-striped table-sm">
+			<div>
+				<table class="table table-border">
 					<thead>
 						<tr>
 							<th>Cargo</th>

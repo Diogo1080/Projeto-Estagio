@@ -23,7 +23,7 @@
 
 		$total_registos->close();
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		$enc_edu=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR `cc` like ? OR `nif` like ?) AND (`tipo_contribuinte`='Encarregado de educação') LIMIT $offset, $registos_por_pagina");
+		$enc_edu=$con->prepare("SELECT * FROM `contribuintes` WHERE (`nome` like ? OR `cc` like ? OR `nif` like ? ) AND `tipo_contribuinte`='Encarregado de educação' LIMIT $offset, $registos_por_pagina");
 		$enc_edu->bind_param("sss",$procura,$procura,$procura);
 		$enc_edu->execute();
 		$resultado=$enc_edu->get_result();
