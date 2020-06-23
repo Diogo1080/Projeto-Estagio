@@ -72,14 +72,9 @@
 			}
 			?>
 	 	],
-<<<<<<< Updated upstream
-	 	cellEdited:function(e, row){ //trigger an alert message when the row is clicked
-	 	},
-=======
 	 	cellEdited:function(e, row){
         	alert("Row " + row.getIndex() + " Clicked!!!!")
     	},
->>>>>>> Stashed changes
 	});
 </script>
 </body>
