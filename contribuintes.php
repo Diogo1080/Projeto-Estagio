@@ -351,17 +351,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-		<script src="//code.jquery.com/jquery.min.js"></script>
 		<script src="toastr/toastr.js"></script>
 		<script src="//code.jquery.com/jquery.min.js"></script>
-<<<<<<< HEAD
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Contribuintes</title>
-=======
->>>>>>> master
 	</head>
 	<body>
 		<!--Popup dos enc edu-->
@@ -795,7 +789,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input id="cp_enc" class="input_enc required"  name="cp_enc" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
+								<input id="cp1" class="input_enc required"  name="cp_enc" maxlength="8" onkeypress="return CodP(event)" value="<?php 
 										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
 											echo($linha_enc['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -912,7 +906,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input required id="cp" name="cp" maxlength="8" onkeypress="return codigo_postalcheck(event)" value="<?php 
+								<input required id="cp" name="cp" maxlength="8" onkeypress="return CodP(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1203,7 +1197,7 @@
 		}
 		$("#foto").change(function() {
 			readURL(this);
-		});
+		})
 
 	//Faz upload da foto do encarregado de educação para mostrar no site temporariamente
 		function readURL_enc(input) {
@@ -1219,7 +1213,7 @@
 
 		$("#foto_enc").change(function() {
 			readURL_enc(this);
-		});
+		})
 
 	//Função de escolher a imagem consuante o sexo
 		function mudar_imagem(){
@@ -1270,7 +1264,7 @@
 			if (document.getElementById("nome").value.length==40) { 
 				toastr.error('O nome só pode ter 40 caracteres');
 				return false;
-			};
+			}
 			
 			var confirmar=soletras(evt)
 			
@@ -1279,7 +1273,7 @@
 				return false
 			}
 				return true;  
-		};
+		}
 
 		var isactive=false;
 		function emailcheck() {
@@ -1316,8 +1310,8 @@
 				return false
 			}else{
 				return true
-			};  
-		};
+			}  
+		}
 
 		function codigo_postalcheck(evt){
 			//verifica se tem 9 digitos
@@ -1332,8 +1326,8 @@
 				return false;
 			}else{
 				return true
-			};  
-		};
+			} 
+		}
 
 		function telemovelcheck(evt){
 			//verifica se tem 9 digitos
@@ -1349,7 +1343,7 @@
 			}else{
 				return true
 			}
-		};
+		}
 
 		function telefonecheck(evt){
 			//verifica se tem 9 digitos
@@ -1365,17 +1359,16 @@
 			}else{
 				return true
 			}
-		};
+		}
 
-		$(document).ready(function () { 
-		    var $campo = $("#cp");
-		    $campo.mask('0000-000', {reverse: true});
-		});
+		function CodP(){
+			$(document).ready(() => {
+		        let $campo = $("#cp")
+		        $campo.mask('0000-000', {reverse: true})
+		    });
+		}
 
-		$(document).ready(function () { 
-		    var $campo = $("#cp_enc");
-		    $campo.mask('0000-000', {reverse: true});
-		});
+		
 
 
 	function mostrar_campos(tipo){

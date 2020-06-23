@@ -1,7 +1,21 @@
 <?php 
   //Prepara a ligação
     require ('ligacao.php');
-?>
+
+    if (isset($_POST['insert'])) {
+        $querry=$con->prepare("INSERT INTO `equipamento`(`id_equipamento`, `tipo`, `t_equipamento`, `tamanho`) VALUES (?,?,?,?)");
+
+        $querry->bind_param("isss",$_POST['id_equipamento'],$_POST['tipo'],$_POST['t_equipamento'],$_POST['tamanho']);
+
+        $querry->execute();
+
+        $id=$querry->insert_id;
+
+        $content=NULL;
+
+  }
+
+?> 
 <!DOCTYPE html>
 <html lang="pt">
   <?php include('head.php'); ?>
@@ -51,8 +65,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Camisola</small>
               </div>
@@ -66,8 +80,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Calção</small>
               </div>
@@ -81,8 +95,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Meias</small>
               </div>
@@ -97,8 +111,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Hoodie</small>
               </div>
@@ -112,8 +126,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Caneleiras</small>
               </div>
@@ -127,8 +141,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Chuteiras</small>
               </div>
@@ -143,8 +157,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Mala</small>
               </div>
@@ -158,8 +172,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Garrafa</small>
               </div>
@@ -173,8 +187,8 @@
               <p class="card-text">Descrição</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Add</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Adicionar</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Eliminar</button>
                 </div>
                 <small class="text-muted">Bola</small>
               </div>

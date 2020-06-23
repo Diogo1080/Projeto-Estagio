@@ -30,9 +30,9 @@ function email($para_email, $para_nome, $assunto, $html) {
     }
   }
 
-  $corpo_email = '<html><body><p>Feliz Aniversário (nome do socio)! O Clube Estrela Azul deseja-lhe um feliz aniversário. Obrigado por fazer parte da familia CEA!</body></html>';
+  $corpo_email = '<html><body><p>Feliz Aniversário ($nome do socio)! O Clube Estrela Azul deseja-lhe um feliz aniversário. Obrigado por fazer parte da familia CEA!</body></html>';
 
-  $controle =  email('socio@email.com', 'NomeSocio', 'Feliz Aniversário!', $corpo_email);
+  $controle =  email('socio@email.com', '$nome do socio', 'Feliz Aniversário!', $corpo_email);
   if ($controle == "1") {
       echo "Email enviado com sucesso";
   } else {
@@ -41,24 +41,4 @@ function email($para_email, $para_nome, $assunto, $html) {
 
   $hoje = date("m-d");
   $sql = "SELECT nome, email FROM contribuintes WHERE date_format(dt_nasc, '%m-%d') = '$hoje'";
-  $res = mysql_query($sql);
-  while ($qds = mysql_fetch_array($res)) {
-      $nome = $qds["nome"];
-      $email = $qds["email"];
-
-      $msg = "mensagem de aniversario";
-
-      $mail->Subject  = "Feliz Aniversario";
-      $mail->AddAddress($email,$nome); // Email e nome de quem receberá
-      $mail->Body      = $msg;
-
-      if(!$mail->Send()){
-         echo "erro ao enviar mensagem para $email<br />";
-         echo "Mailer Error: " . $mail->ErrorInfo;
-         return false;
-      } else {
-         echo "mensagem enviada com sucesso para $nomAluno<br />";
-         return true;
-      }
-  }
 ?>
