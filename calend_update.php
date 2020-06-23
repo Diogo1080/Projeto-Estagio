@@ -10,7 +10,7 @@
 		$data_end = str_replace('/', '-', $dados['end']);
 		$data_end_conv = date("Y-m-d H:i:s", strtotime($data_end));
 
-		$update_event = $con->prepare("UPDATE `treinos` SET `titulo`=?,`dt_inicio`=?,`dt_fim`=? WHERE `id_treino`=?");
+		$update_event = $con->prepare("UPDATE `treinos` SET `titulo`=?,is_cancelado=0, `dt_inicio`=?,`dt_fim`=? WHERE `id_treino`=?");
 		$update_equipa_treino = $con->prepare("UPDATE `equipa_treinos` SET `presente`=?,`justificacao`=? WHERE `id_treino`=? AND `id_atleta`=? AND `id_equipa`=?");
 		$retorna = '<div class="alert alert-danger" role="alert">Erro: Treino não foi atualizado!</div>';
 
