@@ -359,6 +359,7 @@
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
 		<title>Contribuintes</title>
 	</head>
 	<body>
@@ -456,9 +457,7 @@
 
 				<!-- Tabelas / Forms / TUDO -->
 				<div class="card-body">
-
 				<div>
-					<h1>Contribuinte</h1>
 					<?php if (isset($_GET['id_contribuinte'])) {	?>
 							<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
 					<?php } ?>

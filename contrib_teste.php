@@ -448,27 +448,43 @@
 
 					<!-- Tabelas / Forms / TUDO -->
 					<div class="card-body">
-						<h1>Contribuinte</h1>
-						<?php if (isset($_GET['id_contribuinte'])) {	?>
-								<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
-						<?php } ?>
-						<div>
-							<img id="foto_place" src="<?php 
-									if (isset($_GET['id_contribuinte'])){
-										echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
-									}elseif (isset($_POST['insert']) or isset($_POST['update'])){
-										if($_POST['sexo']=='Masculino'){
-											echo("fotos/Male_user.png");
+
+
+						<!-- Row / Vai ter um espaco para img e outro para campos -->
+
+						<div class="row">
+
+						<!-- Imagem -->
+						<div class="form-group col-md-4">		
+							<?php if (isset($_GET['id_contribuinte'])) {	?>
+									<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
+							<?php } ?>
+							<div>
+								<img id="foto_place" src="<?php 
+										if (isset($_GET['id_contribuinte'])){
+											echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
+										}elseif (isset($_POST['insert']) or isset($_POST['update'])){
+											if($_POST['sexo']=='Masculino'){
+												echo("fotos/Male_user.png");
+											}else{
+												echo("fotos/Female_user.png");
+											}
 										}else{
-											echo("fotos/Female_user.png");
-										}
-									}else{
-										echo"fotos/Male_user.png";
-									} 
-								?>" alt="Foto do contribuinte" height="200" width="200"><br>
-							<label>Escolher a foto</label>
-								<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+											echo"fotos/Male_user.png";
+										} 
+									?>" alt="Foto do contribuinte" height="200" width="200"><br>
+								<label>Escolher a foto</label>
+									<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+							</div>
 						</div>
+
+						<!-- Campos -->
+						<div class="form-group col-md-8">
+						
+					</div>
+
+					<div>
+
 						<div>
 							<label>Tipo:</label>
 							<?php if (isset($_GET['id_contribuinte'])) { ?>
@@ -670,6 +686,7 @@
 							</div>
 					</div>
 				</div>
+			</div>
 				<!-- Conteúdo da página -->
 				<div class="card" style=" margin-top:25px;">
 					<!-- Titulo + Botões  -->
