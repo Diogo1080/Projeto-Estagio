@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         defaultDate: Now, 
         minTime: '07:30:00',
         maxTime: '21:30:00',
-        slotDuration: '00:30:00',
+        slotDuration: '00:15:00',
         slotLabelInterval: 15,
         plugins: ['interaction', 'dayGrid', 'timeGrid', 'bootstrap'],
         header: {
