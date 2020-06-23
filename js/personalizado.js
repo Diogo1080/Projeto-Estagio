@@ -110,7 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (clickCnt === 2) {
                         clearTimeout(oneClickTimer)
                         clickCnt = 0
-                        window.location.href="evento.php?id="+info.event.id+"&tipo="+info.event.extendedProps.tipo
+                        if (info.event.extendedProps.tipo=="Jogo"){
+                            window.location.href="evento.php?id="+info.event.id
+                        }
                     }   
                 }
             )
