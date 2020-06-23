@@ -53,6 +53,10 @@
   --input-padding-y: 0.75rem;
 }
 
+body{
+  background-color: #21659e;
+}
+
 .login,
 .image {
   min-height: 100vh;
@@ -66,9 +70,11 @@
 
 .login-heading {
   font-weight: 300;
+  color: #ffffff;
 }
 
 .btn-login {
+  background-color:#657786;
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   padding: 0.75rem 1rem;
@@ -190,7 +196,7 @@
                   <input type="checkbox" class="custom-control-input" id="customCheck1">
                   <label class="custom-control-label" for="customCheck1">Remember password</label>
                 </div> -->
-                <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" name="Login">ENTRAR</button>
+                <button class="btn btn-lg btn-default btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" name="Login">ENTRAR</button>
               </form>
             </div>
           </div>
