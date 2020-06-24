@@ -12,7 +12,7 @@ function email($para_email, $para_nome, $assunto, $html) {
   $mail2->Host       = 'nome-do-server';
   $mail2->Port       = 'Porta de saida (ex: 465)';
   $mail2->SMTPAuth   = true;
-  $mail2->SMTPAuth   = 'ssl';
+  $mail2->SMTPSecure  = 'ssl';
   $mail2->Username =   'EstrelaAzul@email.com';
   $mail2->Password =   'senha';
     
