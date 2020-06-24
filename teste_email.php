@@ -36,9 +36,9 @@ function email($para_email, $para_nome, $assunto, $html) {
   if ($controle == "1") {
       echo "Email enviado com sucesso";
   } else {
-      echo "Erro no envio do email: " . $controle->ErrorInfo;
+      echo $controle;
   }
 
-  $hoje = date("m-d");
-  $sql = "SELECT nome, email FROM contribuintes WHERE date_format(dt_nasc, '%m-%d') = '$hoje'";
+  // $hoje = date("m-d");
+  // $sql = "SELECT nome, email FROM contribuintes WHERE date_format(dt_nasc, '%m-%d') = '$hoje'";
 ?>
