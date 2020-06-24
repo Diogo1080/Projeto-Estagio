@@ -351,11 +351,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="toastr/toastr.js"></script>
-		<script src="//code.jquery.com/jquery.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<title>Contribuintes</title>
+				<!-- Ligação aos links e config da Head -->
+		<?php include('head.php'); ?>
 	</head>
 	<body>
 		<!--Popup dos enc edu-->
@@ -369,7 +368,8 @@
 					</header>
 					<div class="w3-container">
 						<div style="position: relative;overflow: auto; height: 85%">
-							<input name="tabela_enc_edu_procura" onkeyup="return definir_procura_enc_edu(this.value);first_page();atualizar_tabela_popup_enc_edu(num_pagina,this.value);">
+							<label>Procura: </label>
+							<input name="tabela_enc_edu_procura" onkeyup="definir_procura_enc_edu(this.value);first_page();atualizar_tabela_popup_enc_edu(num_pagina,this.value);">
 							<div id="tabela_enc_edu">
 							</div>
 						</div>  
@@ -403,7 +403,8 @@
 					</header>
 					<div class="w3-container">
 						<div style="position: relative;overflow: auto; height: 85%">
-							<input name="tabela_atletas_procura" onkeyup="return definir_procura_atletas(this.value);first_page();atualizar_tabela_popup_atletas(num_pagina,this.value);">
+							<label>Procura: </label>
+							<input name="tabela_atletas_procura" onkeyup="definir_procura_atletas(this.value);first_page();atualizar_tabela_popup_atletas(num_pagina,this.value);">
 							<div id="tabela_atletas">
 							</div>
 						</div>  
@@ -427,11 +428,6 @@
 				</div>
 			</div>
 
-		<!-- Ligação aos links e config da Head -->
-		<?php include('head.php'); ?>
-		<div>
-
-
 
 
 		<!-- Começa aqui o form -->
@@ -442,268 +438,24 @@
 
 			<center style=" margin-top:25px;"><h1>Inserir Contribuintes</h1></center>
 			<form method="POST" enctype="multipart/form-data">
-			<!-- Conteúdo da página -->
-			<div class="card" style=" margin-top:25px;">
 
-				<!-- Titulo + Botões  -->
-				<div class="card-header">
-					<h3 class="panel-title">Informações Básicas</h3>
-				</div>
-
-				<!-- Tabelas / Forms / TUDO -->
-				<div class="card-body">
-
-				<div>
-					<h1>Contribuinte</h1>
-					<?php if (isset($_GET['id_contribuinte'])) {	?>
-							<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
-					<?php } ?>
-					<div>
-						<img id="foto_place" src="<?php 
-								if (isset($_GET['id_contribuinte'])){
-									echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
-								}elseif (isset($_POST['insert']) or isset($_POST['update'])){
-									if($_POST['sexo']=='Masculino'){
-										echo("fotos/Male_user.png");
-									}else{
-										echo("fotos/Female_user.png");
-									}
-								}else{
-									echo"fotos/Male_user.png";
-								} 
-							?>" alt="Foto do contribuinte" height="200" width="200"><br>
-						<label>Escolher a foto</label>
-							<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+				<!-- Conteúdo da página -->
+				<div class="card" style=" margin-top:25px;">
+					<!-- Titulo + Botões  -->
+					<div class="card-header">
+						<h3 class="panel-title">Informações Básicas</h3>
 					</div>
-					<div>
-						<label>Tipo:</label>
-						<?php if (isset($_GET['id_contribuinte'])) { ?>
-							<input hidden name="tipo_contribuinte" value="<?php echo($linha['tipo_contribuinte']); ?>">
-						<?php }?>
-							<select id="tipo_contribuinte" name="tipo_contribuinte" required onchange="mostrar_campos(this.value);">
-								<option disabled selected value> -- Escolher uma opção -- </option>
-								<option>Sócio</option>
-								<option>Atleta</option>
-								<option>Encarregado de educação</option>
-							</select>
-					</div>
-					<!--Sócio-->
-						<div id="container_socio" style="display: none">
-							<div>
-								<label>Numero de socio:</label>
-									<input class="input_socio" name="num_socio" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['num_socio']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['num_socio']);
-										} 
-									?>">
-							</div>
-							<div>
-								<label>Valor quota: </label>
-									<input class="input_socio" name="mensalidade_valor" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['mensalidade_valor']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['mensalidade_valor']);
-										} 
-									?>">
-							</div>
-							<div>
-								<label>Metodo de pagamento</label>
-								<select class="input_socio" id="metodo_pagamento" name="metodo_pagamento" class="">
-									<option disabled selected value> -- Escolher uma opção -- </option>
-									<option>Domicilio</option>
-									<option>No clube</option>
-								</select>
-							</div>
-						</div>
-					<!--Atleta-->
-						<div id="container_atleta" style="display: none">
-							<?php 
-								if (isset($_GET['id_contribuinte'])) {
-									$atleta=$con->prepare("SELECT * FROM atletas WHERE id_contribuinte=?");
-									$atleta->bind_param("i",$linha['id_contribuinte']);
-									$atleta->execute();
-									$resultado=$atleta->get_result();
-									$linha_atleta=$resultado->fetch_assoc();
-								}
-							?>
-							<div>
-								<label>Valor mensalidade: </label>
-									<input id="valor_mensalidade" class="input_atleta" name="mensalidade_valor_atleta" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
-											echo($linha['mensalidade_valor']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['mensalidade_valor_atleta']);
-										} 
-									?>">
-							</div>
-							<div>
-								<label>Valor joia:</label>
-									<input id="valor_joia" class="input_atleta" name="valor_joia" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
-											echo($linha_atleta['valor_joia']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['valor_joia']);
-										} 
-									?>">
-							</div>
-							<div>
-								<label>Pagou joia:</label>
-									<input id="pagou_joia" name="joia" type="checkbox">
-							</div>
-								<div>
-									<?php if (!isset($_GET['id_contribuinte'])) {?>
-										<label>Escolher/Inserir encarregado de educação do atleta</label>
-									<?php }else{ ?>
-										<label>Encarregado de educação:</label>
-									<?php } ?>
-										<input id="insert_enc_edu" name="insert_enc_edu" type="checkbox" onchange="mostrar_inputs_enc_edu();">
-								</div>
-							
-						</div>
-					<!--Encarregado de educação-->
-						<div id="container_enc_edu" style="display: none">
-							<div>
-								<label>Associar atleta a este encarregado de educação</label>
-								<button type="button" onclick="mostrar_modal_atletas();atualizar_tabela_popup_atletas(1,'');">
-									Selecionar
-								</button>
-								<button type="button" onclick="limpar_inputs_enc_edu();">limpar</button>
-							</div>
 
-							<br>
-							<div id="lista_atletas_enc">
-								<label>Lista de atletas associados a este encarregado de educação</label>	
-								<div class="containers_dinamicos">
-									
-								<?php 
-								//Querry para ir buscar os ids dos atletas do enc_edu
-									if (isset($_GET['id_contribuinte'])) {
-											$atletas=$con->prepare("SELECT contribuintes.nome,contribuintes.cc,atletas.id_contribuinte FROM contribuintes INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE atletas.id_enc_edu=?");
-											$atletas->bind_param("i",$linha['id_contribuinte']);
-											$atletas->execute();
-											$resultado=$atletas->get_result();
-											while ($linha_atleta=$resultado->fetch_assoc()) {
-												?>
-										<div>
-											<input hidden id="required_edu_id" name="required_edu_id[]" class="input_enc required_edu" value="<?php 
-														if (isset($_GET['id_contribuinte'])) {
-															echo($linha_atleta['id_contribuinte']);
-														}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-															echo($_POST['mensalidade_valor_atleta']);
-														} 
-													?>">
-										</div>
-										<div>
-											<label>Nome do atleta:</label>
-												<input readonly required id="required_edu_nome" class="input_enc required_edu" onkeypress="return soletras(event)" value="<?php 
-													if (isset($_GET['id_contribuinte'])) {
-														echo($linha_atleta['nome']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['mensalidade_valor_atleta']);
-													} 
-												?>">
-										</div>
-										<div>
-											<label>CC do atleta:</label>
-												<input readonly required id="required_edu_cc" class=" input_enc required_edu" maxlength="8" onkeypress="return sonumeros(event)" value="<?php 
-													if (isset($_GET['id_contribuinte'])) {
-														echo($linha_atleta['cc']);
-													}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-														echo($_POST['mensalidade_valor_atleta']);
-													} 
-												?>">
-										</div>
-										<br>
-										<?php 	}
-									}
-								?>
-								</div>					
-							</div>
-						</div>
-					<!--Form principal-->
+					<!-- Tabelas / Forms / TUDO -->
+					<div class="card-body">
+						<h1>Contribuinte</h1>
+						<?php if (isset($_GET['id_contribuinte'])) {	?>
+								<input name="id_contribuinte" hidden value="<?php echo $linha['id_contribuinte']; ?>">
+						<?php } ?>
 						<div>
-							<label>Nome:</label>
-								<input required name="nome" onkeypress="return soletras(event)" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['nome']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['nome']);
-										} 
-									?>"><br>			
-						</div>
-						<div>
-							<label>CC:</label>
-								<input required name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['cc']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['cc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>NIF:</label>
-								<input required name="nif" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['nif']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['nif']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Sexo:</label>
-								<select id="sexo" name="sexo" onchange="mudar_imagem()">
-									<option value="Masculino">Masculino</option>
-									<option value="Feminino">Feminino</option>
-								</select><br>
-						</div>
-						<div>
-							<label>Data de nascimento:</label>
-								<input required type="date" name="dt_nasc" value="<?php 
-										if (isset($_GET['id_contribuinte'])) {
-											echo($linha['dt_nasc']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['dt_nasc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Receber emails sobre o clube:</label>
-								<input type="checkbox" name="receber_email">
-						</div>
-				</div>
-				<!--form de inserir o enc_educação-->
-				<div id="enc_edu_atleta" style="display: none">
-					<?php
-						if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-							$enc_edu_atleta=$con->prepare("SELECT * FROM contribuintes WHERE id_contribuinte=?");
-							$enc_edu_atleta->bind_param("i",$linha['id_enc_edu']);
-							$enc_edu_atleta->execute();
-							$resultado_atleta=$enc_edu_atleta->get_result();
-							$linha_enc=$resultado_atleta->fetch_assoc();
-						}
-					?>
-					<!--Form secundario-->
-						<h1>Encarregado de educação</h1>
-						<div>
-							<label>Escolher o encarregado de educação</label>
-							<button onclick="mostrar_modal_enc_edu();atualizar_tabela_popup_enc_edu('1','');" type="button">Selecionar</button>
-						</div>
-
-						<input id="id_contribuinte_enc" name="id_enc" hidden value="<?php 
-								if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) { 
-									echo $linha_enc['id_contribuinte'];
-								} 
-							?>">
-						<input name="tipo_enc" hidden value="Encarregado de educação">
-						<div>
-							<img id="foto_place_enc" src="<?php 
-									if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-										echo 'data:image/jpeg;base64,'.base64_encode($linha_enc["foto"]);
+							<img id="foto_place" src="<?php 
+									if (isset($_GET['id_contribuinte'])){
+										echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
 									}elseif (isset($_POST['insert']) or isset($_POST['update'])){
 										if($_POST['sexo']=='Masculino'){
 											echo("fotos/Male_user.png");
@@ -715,158 +467,220 @@
 									} 
 								?>" alt="Foto do contribuinte" height="200" width="200"><br>
 							<label>Escolher a foto</label>
-								<input type="file" id="foto_enc" name="foto_enc" class="input_enc" accept="image/png, image/jpeg"><br>
+								<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
 						</div>
 						<div>
-							<label>Nome:</label>
-								<input id="nome_contribuinte_enc" class="input_enc required" name="nome_enc" onkeypress="return soletras(event)"  value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['nome']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['nome_enc']);
-										} 
-									?>"><br>			
+							<label>Tipo:</label>
+							<?php if (isset($_GET['id_contribuinte'])) { ?>
+								<input hidden name="tipo_contribuinte" value="<?php echo($linha['tipo_contribuinte']); ?>">
+							<?php }?>
+								<select id="tipo_contribuinte" name="tipo_contribuinte" required onchange="mostrar_campos(this.value);">
+									<option disabled selected value> -- Escolher uma opção -- </option>
+									<option>Sócio</option>
+									<option>Atleta</option>
+									<option>Encarregado de educação</option>
+								</select>
 						</div>
-						<div>
-							<label>CC:</label>
-								<input id="cc_contribuinte_enc" class="input_enc required" maxlength="8" name="cc_enc" onkeypress="return sonumeros(event)"  value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['cc']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['cc_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>NIF:</label>
-								<input id="nif_contribuinte_enc" class="input_enc required" maxlength="9" name="nif_enc" onkeypress="return sonumeros(event)"  value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['nif']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['nif_enc']);
-										} 
-									?>"><br>
-						</div>
+						<!--Sócio-->
+							<div id="container_socio" style="display: none">
+								<div>
+									<label>Numero de socio:</label>
+										<input class="input_socio" name="num_socio" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['num_socio']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['num_socio']);
+											} 
+										?>">
+								</div>
+								<div>
+									<label>Valor quota: </label>
+										<input class="input_socio" name="mensalidade_valor" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['mensalidade_valor']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['mensalidade_valor']);
+											} 
+										?>">
+								</div>
+								<div>
+									<label>Metodo de pagamento</label>
+									<select class="input_socio" id="metodo_pagamento" name="metodo_pagamento" class="">
+										<option disabled selected value> -- Escolher uma opção -- </option>
+										<option>Domicilio</option>
+										<option>No clube</option>
+									</select>
+								</div>
+							</div>
+						<!--Atleta-->
+							<div id="container_atleta" style="display: none">
+								<?php 
+									if (isset($_GET['id_contribuinte'])) {
+										$atleta=$con->prepare("SELECT * FROM atletas WHERE id_contribuinte=?");
+										$atleta->bind_param("i",$linha['id_contribuinte']);
+										$atleta->execute();
+										$resultado=$atleta->get_result();
+										$linha_atleta=$resultado->fetch_assoc();
+									}
+								?>
+								<div>
+									<label>Valor mensalidade: </label>
+										<input id="valor_mensalidade" maxlength="11" class="input_atleta" name="mensalidade_valor_atleta" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
+												echo($linha['mensalidade_valor']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['mensalidade_valor_atleta']);
+											} 
+										?>">
+								</div>
+								<div>
+									<label>Valor joia:</label>
+										<input id="valor_joia" maxlength="11" class="input_atleta" name="valor_joia" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte']) AND $linha['tipo_contribuinte']=="Atleta") {
+												echo($linha_atleta['valor_joia']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['valor_joia']);
+											} 
+										?>">
+								</div>
+								<div>
+									<label>Pagou joia:</label>
+										<input id="pagou_joia" name="joia" type="checkbox">
+								</div>
+									<div>
+										<?php if (!isset($_GET['id_contribuinte'])) {?>
+											<label>Escolher/Inserir encarregado de educação do atleta</label>
+										<?php }else{ ?>
+											<label>Encarregado de educação:</label>
+										<?php } ?>
+											<input id="insert_enc_edu" name="insert_enc_edu" type="checkbox" onchange="mostrar_inputs_enc_edu();">
+									</div>
+								
+							</div>
+						<!--Encarregado de educação-->
+							<div id="container_enc_edu" style="display: none">
+								<div>
+									<label>Associar atleta a este encarregado de educação</label>
+									<button type="button" onclick="mostrar_modal_atletas();atualizar_tabela_popup_atletas(1,'');">
+										Selecionar
+									</button>
+									<button type="button" onclick="limpar_inputs_enc_edu();">limpar</button>
+								</div>
+
+								<br>
+								<div id="lista_atletas_enc">
+									<label>Lista de atletas associados a este encarregado de educação</label>	
+									<div class="containers_dinamicos">	
+										<?php 
+											//Querry para ir buscar os ids dos atletas do enc_edu
+											if (isset($_GET['id_contribuinte'])) {
+												$atletas=$con->prepare("SELECT contribuintes.nome,contribuintes.cc,atletas.id_contribuinte FROM contribuintes INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE atletas.id_enc_edu=?");
+												$atletas->bind_param("i",$linha['id_contribuinte']);
+												$atletas->execute();
+												$resultado=$atletas->get_result();
+												while ($linha_atleta=$resultado->fetch_assoc()) { ?>
+													<div>
+														<input hidden id="required_edu_id" name="required_edu_id[]" class="input_enc required_edu" value="<?php 
+																	if (isset($_GET['id_contribuinte'])) {
+																		echo($linha_atleta['id_contribuinte']);
+																	}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+																		echo($_POST['mensalidade_valor_atleta']);
+																	} 
+																?>">
+													</div>
+													<div>
+														<label>Nome do atleta:</label>
+															<input readonly required id="required_edu_nome" class="input_enc required_edu" value="<?php 
+																if (isset($_GET['id_contribuinte'])) {
+																	echo($linha_atleta['nome']);
+																}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+																	echo($_POST['mensalidade_valor_atleta']);
+																} 
+															?>">
+													</div>
+													<div>
+														<label>CC do atleta:</label>
+															<input readonly required id="required_edu_cc" class=" input_enc required_edu" value="<?php 
+																if (isset($_GET['id_contribuinte'])) {
+																	echo($linha_atleta['cc']);
+																}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+																	echo($_POST['mensalidade_valor_atleta']);
+																} 
+															?>">
+													</div>
+													<br>
+												<?php 	
+												}
+											}
+										?>
+									</div>					
+								</div>
+							</div>
+						<!--Form principal-->
+							<div>
+								<label>Nome:</label>
+									<input required name="nome" maxlength="60" onkeypress="return soletras(event)" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['nome']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['nome']);
+											} 
+										?>"><br>			
+							</div>
+							<div>
+								<label>CC:</label>
+									<input required name="cc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['cc']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['cc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>NIF:</label>
+									<input required name="nif" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['nif']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['nif']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Sexo:</label>
+									<select id="sexo" name="sexo" onchange="mudar_imagem()">
+										<option value="Masculino">Masculino</option>
+										<option value="Feminino">Feminino</option>
+									</select><br>
+							</div>
+							<div>
+								<label>Data de nascimento:</label>
+									<input required type="date" name="dt_nasc" value="<?php 
+											if (isset($_GET['id_contribuinte'])) {
+												echo($linha['dt_nasc']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['dt_nasc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Receber emails sobre o clube:</label>
+									<input type="checkbox" name="receber_email">
+							</div>
+					</div>
+				</div>
+				<!-- Conteúdo da página -->
+				<div class="card" style=" margin-top:25px;">
+					<!-- Titulo + Botões  -->
+					<div class="card-header">
+						<h3 class="panel-title">Informações de Contacto</h3>
+					</div>
+					<!-- Tabelas / Forms / TUDO -->
+					<div class="card-body">
 						<div>
 							<label>Morada:</label>
-								<input id="morada_contribuinte_enc" class="input_enc required" name="morada_enc" onkeypress="return moradacheck(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['morada']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['morada_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Localidade:</label>
-								<input id="localidade_contribuinte_enc" class="input_enc required" name="localidade_enc" onkeypress="return soletras(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['localidade']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['localidade_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Freguesia:</label>
-								<input id="freguesia_contribuinte_enc" class="input_enc required" name="freguesia_enc" onkeypress="return soletras(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['freguesia']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['freguesia_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Concelho:</label>
-								<input id="concelho_contribuinte_enc" class="input_enc required" name="concelho_enc" onkeypress="return soletras(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['concelho']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['concelho_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>CP:</label>
-								<input id="cp1" class="input_enc required"  name="cp_enc" maxlength="8" onkeypress="return CodP(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['cp']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['cp_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Email:</label>
-								<input id="email_contribuinte_enc" class="input_enc required" name="email_enc" onkeypress="return emailcheck(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['email']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['email_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Telemovel:</label>
-								<input id="telemovel_contribuinte_enc" class="input_enc required" name="telemovel_enc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['telemovel']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['telemovel_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Telefone:</label>
-								<input id="telefone_contribuinte_enc" class="input_enc required" maxlength="9" name="telefone_enc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['telefone']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['telefone_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Sexo:</label>
-								<select id="sexo_contribuinte_enc" name="sexo_enc" class="input_enc" onchange="mudar_imagem_enc()">
-									<option value="Masculino">Masculino</option>
-									<option value="Feminino">Feminino</option>
-								</select><br>
-						</div>
-						<div>
-							<label>Data de nascimento:</label>
-								<input id="dt_nasc_contribuinte_enc" class="input_enc required" type="date" name="dt_nasc_enc" value="<?php 
-										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
-											echo($linha_enc['dt_nasc']);
-										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
-											echo($_POST['dt_nasc_enc']);
-										} 
-									?>"><br>
-						</div>
-						<div>
-							<label>Receber emails sobre o clube:</label>
-								<input id="receber_emails_contribuinte_enc" class="input_enc" type="checkbox" name="receber_email_enc">
-						</div>
-				</div>
-
-				</div>
-			</div>
-
-			<!-- Conteúdo da página -->
-			<div class="card" style=" margin-top:25px;">
-
-				<!-- Titulo + Botões  -->
-				<div class="card-header">
-					<h3 class="panel-title">Informações de Contacto</h3>
-				</div>
-
-				<!-- Tabelas / Forms / TUDO -->
-				<div class="card-body">
-
-				<div>
-							<label>Morada:</label>
-								<input required name="morada" onkeypress="return moradacheck(event)" value="<?php 
+								<input required name="morada" maxlength="60" onkeypress="return moradacheck(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['morada']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -876,7 +690,7 @@
 						</div>
 						<div>
 							<label>Localidade:</label>
-								<input required name="localidade" onkeypress="return soletras(event)" value="<?php 
+								<input required name="localidade" maxlength="60" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['localidade']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -886,7 +700,7 @@
 						</div>
 						<div>
 							<label>Freguesia:</label>
-								<input required name="freguesia" onkeypress="return soletras(event)" value="<?php 
+								<input required name="freguesia" maxlength="60" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['freguesia']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -896,7 +710,7 @@
 						</div>
 						<div>
 							<label>Concelho:</label>
-								<input required name="concelho" onkeypress="return soletras(event)" value="<?php 
+								<input required name="concelho" maxlength="60" onkeypress="return soletras(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['concelho']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -906,7 +720,7 @@
 						</div>
 						<div>
 							<label>CP:</label>
-								<input required id="cp" name="cp" maxlength="8" onkeypress="return CodP(event)" value="<?php 
+								<input required id="cp" name="cp" maxlength="7" onkeypress="return sonumeros(event)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['cp']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -916,7 +730,7 @@
 						</div>
 						<div>
 							<label>Email:</label>
-								<input required name="email" onkeypress="return emailcheck(event)" value="<?php 
+								<input required name="email" maxlength="60" onblur="return emailcheck(this.value)" value="<?php 
 										if (isset($_GET['id_contribuinte'])) {
 											echo($linha['email']);
 										}elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -944,9 +758,187 @@
 										} 
 									?>"><br>
 						</div>
-
+					</div>
 				</div>
-			</div>
+
+				<!-- Card do enc_edu -->
+				<div id="enc_edu_atleta" class="card" style=" margin-top:25px;display: none">
+					<div class="card-header">
+						<h3 class="panel-title">Inserir encarregado de educação</h3>
+					</div>
+					<div class="card-body">
+						<!--form de inserir o enc_educação-->
+							<?php
+								if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+									$enc_edu_atleta=$con->prepare("SELECT * FROM contribuintes WHERE id_contribuinte=?");
+									$enc_edu_atleta->bind_param("i",$linha['id_enc_edu']);
+									$enc_edu_atleta->execute();
+									$resultado_atleta=$enc_edu_atleta->get_result();
+									$linha_enc=$resultado_atleta->fetch_assoc();
+								}
+							?>
+							<div>
+								<label>Escolher o encarregado de educação</label>
+								<button onclick="mostrar_modal_enc_edu();atualizar_tabela_popup_enc_edu('1','');" type="button">Selecionar</button>
+							</div>
+
+							<input id="id_enc" name="id_enc" hidden value="<?php 
+									if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) { 
+										echo $linha_enc['id_contribuinte'];
+									} 
+								?>">
+							<input name="tipo_enc" hidden value="Encarregado de educação">
+							<div>
+								<img id="foto_place_enc" src="<?php 
+										if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+											echo 'data:image/jpeg;base64,'.base64_encode($linha_enc["foto"]);
+										}elseif (isset($_POST['insert']) or isset($_POST['update'])){
+											if($_POST['sexo']=='Masculino'){
+												echo("fotos/Male_user.png");
+											}else{
+												echo("fotos/Female_user.png");
+											}
+										}else{
+											echo"fotos/Male_user.png";
+										} 
+									?>" alt="Foto do contribuinte" height="200" width="200"><br>
+								<label>Escolher a foto</label>
+									<input type="file" id="foto_enc" name="foto_enc" class="input_enc" accept="image/png, image/jpeg"><br>
+							</div>
+							<div>
+								<label>Nome:</label>
+									<input id="nome_enc" maxlength="60" class="input_enc required" name="nome_enc" onkeypress="return soletras(event)"  value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['nome']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['nome_enc']);
+											} 
+										?>"><br>			
+							</div>
+							<div>
+								<label>CC:</label>
+									<input id="cc_enc" class="input_enc required" maxlength="8" name="cc_enc" onkeypress="return sonumeros(event)"  value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['cc']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['cc_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>NIF:</label>
+									<input id="nif_enc" class="input_enc required" maxlength="9" name="nif_enc" onkeypress="return sonumeros(event)"  value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['nif']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['nif_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Morada:</label>
+									<input id="morada_enc" maxlength="60" class="input_enc required" name="morada_enc" onkeypress="return soletras(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['morada']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['morada_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Localidade:</label>
+									<input id="localidade_enc" maxlength="60" class="input_enc required" name="localidade_enc" onkeypress="return soletras(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['localidade']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['localidade_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Freguesia:</label>
+									<input id="freguesia_enc" maxlength="60" class="input_enc required" name="freguesia_enc" onkeypress="return soletras(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['freguesia']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['freguesia_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Concelho:</label>
+									<input id="concelho_enc" maxlength="60" class="input_enc required" name="concelho_enc" onkeypress="return soletras(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['concelho']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['concelho_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>CP:</label>
+									<input id="cp_enc" class="input_enc required"  name="cp_enc" maxlength="7" onkeypress="return sonumeros(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['cp']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['cp_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Email:</label>
+									<input id="email_enc" maxlength="60" class="input_enc required" name="email_enc" onblur="return emailcheck(this.value)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['email']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['email_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Telemovel:</label>
+									<input id="telemovel_enc" class="input_enc required" name="telemovel_enc" maxlength="9" onkeypress="return sonumeros(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['telemovel']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['telemovel_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Telefone:</label>
+									<input id="telefone_enc" class="input_enc required" maxlength="9" name="telefone_enc" onkeypress="return sonumeros(event)" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['telefone']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['telefone_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Sexo:</label>
+									<select id="sexo_contribuinte_enc" name="sexo_enc" class="input_enc" onchange="mudar_imagem_enc()">
+										<option value="Masculino">Masculino</option>
+										<option value="Feminino">Feminino</option>
+									</select><br>
+							</div>
+							<div>
+								<label>Data de nascimento:</label>
+									<input id="dt_nasc_enc" class="input_enc required" type="date" name="dt_nasc_enc" value="<?php 
+											if ((isset($_GET['id_contribuinte'])) AND ($linha['tipo_contribuinte']=="Atleta")) {
+												echo($linha_enc['dt_nasc']);
+											}elseif (isset($_POST['insert']) || isset($_POST['update'])){
+												echo($_POST['dt_nasc_enc']);
+											} 
+										?>"><br>
+							</div>
+							<div>
+								<label>Receber emails sobre o clube:</label>
+									<input id="receber_emails_enc" class="input_enc" type="checkbox" name="receber_email_enc">
+							</div>
+					</div>
+				</div>
+
 
 				<div class="d-flex justify-content-center">				
 					<?php if (isset($_GET['id_contribuinte'])) {?>
@@ -956,12 +948,7 @@
 					<?php } ?>
 					<button class="btn btn-default" type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
 				</div>
-
-		</div>
-
-			<!-- <form method="POST" enctype="multipart/form-data"> -->
 			</form>
-		</div>
 	</body>
 </html>
 <script type="text/javascript">
@@ -1055,7 +1042,6 @@
 		var inputs_atleta=document.getElementsByClassName("input_atleta");
 
 		function selecionar_enc_edu(id_contribuinte,nome,cc,nif,morada,localidade,freguesia,concelho,cp,email,telemovel,telefone,sexo,dt_nasc,receber_email){
-			alert(id_contribuinte);
 			for (var i = inputs_enc.length - 1; i >= 0; i--) {
 				inputs_enc[i].disabled=false;
 			}
@@ -1068,26 +1054,26 @@
 					document.getElementById('foto_place_enc').src='data:image/jpeg;base64,'+response;
 				}
 			)
-			document.getElementById("id_contribuinte_enc").value=id_contribuinte;
-			document.getElementById("nome_contribuinte_enc").value=nome;
-			document.getElementById("cc_contribuinte_enc").value=cc;
-			document.getElementById("nif_contribuinte_enc").value=nif;
-			document.getElementById("morada_contribuinte_enc").value=morada;
-			document.getElementById("localidade_contribuinte_enc").value=localidade;
-			document.getElementById("freguesia_contribuinte_enc").value=freguesia;
-			document.getElementById("concelho_contribuinte_enc").value=concelho;
-			document.getElementById("cp_contribuinte_enc").value=cp;
-			document.getElementById("email_contribuinte_enc").value=email;
-			document.getElementById("telemovel_contribuinte_enc").value=telemovel;
-			document.getElementById("telefone_contribuinte_enc").value=telefone;
-			document.getElementById("dt_nasc_contribuinte_enc").value=dt_nasc;
+			document.getElementById("id_enc").value=id_contribuinte;
+			document.getElementById("nome_enc").value=nome;
+			document.getElementById("cc_enc").value=cc;
+			document.getElementById("nif_enc").value=nif;
+			document.getElementById("morada_enc").value=morada;
+			document.getElementById("localidade_enc").value=localidade;
+			document.getElementById("freguesia_enc").value=freguesia;
+			document.getElementById("concelho_enc").value=concelho;
+			document.getElementById("cp_enc").value=cp;
+			document.getElementById("email_enc").value=email;
+			document.getElementById("telemovel_enc").value=telemovel;
+			document.getElementById("telefone_enc").value=telefone;
+			document.getElementById("dt_nasc_enc").value=dt_nasc;
 			if (sexo=="Masculino") {
 				document.getElementById("sexo_contribuinte_enc").options.selectedIndex="0";
 			}else{
 				document.getElementById("sexo_contribuinte_enc").options.selectedIndex="1";	
 			}
 			if (receber_email=="1") {
-				document.getElementById("receber_emails_contribuinte_enc").checked=true;
+				document.getElementById("receber_emails_enc").checked=true;
 			}
 			for (var i = inputs_enc.length - 1; i >= 0; i--) {
 				inputs_enc[i].disabled=true;	
@@ -1197,7 +1183,7 @@
 		}
 		$("#foto").change(function() {
 			readURL(this);
-		})
+		});
 
 	//Faz upload da foto do encarregado de educação para mostrar no site temporariamente
 		function readURL_enc(input) {
@@ -1213,7 +1199,7 @@
 
 		$("#foto_enc").change(function() {
 			readURL_enc(this);
-		})
+		});
 
 	//Função de escolher a imagem consuante o sexo
 		function mudar_imagem(){
@@ -1237,6 +1223,7 @@
 			}
 		}
 
+	//Funções para confirmar inputs 
 		function sonumeros(e) {
 	        var charCode = e.charCode ? e.charCode : e.keyCode;
 	        // charCode 8 = backspace   
@@ -1259,117 +1246,14 @@
 				return false;
 		}
 
-		function nomecheck(evt){
-			//verifica se tem 9 digitos
-			if (document.getElementById("nome").value.length==40) { 
-				toastr.error('O nome só pode ter 40 caracteres');
-				return false;
-			}
-			
-			var confirmar=soletras(evt)
-			
-			if (confirmar==false) {
-				toastr.error('O nome só pode conter letras');
-				return false
-			}
-				return true;  
-		}
 
-		var isactive=false;
-		function emailcheck() {
-
-			if (!(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(form_atleta.email.value))){
-				if (isactive==true) {
-					toastr.clear();
-					isactive=false	
-				}
-				toastr.error('Endereço de email invalido');
-
-			}else{
-
-				if (isactive==false) {
-					toastr.clear();
-					isactive=true
-				}
-				toastr.success('Endereço de email valido');
-
-			}
-		}
-
-		function moradacheck(evt){
-			//verifica se tem 9 digitos
-			if (document.getElementById("morada").value.length==60) {
-				toastr.error('A morada só pode ter 60 caracteres');
-				return false;
-			}
-
-			var confirmar=letras_numeros(evt);
-			
-			if (confirmar==false) {
-				toastr.error('A morada só pode conter letras numeros e caracteres como º');
-				return false
-			}else{
-				return true
-			}  
-		}
-
-		function codigo_postalcheck(evt){
-			//verifica se tem 9 digitos
-			if (document.getElementById("codigo_postal").value.length==7) {
-				toastr.error('O codigo postal só pode ter 7 caracteres');
-				return false;
-			}
-
-			var confirmar=sonumeros(evt);
-			if (confirmar==false) {
-				toastr.error('O código postal só pode conter numeros');
-				return false;
-			}else{
-				return true
-			} 
-		}
-
-		function telemovelcheck(evt){
-			//verifica se tem 9 digitos
-			if (document.getElementById("telemovel").value.length==9) {
-				toastr.error('O número de telemóvel só pode ter 9 caracteres');
-				return false;
-			};
-			//verifica se é numero ou não
-			var confirmar=sonumeros(evt);
-			if (confirmar==false) {
-				toastr.error('O número de telemóvel só pode conter numeros');
-				return false
-			}else{
+		function emailcheck(mail) {
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
 				return true
 			}
+			alert("Enderreço de email invalido.")
+			return false
 		}
-
-		function telefonecheck(evt){
-			//verifica se tem 9 digitos
-			if (document.getElementById("telefone").value.length==9) {
-				toastr.error('O número de telefone só pode ter 9 caracteres');
-				return false;
-			};
-			//verifica se é numero ou não
-			var confirmar=sonumeros(evt);
-			if (confirmar==false) {
-				toastr.error('O número de telefone só pode conter numeros');
-				return false
-			}else{
-				return true
-			}
-		}
-
-		function CodP(){
-			$(document).ready(() => {
-		        let $campo = $("#cp")
-		        $campo.mask('0000-000', {reverse: true})
-		    });
-		}
-
-		
-
 
 	function mostrar_campos(tipo){
 		if (tipo=="Sócio") {
@@ -1403,6 +1287,7 @@
 			document.getElementById("enc_edu_atleta").style.display="none";
 		}
 	}
+
 </script>
 <?php
 	if (isset($_GET['id_contribuinte'])) {

@@ -1,3 +1,9 @@
+let inputs_calendario=document.getElementsByClassName("input_calendario")
+function limpar_inputs_calendario(){
+    for (var i = inputs_calendario.length - 1; i >= 0; i--) {
+        inputs_calendario[i].value="";
+    }
+}
 
 function dateTime_now() {
     return new Date()
@@ -104,17 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (clickCnt === 2) {
                         clearTimeout(oneClickTimer)
                         clickCnt = 0
-                        Now = dateTime_now()
-                        alert("double")
+                        if (info.event.extendedProps.tipo=="Jogo"){
+                            window.location.href="evento.php?id="+info.event.id
+                        }
                     }   
                 }
             )
         },
         select: (info) => {
+            limpar_inputs_calendario()
             if (calendar.view.type === "dayGridMonth") {
                 calendar.changeView('timeGridDay',info.startStr)
             } else {
-                
                 $("#nav_treinos, #nav_jogos").removeClass("active disabled")
                 
                 $("#nav_treinos").addClass("active")
@@ -154,7 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         'only_data':"1"
                     }, 
                     (response) => {
+                        $('#modal_calendario').modal('hide')
+                        document.getElementById("treino_titulo").value=""
+                        document.getElementById("jogo_titulo").value=""
+                        document.getElementById("treino_color").style.color=""
+                        document.getElementById("jogo_color").style.color=""
+                        document.getElementById("warning").style.display='block'
                         $('#warning').html(response)
+                        calendar.refetchEvents()
                         setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
                     }
                 )
@@ -171,7 +185,67 @@ document.addEventListener('DOMContentLoaded', () => {
                         'only_data':"1"
                     }, 
                     (response) => {
+                        $('#modal_calendario').modal('hide')
+                        document.getElementById("treino_titulo").value=""
+                        document.getElementById("jogo_titulo").value=""
+                        document.getElementById("treino_color").style.color=""
+                        document.getElementById("jogo_color").style.color=""
+                        document.getElementById("warning").style.display='block'
                         $('#warning').html(response)
+                        calendar.refetchEvents()
+                        setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
+                    }
+                )
+            }
+        },
+        eventResize:function(info) { 
+            let dt_inicio = transformar_data(info.event.start)
+            let dt_fim = transformar_data(info.event.end)
+            if (info.event.extendedProps.tipo=="Treino") {
+                $.post(
+                    'calend_update.php', 
+                    {
+                        'treino_id': info.event.id,
+                        'title': info.event.title,
+                        'cor': info.event.backgroundColor,
+                        'start': dt_inicio,
+                        'end':dt_fim,
+                        'tipo':info.event.extendedProps.tipo,
+                        'only_data':"1"
+                    }, 
+                    (response) => {
+                        $('#modal_calendario').modal('hide')
+                        document.getElementById("treino_titulo").value=""
+                        document.getElementById("jogo_titulo").value=""
+                        document.getElementById("treino_color").style.color=""
+                        document.getElementById("jogo_color").style.color=""
+                        document.getElementById("warning").style.display='block'
+                        $('#warning').html(response)
+                        calendar.refetchEvents()
+                        setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
+                    }
+                )
+            }else{
+                $.post(
+                    'calend_update.php', 
+                    {
+                        'jogo_id': info.event.id,
+                        'title': info.event.title,
+                        'cor': info.event.backgroundColor,
+                        'start': dt_inicio,
+                        'end':dt_fim,
+                        'tipo':info.event.extendedProps.tipo,
+                        'only_data':"1"
+                    }, 
+                    (response) => {
+                        $('#modal_calendario').modal('hide')
+                        document.getElementById("treino_titulo").value=""
+                        document.getElementById("jogo_titulo").value=""
+                        document.getElementById("treino_color").style.color=""
+                        document.getElementById("jogo_color").style.color=""
+                        document.getElementById("warning").style.display='block'
+                        $('#warning').html(response)
+                        calendar.refetchEvents()
                         setTimeout(() => { document.getElementById("warning").style.display='none' }, 3000)
                     }
                 )

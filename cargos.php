@@ -1,7 +1,9 @@
 <?php 
 	//Prepara a ligação
 		require ('ligacao.php');
-	//Se um contribuinte estiver selecionado prepara os dados do mesmo
+		$is_treinador=0;
+		$get_login=0;
+	//Se um cargo estiver selecionado prepara os dados do mesmo
 		if (isset($_GET['id_cargo'])) {
 			//prepara o select do contribuinte
 				$contibuintes_select=$con->prepare("SELECT * FROM cargos WHERE id_cargo=?");
@@ -16,10 +18,16 @@
 		}
 
 	if (isset($_POST['insert'])) {
+		if (isset($_POST['is_treinador'])) {
+			$is_treinador=1;
+		}
+		if (isset($_POST['is_treinador'])) {
+			$get_login=1;
+		}
 		//prepara o insert do cargo 
-			$insert_cargo=$con->prepare("INSERT INTO `cargos` (`cargo`) VALUES (?)");
+			$insert_cargo=$con->prepare("INSERT INTO `cargos` (`cargo`,`is_treinador`,`get_login`) VALUES (?,?,?)");
 		//Prepara os dados para o insert
-			$insert_cargo->bind_param("s",$_POST['cargo']);
+			$insert_cargo->bind_param("sii",$_POST['cargo'],$is_treinador,$get_login);
 		//Executa a query
 			$insert_cargo->execute();
 		//Busca o id do cargo
@@ -45,10 +53,16 @@
 	}
 
 	if (isset($_POST['update'])) {
+		if (isset($_POST['is_treinador'])) {
+			$is_treinador=1;
+		}
+		if (isset($_POST['is_treinador'])) {
+			$get_login=1;
+		}
 		//prepara o insert do cargo
-			$update_cargo=$con->prepare("UPDATE `cargos` SET `cargo`=? WHERE `id_cargo`=?");
+			$update_cargo=$con->prepare("UPDATE `cargos` SET `cargo`=?,`is_treinador`=?,`get_login`=? WHERE `id_cargo`=?");
 		//Prepara os dados para o insert
-			$update_cargo->bind_param("si",$_POST['cargo'],$_GET['id_cargo']);
+			$update_cargo->bind_param("siii",$_POST['cargo'],$is_treinador,$get_login,$_GET['id_cargo']);
 		//Executa a query
 			$update_cargo->execute();
 		//Busca o id do cargo
@@ -65,7 +79,7 @@
 			$update_cargo->close();
 			?>
 				<script type="text/javascript">
-					alert("Dados inseridos com sucesso.")
+					alert("Dados atualizados com sucesso.")
 					window.location.href="cargos.php?id_cargo=<?php echo $id_cargo ?>"
 				</script>
 			<?php
@@ -101,6 +115,18 @@
 									?>"><br>
                             </label>
 						</div>
+							<!--Form secundario-->
+						<div>
+							<label>Treinador:
+								<input name="is_treinador" id="is_treinador" type="checkbox"><br>
+                            </label>
+						</div>
+							<!--Form secundario-->
+						<div>
+							<label>Login:
+								<input name="get_login" id="get_login" type="checkbox"><br>
+                            </label>
+						</div>
 				</div>
 				<div>
 					<?php if (isset($_GET['id_cargo'])) {?>
@@ -108,6 +134,7 @@
 					<?php } else {?>
 						<input type="submit" name="insert" value="Inserir">
 					<?php } ?>
+					<button type="button" onclick="window.location.href='cargos.php'">Limpar</button>
 				</div>
 			</form>
 		</div>
@@ -178,3 +205,21 @@
 
 	tabela_cargos(num_pagina, procura)
 </script>
+<?php
+	if (isset($_GET['id_cargo'])) {
+		if ($linha['is_treinador']==1) {
+			?>
+			<script type="text/javascript">
+				document.getElementById('is_treinador').checked=true;
+			</script>
+			<?php
+		}
+		if ($linha['get_login']==1) {
+			?>
+			<script type="text/javascript">
+				document.getElementById('get_login').checked=true;
+			</script>
+			<?php
+		}
+	}
+?>

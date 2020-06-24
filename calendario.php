@@ -63,36 +63,36 @@
                             <div id="Treinos" class="tab-pane fade show active">
                                 <h3>Treinos</h3>
                                 <form id="treino" method="POST" enctype="multipart/form-data">
-                                    <input name="treino_id" id="treino_id" value="" hidden>
+                                    <input  class="input_calendario" name="treino_id" id="treino_id" value="" hidden>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Título</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="title" class="form-control" id="treino_titulo" placeholder="Título do Treino">
+                                            <input type="text" name="title" class="input_calendario form-control" id="treino_titulo" placeholder="Título do Treino">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Color</label>
                                         <div class="col-sm-10">
-                                            <input id="treino_input_color" hidden name="color">
+                                            <input class="input_calendario" id="treino_input_color" hidden name="color">
                                             <i id="treino_color" class="fas fa-square"></i>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="treino_dt_inicio">Início do Treino</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="start" class="form-control" id="treino_dt_inicio" onkeypress="DataHora(event, this)">
+                                            <input type="text" name="start" class="input_calendario form-control" id="treino_dt_inicio" onkeypress="DataHora(event, this)">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="treino_dt_fim">Final do Treino</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="end" class="form-control" id="treino_dt_fim" onkeypress="DataHora(event, this)">
+                                            <input type="text" name="end" class="input_calendario form-control" id="treino_dt_fim" onkeypress="DataHora(event, this)">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="select_equipa">Equipa</label>
                                         <div class="col-sm-10">
-                                           <select id="treino_select_equipa" name="equipa" onchange="buscar_atletas_treino(this.value,data_final,'')" class="form-control" required>
+                                           <select id="treino_select_equipa" name="equipa" onchange="buscar_atletas_treino(this.value,data_final,'')" class="input_calendario form-control" required>
                                                 <option  disabled selected>--Selecione uma equipa--</option>
                                                 <?php 
                                                     $equipas=$con->prepare("SELECT * FROM equipas");
@@ -127,36 +127,36 @@
                             <div id="Jogos" class="tab-pane fade">
                                 <h3>Jogos</h3>
                                 <form id="jogo" method="POST" enctype="multipart/form-data">
-                                    <input name="jogo_id" id="jogo_id" value="" hidden>
+                                    <input class="input_calendario" name="jogo_id" id="jogo_id" value="" hidden>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Título</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="title" class="form-control" id="jogo_titulo" placeholder="Título do jogo">
+                                            <input type="text" name="title" class="input_calendario form-control" id="jogo_titulo" placeholder="Título do jogo">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Color</label>
                                         <div class="col-sm-10">
-                                            <input id="jogo_input_color" hidden name="color">
+                                            <input class="input_calendario" id="jogo_input_color" hidden name="color">
                                             <i id="jogo_color" class="fas fa-square"></i>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="jogo_dt_inicio">Início do Jogo</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="start" class="form-control" id="jogo_dt_inicio" onkeypress="DataHora(event, this)">
+                                            <input type="text" name="start" class="input_calendario form-control" id="jogo_dt_inicio" onkeypress="DataHora(event, this)">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="jogo_dt_fim">Final do Jogo</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="end" class="form-control" id="jogo_dt_fim" onkeypress="DataHora(event, this)">
+                                            <input type="text" name="end" class="input_calendario form-control" id="jogo_dt_fim" onkeypress="DataHora(event, this)">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="select_equipa">Equipa</label>
                                         <div class="col-sm-10">
-                                           <select id="jogo_select_equipa" name="equipa" onchange="buscar_atletas_jogos(this.value,data_final,'')" class="form-control" required>
+                                           <select id="jogo_select_equipa" name="equipa" class="input_calendario form-control" onchange="buscar_atletas_jogos(this.value,data_final,'')" required>
                                                 <option  disabled selected>--Selecione uma equipa--</option>
                                                 <?php 
                                                     $equipas=$con->prepare("SELECT * FROM equipas");
