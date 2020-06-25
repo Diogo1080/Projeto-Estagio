@@ -40,13 +40,11 @@
                     </button> 
                   </div>
 
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
-                  <div class="form-label-group">
-                  <input type="text" id="pesquisa_text" onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);" class="form-control" placeholder="Pesquisa" required autofocus>
-                  <!-- <input onkeyup="definir_procura(this.value);tabela_colaboradores(num_pagina,procura);" class=""> -->
-                  <label for="pesquisa_text">Pesquisa</label>
-                </div>
-             </div>
+                  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6 " align="right">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    </nav>
+                  </div>
+         </div>
       </div>
     </div>
    
