@@ -21,7 +21,7 @@
 		if (isset($_POST['is_treinador'])) {
 			$is_treinador=1;
 		}
-		if (isset($_POST['is_treinador'])) {
+		if (isset($_POST['get_login'])) {
 			$get_login=1;
 		}
 		//prepara o insert do cargo 
@@ -56,7 +56,7 @@
 		if (isset($_POST['is_treinador'])) {
 			$is_treinador=1;
 		}
-		if (isset($_POST['is_treinador'])) {
+		if (isset($_POST['get_login'])) {
 			$get_login=1;
 		}
 		//prepara o insert do cargo
