@@ -185,6 +185,8 @@
 
             <div class="card-body">
 
+            <center><strong>Inserir classificação relativa ao atleta</strong></center>
+
             
               <div class="row">
                 <div class="col">
