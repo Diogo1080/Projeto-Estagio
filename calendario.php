@@ -38,6 +38,13 @@
         <script src="js/personalizado.js"></script>
         <script src="js/bootstrap.main.min.js"></script>
         <title>Calendario</title>
+
+        <!-- So para mudar o titulo -->
+        <style>
+            #calendar h2{
+            color:black;
+            }
+        </style>
     </head>
     <body>
 
