@@ -24,7 +24,7 @@
             </div> 
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 ">
                 <select class="form-control" onchange="definir_tipo(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
-                  <option selected disabled>--Escolha o tipo--</option>
+                  <option value="">Todos os contribuintes</option>
                   <option>Sócio</option>
                   <option>Atleta</option>
                   <option>Encarregado de educação</option>
