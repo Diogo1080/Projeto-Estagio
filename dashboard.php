@@ -112,83 +112,47 @@
         <div class="col-sm-12">
           <div class="card"style="margin-top: 30px">
             <div class="card-header">
-              <h3 class="panel-title">Últimos Atletas Inseridos</h3>
+              <h3 class="panel-title">Últimos 4 Atletas Inseridos</h3>
             </div>
             <div class="card-body">
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Sexo</th>
+                    <th scope="col">E-mail</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  <?php 
+                    $atletas=$con->prepare("SELECT * FROM contribuintes WHERE tipo_contribuinte='Atleta' ORDER BY id_contribuinte LIMIT 4");
+                    $atletas->execute();
+                    $resultado_atletas=$atletas->get_result();
+                    if ($resultado_atletas->num_rows==0) {
+                      ?>
+                        <tr>
+                          <td colspan="100%">Nenhum atleta inserido</td>
+                        </tr>
+                      <?php
+                    }else{
+                      while ($linha_atletas=$resultado_atletas->fetch_assoc()) {
+                        ?>
+                        <tr>
+                          <td><?php echo $linha_atletas['nome']; ?></td>
+                          <td><?php echo $linha_atletas['sexo']; ?></td>
+                          <td><?php echo $linha_atletas['email']; ?></td>
+                        </tr>
+                        <?php
+                      }
+                    }
+                    $atletas->close();
+                  ?>
                 </tbody>
               </table>
             </div>
+          </div>
         </div>
-
-
-
-        </div>
-
-        <div class="col-sm-12">
-          <div class="card"style="margin-top: 30px">
-            <div class="card-header">
-              <h3 class="panel-title">Últimos Atletas Inseridos</h3>
-            </div>
-            <div class="card-body">
-              <table class="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
+      </div>
     </div>
-
   </body>
 </html>

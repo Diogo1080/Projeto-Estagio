@@ -9,51 +9,47 @@
       <div class="col-sm-12">
         <div class="card"style="margin-top: 30px">
           <div class="card-header"> 
-              <div class="row">
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
-                        <h3 class="panel-title">Lista de Contribuintes</h3>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" align="right">
-                        <a href="contribuintes.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Contribuinte</a>      
-                    </div>
-                </div>
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                <h3 class="panel-title">Lista de Contribuintes</h3>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6" align="right">
+                <a href="contribuintes.php" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Contribuinte</a>      
+              </div>
+            </div>
           </div>
+          <div class="row card-header">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 ">
+                <input class="form-control mr-sm-2" type="search" placeholder="Pesquisa" aria-label="Search" onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
+            </div> 
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 ">
+                <select class="form-control" onchange="definir_tipo(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
+                  <option value="">Todos os contribuintes</option>
+                  <option>Sócio</option>
+                  <option>Atleta</option>
+                  <option>Encarregado de educação</option>
+                </select>
+            </div>
+          </div>
+          <div class="card-body " id="tabela_contribuintes"></div>
 
-        <div class="d-flex justify-content-center" style="margin-top:30px;">
-
-        <!-- Input da Procura -->
-        <div class="form-label-group" >
-                  <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);" type="text"  class="form-control" placeholder="Pesquisa" autofocus>
-                  <label for="inputEmail">Pesquisa</label>
-        </div>
-          <!-- Procura: <input onkeyup="definir_procura(this.value);tabela_contribuintes(num_pagina,procura,tipo);"> -->
-
-        <!-- Filtro de Procura -->
-        
-          Tipo: 
-          <select onchange="definir_tipo(this.value);tabela_contribuintes(num_pagina,procura,tipo);">
-            <option></option>
-            <option>Sócio</option>
-            <option>Atleta</option>
-            <option>Encarregado de educação</option>
-          </select>
-        </div>
-
-        <div class="card-body " id="tabela_contribuintes"></div>
-        <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-default" onclick="first_page();tabela_contribuintes(num_pagina,procura,tipo); ">
-          <<
-        </button>
-        <button type="button" class="btn btn-default" onclick="prev_page();tabela_contribuintes(num_pagina,procura,tipo);">
-          <
-        </button>
-        <button type="button" class="btn btn-default" onclick="next_page();tabela_contribuintes(num_pagina,procura,tipo);">
-          >
-        </button>
-        <button type="button" class="btn btn-default" onclick="last_page();tabela_contribuintes(num_pagina,procura,tipo);">
-          >>
-        </button> 
-      </div>
+          <div class="row card-header">
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-6">
+              <button type="button" class="btn btn-default" onclick="first_page();tabela_contribuintes(num_pagina,procura,tipo); ">
+                <<
+              </button>
+              <button type="button" class="btn btn-default" onclick="prev_page();tabela_contribuintes(num_pagina,procura,tipo);">
+                <
+              </button>
+              <button type="button" class="btn btn-default" onclick="next_page();tabela_contribuintes(num_pagina,procura,tipo);">
+                >
+              </button>
+              <button type="button" class="btn btn-default" onclick="last_page();tabela_contribuintes(num_pagina,procura,tipo);">
+                >>
+              </button>
+            </div>
+            
+          </div>
         </div>
       </div>
     </div>
