@@ -389,7 +389,6 @@
 <html lang="pt">
 	<head>
 		<?php include('head.php'); ?>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 		<title>Colaboradores</title>
 	</head>
 	<body>
@@ -419,7 +418,7 @@
 						<div class="row">
 							<div class="col-md-4">         
 							<!-- Inserir Foto -->
-								<div>
+								<div class="form-group d-flex justify-content-center">
 									<img id="foto_place" src="<?php 
 									if (isset($_GET['id_colaborador'])){
 									echo 'data:image/jpeg;base64,'.base64_encode($linha["foto"]);
@@ -432,10 +431,15 @@
 									}else{
 									echo"fotos/Male_user.png";
 									} 
-									?>" alt="Foto do contribuinte" height="200" width="200"><br>
+									?>" alt="Foto do contribuinte" height="220" width="210"><br>
 
-									<label>Escolher a foto</label>
-										<input type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+								</div>
+								<div class="row">
+									<div class="col-md-1"></div>
+									<div class="col-md-10">
+										<label class="custom-file-label">Escolher a foto</label>
+											<input class="custom-file-input" type="file" id="foto" name="foto" accept="image/png, image/jpeg"><br>
+									</div>
 								</div>
 							</div>
 							<div class="col-md-8">
