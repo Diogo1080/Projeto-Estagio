@@ -28,7 +28,7 @@
 		$resultado=$cargos->get_result();
 		echo '
 			<div>
-				<table class="table table-border">
+				<table border class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Cargo</th>
@@ -47,7 +47,7 @@
 							echo '
 							<tr>
 								<td>'.$linha['cargo'].'</td>
-								<td><button onclick="window.location.href=\'cargos.php?id_cargo='.$linha['id_cargo'].'\'">Selecionar</button></td>
+								<td><button class="btn btn-default" onclick="window.location.href=\'cargos.php?id_cargo='.$linha['id_cargo'].'\'">Selecionar</button></td>
 							</tr>
 							';
 						}
