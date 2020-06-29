@@ -14,16 +14,29 @@
               <a class="nav-link" href="dashboard.php">Home</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="listar_colaboradores.php">Colaboradores</a>
+              <?php if ($_SESSION['permissao']==2) { ?>
+                <a class="nav-link" href="Colaboradores.php?id_colaborador=<?php echo($_SESSION['id']) ?>">O meu perfil</a>
+              <?php }else{ ?>
+                <a class="nav-link" href="listar_colaboradores.php">Colaboradores</a>
+              <?php } ?>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="listar_contribuintes.php">Contribuintes</a>
+              <?php if ($_SESSION['permissao']==2) { ?>
+                <a class="nav-link" href="listar_contribuintes.php">Atletas</a>
+              <?php }else{ ?>
+                <a class="nav-link" href="listar_contribuintes.php">Contribuintes</a>
+              <?php } ?>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="cargos.php">Cargos</a>
-            </li>
+            <?php if ($_SESSION['permissao']==1) { ?>
+              <li class="nav-item">
+                <a class="nav-link" href="cargos.php">Cargos</a>
+              </li>
+            <?php } ?>
             <li class="nav-item">
               <a class="nav-link" href="calendario.php">Calendario</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout.php">Terminar sessão</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">CopyPaster</a>
