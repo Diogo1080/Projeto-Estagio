@@ -157,8 +157,11 @@
 
 	if (isset($_POST['update'])) {
 		if ($_SESSION['permissao']==2) {
+
+			$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
+			
 			$querry=$con->prepare("UPDATE `recursos_humanos` SET `password`=? WHERE `id_recurso_humano`=?");
-			$querry->bind_param("si",$_POST['password'],$_SESSION['id']);
+			$querry->bind_param("si",$hashed_password,$_SESSION['id']);
 		}else{
 			$foto=NULL;
 			$hashed_password=NULL;
@@ -1131,6 +1134,7 @@
 				for (var i = 0; i < todos_inputs.length; i++) {
 					todos_inputs[i].disabled=true
 				}
+				document.getElementById("password").required=true
 				document.getElementById("password").disabled=false
 				document.getElementById("update").disabled=false
 			</script>
