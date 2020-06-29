@@ -1,8 +1,14 @@
 <?php 
 	require ('ligacao.php');
+	
+	if ($_SESSION['permissao']==3) {
+		header("location: index.php");
+	}elseif($_SESSION['permissao']==2 && (!isset($_GET['id_colaborador']) || $_GET['id_colaborador']<>$_SESSION['id'])){
+		header("location: colaboradores.php?id_colaborador=".$_SESSION['id']);
+	}
 
 	if (isset($_POST['insert'])) {
-		$querry=$con->prepare("INSERT INTO `recursos_humanos`(`foto`,`num_recurso_humano`, `palavra_passe`, `nome`, `sexo`, `dt_nasc`, `morada`, `localidade`, `freguesia`, `concelho`, `cp`, `email`, `telemovel`, `telefone`, `cc`, `nif`, `salario`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$querry=$con->prepare("INSERT INTO `recursos_humanos`(`foto`,`num_recurso_humano`, `password`, `nome`, `sexo`, `dt_nasc`, `morada`, `localidade`, `freguesia`, `concelho`, `cp`, `email`, `telemovel`, `telefone`, `cc`, `nif`, `salario`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		$cp=explode('-',$_POST['cp']);
 		$cp=$cp[0].$cp[1];
@@ -150,218 +156,222 @@
 	}
 
 	if (isset($_POST['update'])) {
+		if ($_SESSION['permissao']==2) {
+			$querry=$con->prepare("UPDATE `recursos_humanos` SET `password`=? WHERE `id_recurso_humano`=?");
+			$querry->bind_param("si",$_POST['password'],$_SESSION['id']);
+		}else{
+			$foto=NULL;
+			$hashed_password=NULL;
+			$num_colaborador=NULL;
 
-		$foto=NULL;
-		$hashed_password=NULL;
-		$num_colaborador=NULL;
+			$cp=explode('-',$_POST['cp']);
+			$cp=$cp[0].$cp[1];
 
-		$cp=explode('-',$_POST['cp']);
-		$cp=$cp[0].$cp[1];
+			if (isset($_POST['num_colaborador'][1])) {
+				$num_colaborador=$_POST['num_colaborador'][0].$_POST['num_colaborador'][1];
+			}
 
-		if (isset($_POST['num_colaborador'][1])) {
-			$num_colaborador=$_POST['num_colaborador'][0].$_POST['num_colaborador'][1];
+			$querry=$con->prepare("UPDATE `recursos_humanos` SET `foto`=?,`num_recurso_humano`=?,`nome`=?,`sexo`=?,`dt_nasc`=?,`morada`=?,`localidade`=?,`freguesia`=?,`concelho`=?,`cp`=?,`email`=?,`telemovel`=?,`telefone`=?,`cc`=?,`nif`=?,`salario`=? WHERE `id_recurso_humano`=?");
+
+			$querry->bind_param("bssssssssisiiiiii",$foto,$num_colaborador,$_POST['nome'],$_POST['sexo'],$_POST['dt_nasc'],$_POST['morada'],$_POST['localidade'],$_POST['freguesia'],$_POST['concelho'],$cp,$_POST['email'],$_POST['telemovel'],$_POST['telefone'],$_POST['cc'],$_POST['nif'],$_POST['salario'],$_POST['id_colaborador']);
+
+			if (isset($_POST['password'])) {
+				if (!empty($_POST['password'])) {
+					$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+					$querry=$con->prepare("UPDATE `recursos_humanos` SET `foto`=?,`num_recurso_humano`=?,`password`=?,`nome`=?,`sexo`=?,`dt_nasc`=?,`morada`=?,`localidade`=?,`freguesia`=?,`concelho`=?,`cp`=?,`email`=?,`telemovel`=?,`telefone`=?,`cc`=?,`nif`=?,`salario`=? WHERE `id_recurso_humano`=?");
+
+					$querry->bind_param("bsssssssssisiiiiii",$foto,$num_colaborador,$hashed_password,$_POST['nome'],$_POST['sexo'],$_POST['dt_nasc'],$_POST['morada'],$_POST['localidade'],$_POST['freguesia'],$_POST['concelho'],$cp,$_POST['email'],$_POST['telemovel'],$_POST['telefone'],$_POST['cc'],$_POST['nif'],$_POST['salario'],$_POST['id_colaborador']);
+				}
+			}
+
+
+			//foto
+				if (is_uploaded_file($_FILES["foto"]["tmp_name"])){
+					$querry->send_long_data(0,file_get_contents($_FILES["foto"]["tmp_name"]));
+				}else{
+					$select_foto=$con->prepare("SELECT foto FROM `recursos_humanos` WHERE `id_recurso_humano`=?");
+					$select_foto->bind_param("i",$_POST['id_colaborador']);
+					$select_foto->execute();
+					$resultado=$select_foto->get_result();
+					$linha=$resultado->fetch_assoc();
+					$querry->send_long_data(0,$linha['foto']);
+					$select_foto->close();
+				}
+
+			//Insert cargos
+				$delete_cargos=$con->prepare("DELETE FROM `cargos_recursos` WHERE id_recurso_humano=? ");
+				$delete_cargos->bind_param("i",$_POST['id_colaborador']);
+				$delete_cargos->execute();
+				$delete_cargos->close();
+
+				$insert_cargos=$con->prepare("INSERT INTO `cargos_recursos`(`id_cargo`, `id_recurso_humano`) VALUES (?,?)");
+				for ($i=0; $i < count($_POST['cargo']); $i++) { 
+					$insert_cargos->bind_param("ii",$_POST['cargo'][$i],$_POST['id_colaborador']);
+					$insert_cargos->execute();
+					//Check se é treinador
+				}
+
+			$ficheiros_update=$con->prepare("UPDATE `ficheiros` SET `nome`=?,`extencao`=?,`filesize`=?,`ficheiro`=? WHERE `id_recurso_humano`=? AND nome LIKE ?");
+			$ficheiros_insert=$con->prepare("INSERT INTO `ficheiros`(`id_recurso_humano`,`nome`, `extencao`, `filesize`, `ficheiro`) VALUES ($_POST[id_colaborador],?,?,?,?)");
+			$ficheiros_select=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_POST[id_colaborador]");
+			$ficheiros_select->execute();
+			$resultado=$ficheiros_select->get_result();
+
+			//Update se for treinador de qualquer genero.
+				if (isset($_POST['clubes_anteriores'])) {
+					$update_treinador=$con->prepare("UPDATE `treinadores` SET `clubles_anteriores`=? WHERE `id_treinador`=?");
+					$update_treinador->bind_param("si",$_POST['clubes_anteriores'],$_POST['id_colaborador']);
+					$update_treinador->execute();
+
+					if (isset($_FILES["Certificado_desportivo"]['tmp_name'])) {
+						if (is_uploaded_file($_FILES["Certificado_desportivo"]['tmp_name'])) {
+
+							$filename = "Certificado_desportivo_".$_POST['cc'];
+							$tmpname = $_FILES["Certificado_desportivo"]['tmp_name'];
+							$file_size = $_FILES["Certificado_desportivo"]['size'];
+							$file_type = $_FILES["Certificado_desportivo"]['type'];
+							$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+							while ($linha=$resultado->fetch_assoc()) {
+								if (strpos($linha['nome'],'Certificado_desportivo')!==false){
+									$Certificado_desportivo="Certificado_desportivo";
+									$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$Certificado_desportivo);
+									$ficheiros_update->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));	
+									$ficheiros_update->execute();
+									$done=1;			
+								}
+							}
+							if (!isset($done)) {
+								$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
+								$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));	
+								$ficheiros_insert->execute();
+							}else{
+								unset($done);
+							}
+						}
+					}
+				}
+
+			//Update dos ficheiros	
+				//registo criminal
+					if (isset($_FILES["registo_criminal"]['tmp_name'])) {
+
+						if (is_uploaded_file($_FILES["registo_criminal"]['tmp_name'])) {
+
+							$filename = "Registo_criminal_".$_POST['cc'];
+							$tmpname = $_FILES["registo_criminal"]['tmp_name'];
+							$file_size = $_FILES["registo_criminal"]['size'];
+							$file_type = $_FILES["registo_criminal"]['type'];
+							$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+							while ($linha=$resultado->fetch_assoc()) {
+								if (strpos($linha['nome'],'Registo_criminal')!==false){
+									$registo_criminal="registo_criminal";
+									$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$registo_criminal);
+									$ficheiros_update->send_long_data(3,file_get_contents($_FILES["registo_criminal"]["tmp_name"]));	
+									$ficheiros_update->execute();
+									$done=1;			
+								}
+							}
+							if (!isset($done)) {
+								$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
+								$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["registo_criminal"]["tmp_name"]));	
+								$ficheiros_insert->execute();
+							}else{
+								unset($done);
+							}
+						}
+					}
+				//certificado academico
+					if (isset($_FILES["certificado_academico"]["tmp_name"])) {
+						if (is_uploaded_file($_FILES["certificado_academico"]["tmp_name"])) {
+
+							$filename = "Certificado_academico_".$_POST['cc'];
+							$tmpname = $_FILES["certificado_academico"]['tmp_name'];
+							$file_size = $_FILES["certificado_academico"]['size'];
+							$file_type = $_FILES["certificado_academico"]['type'];
+							$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+							while ($linha=$resultado->fetch_assoc()) {
+								if (strpos($linha['nome'],'Certificado_academico')!==false){
+									$certificado_academico="certificado_academico";
+									$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_academico);
+									$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_academico"]["tmp_name"]));	
+									$ficheiros_update->execute();
+									$done=1;			
+								}
+							}
+							if (!isset($done)) {
+								$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
+								$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_academico"]["tmp_name"]));	
+								$ficheiros_insert->execute();
+							}else{
+								unset($done);
+							}
+						}
+					}
+				//certificado sbv dae
+					if (isset($_FILES["certificado_sbv_dae"]["tmp_name"])){
+						if (is_uploaded_file($_FILES["certificado_sbv_dae"]["tmp_name"])) {
+
+							$filename = "Certificado_sbv_dae_".$_POST['cc'];
+							$tmpname = $_FILES["certificado_sbv_dae"]['tmp_name'];
+							$file_size = $_FILES["certificado_sbv_dae"]['size'];
+							$file_type = $_FILES["certificado_sbv_dae"]['type'];
+							$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+							while ($linha=$resultado->fetch_assoc()) {
+								if (strpos($linha['nome'],'Certificado_sbv_dae')!==false){
+									$certificado_sbv_dae="certificado_sbv_dae";
+									$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_sbv_dae);
+									$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_sbv_dae"]["tmp_name"]));	
+									$ficheiros_update->execute();
+									$done=1;			
+								}
+							}
+							if (!isset($done)) {
+								$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
+								$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_sbv_dae"]["tmp_name"]));	
+								$ficheiros_insert->execute();
+							}else{
+								unset($done);
+							}
+						}
+					}
+				//certificado direcao
+					if (isset($_FILES["certificado_direcao"]["tmp_name"])){
+						if(is_uploaded_file($_FILES["certificado_direcao"]["tmp_name"])) {
+
+							$filename = "Certificado_direcao_".$_POST['cc'];
+							$tmpname = $_FILES["certificado_direcao"]['tmp_name'];
+							$file_size = $_FILES["certificado_direcao"]['size'];
+							$file_type = $_FILES["certificado_direcao"]['type'];
+							$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+							while ($linha=$resultado->fetch_assoc()) {
+								if (strpos($linha['nome'],'Certificado_direcao')!==false){
+									$certificado_direcao="certificado_direcao";
+									$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_direcao);
+									$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_direcao"]["tmp_name"]));	
+									$ficheiros_update->execute();
+									$done=1;			
+								}
+							}
+							if (!isset($done)) {
+								$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
+								$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_direcao"]["tmp_name"]));	
+								$ficheiros_insert->execute();
+							}else{
+								unset($done);
+							}
+						}
+					}	
+
+			$ficheiros_insert->close();
+			$ficheiros_update->close();
+			$ficheiros_select->close();
 		}
-
-		$querry=$con->prepare("UPDATE `recursos_humanos` SET `foto`=?,`num_recurso_humano`=?,`nome`=?,`sexo`=?,`dt_nasc`=?,`morada`=?,`localidade`=?,`freguesia`=?,`concelho`=?,`cp`=?,`email`=?,`telemovel`=?,`telefone`=?,`cc`=?,`nif`=?,`salario`=? WHERE `id_recurso_humano`=?");
-
-		$querry->bind_param("bssssssssisiiiiii",$foto,$num_colaborador,$_POST['nome'],$_POST['sexo'],$_POST['dt_nasc'],$_POST['morada'],$_POST['localidade'],$_POST['freguesia'],$_POST['concelho'],$cp,$_POST['email'],$_POST['telemovel'],$_POST['telefone'],$_POST['cc'],$_POST['nif'],$_POST['salario'],$_POST['id_colaborador']);
-
-		if (isset($_POST['password'])) {
-			if (!empty($_POST['password'])) {
-				$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-				$querry=$con->prepare("UPDATE `recursos_humanos` SET `foto`=?,`num_recurso_humano`=?,`palavra_passe`=?,`nome`=?,`sexo`=?,`dt_nasc`=?,`morada`=?,`localidade`=?,`freguesia`=?,`concelho`=?,`cp`=?,`email`=?,`telemovel`=?,`telefone`=?,`cc`=?,`nif`=?,`salario`=? WHERE `id_recurso_humano`=?");
-
-				$querry->bind_param("bsssssssssisiiiiii",$foto,$num_colaborador,$hashed_password,$_POST['nome'],$_POST['sexo'],$_POST['dt_nasc'],$_POST['morada'],$_POST['localidade'],$_POST['freguesia'],$_POST['concelho'],$cp,$_POST['email'],$_POST['telemovel'],$_POST['telefone'],$_POST['cc'],$_POST['nif'],$_POST['salario'],$_POST['id_colaborador']);
-			}
-		}
-
-
-		//foto
-			if (is_uploaded_file($_FILES["foto"]["tmp_name"])){
-				$querry->send_long_data(0,file_get_contents($_FILES["foto"]["tmp_name"]));
-			}else{
-				$select_foto=$con->prepare("SELECT foto FROM `recursos_humanos` WHERE `id_recurso_humano`=?");
-				$select_foto->bind_param("i",$_POST['id_colaborador']);
-				$select_foto->execute();
-				$resultado=$select_foto->get_result();
-				$linha=$resultado->fetch_assoc();
-				$querry->send_long_data(0,$linha['foto']);
-				$select_foto->close();
-			}
-
-		//Insert cargos
-			$delete_cargos=$con->prepare("DELETE FROM `cargos_recursos` WHERE id_recurso_humano=? ");
-			$delete_cargos->bind_param("i",$_POST['id_colaborador']);
-			$delete_cargos->execute();
-			$delete_cargos->close();
-
-			$insert_cargos=$con->prepare("INSERT INTO `cargos_recursos`(`id_cargo`, `id_recurso_humano`) VALUES (?,?)");
-			for ($i=0; $i < count($_POST['cargo']); $i++) { 
-				$insert_cargos->bind_param("ii",$_POST['cargo'][$i],$_POST['id_colaborador']);
-				$insert_cargos->execute();
-				//Check se é treinador
-			}
-
-		$ficheiros_update=$con->prepare("UPDATE `ficheiros` SET `nome`=?,`extencao`=?,`filesize`=?,`ficheiro`=? WHERE `id_recurso_humano`=? AND nome LIKE ?");
-		$ficheiros_insert=$con->prepare("INSERT INTO `ficheiros`(`id_recurso_humano`,`nome`, `extencao`, `filesize`, `ficheiro`) VALUES ($_POST[id_colaborador],?,?,?,?)");
-		$ficheiros_select=$con->prepare("SELECT * FROM `ficheiros` WHERE id_recurso_humano=$_POST[id_colaborador]");
-		$ficheiros_select->execute();
-		$resultado=$ficheiros_select->get_result();
-
-		//Update se for treinador de qualquer genero.
-			if (isset($_POST['clubes_anteriores'])) {
-				$update_treinador=$con->prepare("UPDATE `treinadores` SET `clubles_anteriores`=? WHERE `id_treinador`=?");
-				$update_treinador->bind_param("si",$_POST['clubes_anteriores'],$_POST['id_colaborador']);
-				$update_treinador->execute();
-
-				if (isset($_FILES["Certificado_desportivo"]['tmp_name'])) {
-					if (is_uploaded_file($_FILES["Certificado_desportivo"]['tmp_name'])) {
-
-						$filename = "Certificado_desportivo_".$_POST['cc'];
-						$tmpname = $_FILES["Certificado_desportivo"]['tmp_name'];
-						$file_size = $_FILES["Certificado_desportivo"]['size'];
-						$file_type = $_FILES["Certificado_desportivo"]['type'];
-						$ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-						while ($linha=$resultado->fetch_assoc()) {
-							if (strpos($linha['nome'],'Certificado_desportivo')!==false){
-								$Certificado_desportivo="Certificado_desportivo";
-								$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$Certificado_desportivo);
-								$ficheiros_update->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));	
-								$ficheiros_update->execute();
-								$done=1;			
-							}
-						}
-						if (!isset($done)) {
-							$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
-							$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["Certificado_desportivo"]["tmp_name"]));	
-							$ficheiros_insert->execute();
-						}else{
-							unset($done);
-						}
-					}
-				}
-			}
-
-		//Update dos ficheiros	
-			//registo criminal
-				if (isset($_FILES["registo_criminal"]['tmp_name'])) {
-
-					if (is_uploaded_file($_FILES["registo_criminal"]['tmp_name'])) {
-
-						$filename = "Registo_criminal_".$_POST['cc'];
-						$tmpname = $_FILES["registo_criminal"]['tmp_name'];
-						$file_size = $_FILES["registo_criminal"]['size'];
-						$file_type = $_FILES["registo_criminal"]['type'];
-						$ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-						while ($linha=$resultado->fetch_assoc()) {
-							if (strpos($linha['nome'],'Registo_criminal')!==false){
-								$registo_criminal="registo_criminal";
-								$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$registo_criminal);
-								$ficheiros_update->send_long_data(3,file_get_contents($_FILES["registo_criminal"]["tmp_name"]));	
-								$ficheiros_update->execute();
-								$done=1;			
-							}
-						}
-						if (!isset($done)) {
-							$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
-							$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["registo_criminal"]["tmp_name"]));	
-							$ficheiros_insert->execute();
-						}else{
-							unset($done);
-						}
-					}
-				}
-			//certificado academico
-				if (isset($_FILES["certificado_academico"]["tmp_name"])) {
-					if (is_uploaded_file($_FILES["certificado_academico"]["tmp_name"])) {
-
-						$filename = "Certificado_academico_".$_POST['cc'];
-						$tmpname = $_FILES["certificado_academico"]['tmp_name'];
-						$file_size = $_FILES["certificado_academico"]['size'];
-						$file_type = $_FILES["certificado_academico"]['type'];
-						$ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-						while ($linha=$resultado->fetch_assoc()) {
-							if (strpos($linha['nome'],'Certificado_academico')!==false){
-								$certificado_academico="certificado_academico";
-								$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_academico);
-								$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_academico"]["tmp_name"]));	
-								$ficheiros_update->execute();
-								$done=1;			
-							}
-						}
-						if (!isset($done)) {
-							$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
-							$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_academico"]["tmp_name"]));	
-							$ficheiros_insert->execute();
-						}else{
-							unset($done);
-						}
-					}
-				}
-			//certificado sbv dae
-				if (isset($_FILES["certificado_sbv_dae"]["tmp_name"])){
-					if (is_uploaded_file($_FILES["certificado_sbv_dae"]["tmp_name"])) {
-
-						$filename = "Certificado_sbv_dae_".$_POST['cc'];
-						$tmpname = $_FILES["certificado_sbv_dae"]['tmp_name'];
-						$file_size = $_FILES["certificado_sbv_dae"]['size'];
-						$file_type = $_FILES["certificado_sbv_dae"]['type'];
-						$ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-						while ($linha=$resultado->fetch_assoc()) {
-							if (strpos($linha['nome'],'Certificado_sbv_dae')!==false){
-								$certificado_sbv_dae="certificado_sbv_dae";
-								$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_sbv_dae);
-								$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_sbv_dae"]["tmp_name"]));	
-								$ficheiros_update->execute();
-								$done=1;			
-							}
-						}
-						if (!isset($done)) {
-							$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
-							$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_sbv_dae"]["tmp_name"]));	
-							$ficheiros_insert->execute();
-						}else{
-							unset($done);
-						}
-					}
-				}
-			//certificado direcao
-				if (isset($_FILES["certificado_direcao"]["tmp_name"])){
-					if(is_uploaded_file($_FILES["certificado_direcao"]["tmp_name"])) {
-
-						$filename = "Certificado_direcao_".$_POST['cc'];
-						$tmpname = $_FILES["certificado_direcao"]['tmp_name'];
-						$file_size = $_FILES["certificado_direcao"]['size'];
-						$file_type = $_FILES["certificado_direcao"]['type'];
-						$ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-						while ($linha=$resultado->fetch_assoc()) {
-							if (strpos($linha['nome'],'Certificado_direcao')!==false){
-								$certificado_direcao="certificado_direcao";
-								$ficheiros_update->bind_param('ssibis',$filename,$file_type,$file_size,$content,$_POST['id_colaborador'],$certificado_direcao);
-								$ficheiros_update->send_long_data(3,file_get_contents($_FILES["certificado_direcao"]["tmp_name"]));	
-								$ficheiros_update->execute();
-								$done=1;			
-							}
-						}
-						if (!isset($done)) {
-							$ficheiros_insert->bind_param('ssib',$filename,$file_type,$file_size,$content);
-							$ficheiros_insert->send_long_data(3,file_get_contents($_FILES["certificado_direcao"]["tmp_name"]));	
-							$ficheiros_insert->execute();
-						}else{
-							unset($done);
-						}
-					}
-				}	
-
-		$ficheiros_insert->close();
-		$ficheiros_update->close();
-		$ficheiros_select->close();
 		$querry->execute();
 		if ($querry->affected_rows<0) {
 			?>
@@ -925,11 +935,13 @@
 					<div class="card-header"></div>
 					<div class="card-body">
 					<?php if (!isset($_GET['id_colaborador'])) { ?>
-						<input type="submit" name="insert" value="Inserir dados">
+						<input type="submit" id="insert" name="insert" value="Inserir dados">
 					<?php }else{ ?>
-						<input type="submit" name="update" value="Atualizar dados">
+						<input type="submit" id="update" name="update" value="Atualizar dados">
 					<?php } ?>
-					<button type="button" onclick="window.location.href='colaboradores.php'">Limpar</button>
+					<?php if ($_SESSION['permissao']==1){ ?>
+						<button type="button" onclick="window.location.href='colaboradores.php'">Limpar</button>
+					<?php } ?>
 					</div>
 				</div>
 			</form>
@@ -1103,5 +1115,25 @@
 					}
 			</script>
 		<?php 
+	}
+	if ($_SESSION['permissao']==2) {
+		?>
+			<script type="text/javascript">
+				let todos_inputs=document.getElementsByTagName("input");
+				for (var i = 0; i < todos_inputs.length; i++) {
+					todos_inputs[i].disabled=true
+				}
+				todos_inputs=document.getElementsByTagName("select");
+				for (var i = 0; i < todos_inputs.length; i++) {
+					todos_inputs[i].disabled=true
+				}
+				todos_inputs=document.getElementsByTagName("textarea");
+				for (var i = 0; i < todos_inputs.length; i++) {
+					todos_inputs[i].disabled=true
+				}
+				document.getElementById("password").disabled=false
+				document.getElementById("update").disabled=false
+			</script>
+		<?php
 	}
 ?>

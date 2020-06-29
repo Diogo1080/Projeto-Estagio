@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 $('#modal_calendario').modal('show')
 
                 document.getElementById("treino_select_equipa").options.selectedIndex = 0
-
+                document.getElementById("jogo_select_equipa").options.selectedIndex = 0
                 data_final=info.end
                 
                 buscar_atletas_treino('','','')
