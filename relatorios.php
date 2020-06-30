@@ -60,7 +60,7 @@
 					</div>
 				</div>
 			</form>	<hr>
-			<form method="POST" action="gerar_planilha_especifica.php">
+			<form method="POST" action="relatoriosespecifico.php">
 				<div class="row espaco">
 					<div class="pull-right">					
 						<!--<a href="form_contato.php"><button type='button' class='btn btn-sm btn-success'>Outro</button></a>-->
