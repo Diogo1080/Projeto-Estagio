@@ -3,7 +3,7 @@
 	include_once('../ligacao.php');
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 	<head>
 		<meta charset="utf-8">
 		<title>Relatório Geral</title>

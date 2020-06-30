@@ -2,7 +2,7 @@
 	include_once('../ligacao.php');
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 	<head>
 		<meta charset="utf-8">
 		<title>Relatorios</title>
@@ -64,7 +64,7 @@
 				<div class="row espaco">
 					<div class="pull-right">					
 						<!--<a href="form_contato.php"><button type='button' class='btn btn-sm btn-success'>Outro</button></a>-->
-						<a href="gerar_planilha.php"><button type='button' class='btn btn-sm btn-danger'>Relatório Geral</button></a>
+						<a href="relatoriosgeral.php"><button type='button' class='btn btn-sm btn-danger'>Relatório Geral</button></a>
 						<input type="submit" value="Relatório Especifico" class='btn btn-sm btn-warning'>
 					</div>
 				</div>
