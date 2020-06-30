@@ -90,79 +90,112 @@
 <html lang="pt">
 	<head>
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-		<script src="//code.jquery.com/jquery.min.js"></script>
-		<script src="toastr/toastr.js"></script>
-		<script src="//code.jquery.com/jquery.min.js"></script>
+
+		<!-- Ligação aos links e config da Head -->
+		<?php include('head.php'); ?>
+
 		<title>Cargos</title>
 	</head>
 	<body>
-		<?php require ('nav.php'); ?>
-		<div>
-			<form method="POST" enctype="multipart/form-data">
-				<!--form de inserir o cargo-->
-				<div>
-					<!--Form secundario-->
-						<h1>Cargos</h1>
-						<div>
-							<label>Nome do cargo:
-								<input name="cargo" value="<?php
-										if (isset($_GET['id_cargo'])) {
-											echo($linha['cargo']);
-										} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
-											echo($_POST['cargo']);
-										}
-									?>"><br>
-                            </label>
-						</div>
-							<!--Form secundario-->
-						<div>
-							<label>Treinador:
-								<input name="is_treinador" id="is_treinador" type="checkbox"><br>
-                            </label>
-						</div>
-							<!--Form secundario-->
-						<div>
-							<label>Login:
-								<input name="get_login" id="get_login" type="checkbox"><br>
-                            </label>
-						</div>
-				</div>
-				<div>
-					<?php if (isset($_GET['id_cargo'])) {?>
-						<input type="submit" name="update" value="Atualizar">
-					<?php } else {?>
-						<input type="submit" name="insert" value="Inserir">
-					<?php } ?>
-					<button type="button" onclick="window.location.href='cargos.php'">Limpar</button>
-				</div>
-			</form>
-		</div>
-		<div>
-			<h1>Tabela</h1>
-			<div>
-				<label>Procura:
-                    <input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
-                </label>
+
+	<!-- Container Geral -->
+	<div class="container">
+
+		<!-- Navbar -->
+		<?php require ('navbar_dashboard.php'); ?>
+
+		<center style=" margin-top:25px;"><h1>Cargos</h1></center>
+
+		<!-- Card para o Form -->
+        <div class="card" style=" margin-top:25px;">
+
+            <!-- Titulo + Botões  -->
+            <div class="card-header">
+                <h3 class="panel-title">Inserir Cargos</h3>
             </div>
-			<div id="tabela_cargos"></div>
-			<div>
-				<button type="button" class="w3-btn page_btn" onclick="first_page();tabela_cargos(num_pagina,procura)">
-					<<
-				</button>
-				<button type="button" class="w3-btn page_btn" onclick="prev_page();tabela_cargos(num_pagina,procura)">
-					<
-				</button>
-				<button type="button" class="w3-btn page_btn" onclick="next_page();tabela_cargos(num_pagina,procura)">
-					>
-				</button>
-				<button type="button" class="w3-btn page_btn" onclick="last_page();tabela_cargos(num_pagina,procura)">
-					>>
-				</button>	
+
+            <div class="card-body">
+				<form method="POST" enctype="multipart/form-data">
+					<!--form de inserir o cargo-->
+					<div>
+						<!--Form secundario-->
+							<div>
+								<label>Nome do cargo:
+									<input name="cargo" value="<?php
+											if (isset($_GET['id_cargo'])) {
+												echo($linha['cargo']);
+											} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
+												echo($_POST['cargo']);
+											}
+										?>"><br>
+								</label>
+							</div>
+								<!--Form secundario-->
+							<div>
+								<label>Treinador:
+									<input name="is_treinador" id="is_treinador" type="checkbox"><br>
+								</label>
+							</div>
+								<!--Form secundario-->
+							<div>
+								<label>Login:
+									<input name="get_login" id="get_login" type="checkbox"><br>
+								</label>
+							</div>
+					</div>
+					<div>
+						<?php if (isset($_GET['id_cargo'])) {?>
+							<input type="submit" name="update" value="Atualizar">
+						<?php } else {?>
+							<input type="submit" name="insert" value="Inserir">
+						<?php } ?>
+						<button type="button" onclick="window.location.href='cargos.php'">Limpar</button>
+					</div>
+				</form>
+            </div>
+        </div>
+
+		<!-- Card para as Tabelas -->
+		<div class="card" style=" margin-top:25px;">
+
+			<!-- Titulo + Botões  -->
+			<div class="card-header">
+				<h3 class="panel-title">Cargos Existentes</h3>
+			</div>
+			<div class="card-header">
+				<div>
+					<label>Procura:
+						<input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
+					</label>
+				</div>
+            </div>
+
+			<div class="card-body">
+				<div id="tabela_cargos"></div>
+				<div class="d-flex justify-content-center">
+					<button type="button" class="btn btn-default" onclick="first_page();tabela_cargos(num_pagina,procura)">
+						<<
+					</button>
+					<button type="button" class="btn btn-default" onclick="prev_page();tabela_cargos(num_pagina,procura)">
+						<
+					</button>
+					<button type="button" class="btn btn-default" onclick="next_page();tabela_cargos(num_pagina,procura)">
+						>
+					</button>
+					<button type="button" class="btn btn-default" onclick="last_page();tabela_cargos(num_pagina,procura)">
+						>>
+					</button>	
+				</div>
+
 			</div>
 		</div>
-	</body>
+
+	</div>
+		
+</body>
 </html>
+
+<!-- Scripts de Situações -->
 <script type="text/javascript">
 	let procura = ''
 	let num_pagina = 1
