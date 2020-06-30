@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	include_once('../ligacao.php');
+	include_once('ligacao.php');
 ?>
 <!DOCTYPE html>
 <html lang="pt">
