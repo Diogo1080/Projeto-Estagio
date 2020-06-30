@@ -53,7 +53,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">Nome</label>
 					<div class="col-sm-8">
-						<input type="text" name="nome" class="form-control" id="inputEmail3" placeholder="Nome do Usuários" value="">
+						<input type="text" name="nome" class="form-control" id="inputEmail3" placeholder="Nome Atletas" value="">
 					</div>
 					<div class="col-sm-2">
 						<button type="submit" class="btn btn-info">Pesquisar</button>
