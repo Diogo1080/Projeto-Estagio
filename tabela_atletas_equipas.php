@@ -57,7 +57,7 @@
 				AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
 				AND (equipas.id_equipa=?)
 				LIMIT $offset,$registos_por_pagina");
-			$atletas->bind_param("sssi",$procura,$procura,$procura,$equipa);
+			$atletas->bind_param("sssi",$procura,$procura,$procura,$_POST['equipa']);
 		if ($_POST['equipa']=="T") {
 		//TODOS OS ATLETAS
 			$atletas=$con->prepare("SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 

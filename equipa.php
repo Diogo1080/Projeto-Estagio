@@ -157,6 +157,7 @@
             }
         )
     }
+    
     function toogle_mostrar_atletas(){
       if (document.getElementById("container_atletas").style.display=="none") {
         document.getElementById("container_atletas").style.display="block"
@@ -308,7 +309,7 @@
                             $equipas=$equipas->get_result();
                             while ($linha_equipa=$equipas->fetch_assoc()) {
                               ?>
-                                <option><?php echo $linha_equipa['escalao']; ?></option>
+                                <option value="<?php echo $linha_equipa['id_escalao']; ?>"><?php echo $linha_equipa['escalao']; ?></option>
                               <?php
                             }
                           ?>

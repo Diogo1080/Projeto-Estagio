@@ -43,10 +43,20 @@
             </li>
 
             <!-- Calendário -->
-                <li class="nav-item">
-                    <a class="nav-link" href="calendario.php">Calendario</a>
-              </li>
+            <li class="nav-item">
+                <a class="nav-link" href="calendario.php">Calendario</a>
+            </li>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Equipa
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                    <a class="nav-link" href="listar_equipas.php"> Ver equipas</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="nav-link" href="equipa.php"> Inserir equipa</a>
+                </div>
+            </li>
             <!-- Operações -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +64,6 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
                     <a class="nav-link" href="cargos.php">Cargos</a>
-                    <a class="nav-link" href="inserir_equipa.php">Equipas</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>
