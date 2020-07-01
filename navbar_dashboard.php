@@ -1,6 +1,6 @@
 <!-- Title -->
       <center>
-        <h1>ADMIN PANEL DASHBOARD</h1>
+        <img src="img/panel.png" style="width:60%;">
       </center> 
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-dark" style="border-radius: 5px;">

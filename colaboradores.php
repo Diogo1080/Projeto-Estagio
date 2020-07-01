@@ -921,17 +921,17 @@
 					</div>
 				</div>
 
-				<div class="card" style=" margin-top:25px;">
-					<div class="card-header"></div>
-					<div class="card-body">
-					<?php if (!isset($_GET['id_colaborador'])) { ?>
-						<input type="submit" name="insert" value="Inserir dados">
-					<?php }else{ ?>
-						<input type="submit" name="update" value="Atualizar dados">
-					<?php } ?>
-					<button type="button" onclick="window.location.href='colaboradores.php'">Limpar</button>
+				<div class="d-flex justify-content-center" style=" margin-top:25px;">
+					<div class="alert alert-primary">
+						<?php if (!isset($_GET['id_colaborador'])) { ?>
+							<input type="submit" class="btn btn-default" name="insert" value="Inserir dados">
+						<?php }else{ ?>
+							<input type="submit" class="btn btn-default" name="update" value="Atualizar dados">
+						<?php } ?>
+						<button type="button" class="btn btn-default" onclick="window.location.href='colaboradores.php'">Limpar</button>
 					</div>
 				</div>
+
 			</form>
 		</div>    
 	</body>
