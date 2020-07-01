@@ -1333,11 +1333,8 @@
     </div>
 
     <!--Butões-->
-    <div class="card" style=" margin-top:25px;margin-bottom:25px; ">
-      <div class="card-header">
-        <h3 class="panel-title">Butões</h3>
-      </div>
-      <div class="card-body">
+    <div class="d-flex justify-content-center" style=" margin-top:25px;margin-bottom:25px; ">
+      <div class="alert alert-primary">
         <div>
           <?php if (isset($_GET['id_contribuinte'])) {?>
             <input class="btn btn-default" type="submit" name="update" value="Atualizar">
