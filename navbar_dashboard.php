@@ -36,6 +36,9 @@
               <a class="nav-link" href="calendario.php">Calendario</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="equipa.php">Equipas</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="logout.php">Terminar sessão</a>
             </li>
             <li class="nav-item">
