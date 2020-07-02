@@ -86,96 +86,116 @@
 		}
 	}
 ?>
+<!DOCTYPE html>
+<html lang="pt">
+	<head>
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-<html lang="en">
-  <?php include('head.php'); ?>
-  <body>
-    <div class="container">
-      <?php include('navbar_dashboard.php'); ?>
+		<!-- Ligação aos links e config da Head -->
+		<?php include('head.php'); ?>
 
-      <!-- Tables cargos -->
-      <div class="col-sm-12">
-        <div class="card"style="margin-top: 30px">
-          <div class="card-header"> 
-            <div class="row">
-              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
-                <h3 class="panel-title">Lista de Cargos</h3>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6" align="right">
-                <a href="#" name="add" id="add_button" class="btn btn-default btn-xs" >Novo Cargo</a>      
-              </div>
+		<title>Cargos</title>
+	</head>
+	<body>
+
+	<!-- Container Geral -->
+	<div class="container">
+
+		<!-- Navbar -->
+		<?php require ('navbar_dashboard.php'); ?>
+
+		<center style=" margin-top:25px;"><h1>Cargos</h1></center>
+
+		<!-- Card para o Form -->
+        <div class="card" style=" margin-top:25px;">
+
+            <!-- Titulo + Botões  -->
+            <div class="card-header">
+                <h3 class="panel-title">Inserir Cargos</h3>
             </div>
-          </div>
-          <div class="row card-header">
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 ">
-                <input class="form-control mr-sm-2" type="search" placeholder="Pesquisa" aria-label="Search" onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
-            </div> 
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 ">
+
+            <div class="card-body">
 				<form method="POST" enctype="multipart/form-data">
 					<!--form de inserir o cargo-->
 					<div>
 						<!--Form secundario-->
-								<input class="form-control mr-sm-2" placeholder="Nome do cargo" name="cargo" value="<?php
-										if (isset($_GET['id_cargo'])) {
-											echo($linha['cargo']);
-										} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
-											echo($_POST['cargo']);
-										}
-									?>">
-
-						<label>Treinador:
-							<input name="is_treinador" id="is_treinador" type="checkbox"><br>
-						</label>
-
-						<label>Login:
-							<input name="get_login" id="get_login" type="checkbox"><br>
-						</label>
-						<div>				
-							<?php if (isset($_GET['id_cargo'])) {?>
-								<input class="btn btn-default" type="submit" name="update" value="Atualizar">
-							<?php } else {?>
-								<input class="btn btn-default" type="submit" name="insert" value="Inserir">
-							<?php } ?>
-							<button class="btn btn-default" type="button" onclick="window.location.href='cargos.php'">Limpar</button>
-						</div>
+							<div>
+								<label>Nome do cargo:
+									<input name="cargo" value="<?php
+											if (isset($_GET['id_cargo'])) {
+												echo($linha['cargo']);
+											} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
+												echo($_POST['cargo']);
+											}
+										?>"><br>
+								</label>
+							</div>
+								<!--Form secundario-->
+							<div>
+								<label>Treinador:
+									<input name="is_treinador" id="is_treinador" type="checkbox"><br>
+								</label>
+							</div>
+								<!--Form secundario-->
+							<div>
+								<label>Login:
+									<input name="get_login" id="get_login" type="checkbox"><br>
+								</label>
+							</div>
+					</div>
+					<div>
+						<?php if (isset($_GET['id_cargo'])) {?>
+							<input type="submit" name="update" value="Atualizar">
+						<?php } else {?>
+							<input type="submit" name="insert" value="Inserir">
+						<?php } ?>
+						<button type="button" onclick="window.location.href='cargos.php'">Limpar</button>
 					</div>
 				</form>
+            </div>
+        </div>
+
+		<!-- Card para as Tabelas -->
+		<div class="card" style=" margin-top:25px;">
+
+			<!-- Titulo + Botões  -->
+			<div class="card-header">
+				<h3 class="panel-title">Cargos Existentes</h3>
+			</div>
+			<div class="card-header">
+				<div>
+					<label>Procura:
+						<input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
+					</label>
+				</div>
+            </div>
+
+			<div class="card-body">
+				<div id="tabela_cargos"></div>
+				<div class="d-flex justify-content-center">
+					<button type="button" class="btn btn-default" onclick="first_page();tabela_cargos(num_pagina,procura)">
+						<<
+					</button>
+					<button type="button" class="btn btn-default" onclick="prev_page();tabela_cargos(num_pagina,procura)">
+						<
+					</button>
+					<button type="button" class="btn btn-default" onclick="next_page();tabela_cargos(num_pagina,procura)">
+						>
+					</button>
+					<button type="button" class="btn btn-default" onclick="last_page();tabela_cargos(num_pagina,procura)">
+						>>
+					</button>	
+				</div>
+
 			</div>
 		</div>
 
-          <div class="card-body"  id="tabela_cargos"></div>
-
-          <div class="row card-header">
-            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-6">
-			<button type="button" class="btn btn-default" onclick="first_page();tabela_cargos(num_pagina,procura);">
-					<<
-				</button>
-				<button type="button" class="btn btn-default" onclick="prev_page();tabela_cargos(num_pagina,procura);">
-					<
-				</button>
-				<button type="button" class="btn btn-default" onclick="next_page();tabela_cargos(num_pagina,procura);">
-					>
-				</button>
-				<button type="button" class="btn btn-default" onclick="last_page();tabela_cargos(num_pagina,procura);">
-					>>
-				</button>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-   
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-	<script src="//code.jquery.com/jquery.min.js"></script>
-	<script src="toastr/toastr.js"></script>					
-  </body>
+	</div>
+		
+</body>
 </html>
+
+<!-- Scripts de Situações -->
 <script type="text/javascript">
 	let procura = ''
 	let num_pagina = 1
@@ -186,10 +206,10 @@
 				'num_pagina': num_pagina,
 				'procura':procura
 			}, 
-			function(response) {
+			(response) => {
 				let resposta=response.split("«")
 				total_num_paginas=resposta[0]
-				$('#tabela_cargos').html(resposta[1]);
+				$('#tabela_cargos').html(resposta[1])
 			}
 		)
 	}

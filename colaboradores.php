@@ -157,8 +157,11 @@
 
 	if (isset($_POST['update'])) {
 		if ($_SESSION['permissao']==2) {
+
+			$hashed_password=password_hash($_POST['password'], PASSWORD_DEFAULT);
+			
 			$querry=$con->prepare("UPDATE `recursos_humanos` SET `password`=? WHERE `id_recurso_humano`=?");
-			$querry->bind_param("si",$_POST['password'],$_SESSION['id']);
+			$querry->bind_param("si",$hashed_password,$_SESSION['id']);
 		}else{
 			$foto=NULL;
 			$hashed_password=NULL;
@@ -930,18 +933,14 @@
 					  </div>
 					</div>
 				</div>
-
-				<div class="card" style=" margin-top:25px;">
-					<div class="card-header"></div>
-					<div class="card-body">
-					<?php if (!isset($_GET['id_colaborador'])) { ?>
-						<input type="submit" id="insert" name="insert" value="Inserir dados">
-					<?php }else{ ?>
-						<input type="submit" id="update" name="update" value="Atualizar dados">
-					<?php } ?>
-					<?php if ($_SESSION['permissao']==1){ ?>
-						<button type="button" onclick="window.location.href='colaboradores.php'">Limpar</button>
-					<?php } ?>
+				<div class="d-flex justify-content-center" style=" margin-top:25px;">
+					<div class="alert alert-primary">
+						<?php if (!isset($_GET['id_colaborador'])) { ?>
+							<input type="submit" class="btn btn-default" name="insert" value="Inserir dados">
+						<?php }else{ ?>
+							<input type="submit" class="btn btn-default" name="update" value="Atualizar dados">
+						<?php } ?>
+						<button type="button" class="btn btn-default" onclick="window.location.href='colaboradores.php'">Limpar</button>
 					</div>
 				</div>
 			</form>
@@ -1131,6 +1130,7 @@
 				for (var i = 0; i < todos_inputs.length; i++) {
 					todos_inputs[i].disabled=true
 				}
+				document.getElementById("password").required=true
 				document.getElementById("password").disabled=false
 				document.getElementById("update").disabled=false
 			</script>

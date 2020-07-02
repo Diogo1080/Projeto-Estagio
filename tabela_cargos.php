@@ -28,7 +28,7 @@
 		$resultado=$cargos->get_result();
 		echo '
 			<div>
-				<table border class="table table-bordered">
+				<table class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Cargo</th>
