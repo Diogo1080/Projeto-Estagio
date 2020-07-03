@@ -129,12 +129,12 @@
 								<td>';
 									if (isset($_SESSION['array_atletas'])) {
 										if (in_array($linha['id_atleta'], $_SESSION['array_atletas'])) {
-											echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
+											echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
 										}else{
-											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
+											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
 										}
 									}else{
-										echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\',\''.$_POST['num_pagina'].'\',\''.$_POST['procura'].'\');">';
+										echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
 									}
 								echo '</td>
 							</tr>

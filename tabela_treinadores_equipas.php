@@ -36,29 +36,30 @@
 		$resultado=$cargos->get_result();
 		echo '
 			<table class="table table-hover table-bordered">
-					<thead>
-						<tr>
-							<th scope="col">Nome</th>
-							<th scope="col">Selecionar</th>
-						</tr>
-					</thead>
+				<thead>
+					<tr>
+						<th scope="col">Nome</th>
+						<th scope="col">Selecionar</th>
+					</tr>
+				</thead>
+				<tbody>
                 ';
                 if ($resultado->num_rows==0) {
+					echo '
+						<tr>
+							<td colspan="100%">Nenhum registo encontrado.</td>
+						</tr>
+					';
+				}else{
+					while ($linha=$resultado->fetch_assoc()) {
 						echo '
-							<tr>
-								<td colspan="100%">Nenhum registo encontrado.</td>
-							</tr>
+						<tr>
+							<td>'.$linha['nome'].'</td>
+							<td><input name="treinador" value="'.$linha['id_recurso_humano'].'" type="radio"></td>
+						</tr>
 						';
-					}else{
-						while ($linha=$resultado->fetch_assoc()) {
-							echo '
-							<tr>
-								<td>'.$linha['nome'].'</td>
-								<td><input type="radio"></td>
-							</tr>
-							';
-						}
 					}
+				}
 				echo '
 				</tbody>
 			</table>

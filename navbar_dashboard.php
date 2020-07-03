@@ -38,7 +38,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
                     <a class="nav-link" href="listar_contribuintes.php"> Ver Contribuintes</a>
                     <div class="dropdown-divider"></div>
-                    <a class="nav-link" href="listar_contribuintes.php"> Inserir Contribuinte</a>
+                    <a class="nav-link" href="contribuintes.php"> Inserir Contribuinte</a>
                 </div>
             </li>
 
