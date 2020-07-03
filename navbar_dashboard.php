@@ -56,7 +56,7 @@
                     <a class="nav-link" href="cargos.php">Cargos</a>
                     <a class="nav-link" href="inserir_equipa.php">Equipas</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="relatorios.php">Relatórios e Estatísticas</a>
                 </div>
             </li>
 
