@@ -934,7 +934,7 @@
 					</div>
 				</div>
 				<div class="d-flex justify-content-center" style=" margin-top:25px;">
-					<div class="alert alert-primary">
+					<div class="alert alert-light">
 						<?php if (!isset($_GET['id_colaborador'])) { ?>
 							<input type="submit" class="btn btn-default" name="insert" value="Inserir dados">
 						<?php }else{ ?>

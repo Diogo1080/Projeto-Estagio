@@ -1334,7 +1334,7 @@
 
     <!--Butões-->
     <div class="d-flex justify-content-center" style=" margin-top:25px;margin-bottom:25px; ">
-      <div class="alert alert-primary">
+      <div class="alert alert-light">
         <div>
           <?php if (isset($_GET['id_contribuinte'])) {?>
             <input class="btn btn-default" type="submit" name="update" value="Atualizar">

@@ -38,7 +38,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
                     <a class="nav-link" href="listar_contribuintes.php"> Ver Contribuintes</a>
                     <div class="dropdown-divider"></div>
-                    <a class="nav-link" href="listar_contribuintes.php"> Inserir Contribuinte</a>
+                    <a class="nav-link" href="contribuintes.php"> Inserir Contribuinte</a>
                 </div>
             </li>
 
@@ -56,7 +56,7 @@
                     <a class="nav-link" href="cargos.php">Cargos</a>
                     <a class="nav-link" href="inserir_equipa.php">Equipas</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="relatorios.php">Relatórios e Estatísticas</a>
+                    <a class="dropdown-item" href="stats.php">Relatórios e Estatísticas</a>
                 </div>
             </li>
 
