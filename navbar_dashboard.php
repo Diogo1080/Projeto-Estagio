@@ -14,7 +14,7 @@
           <ul class="navbar-nav mr-auto">
 
             <!-- Homepage -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">Home</span></a>
             </li>
 
@@ -42,10 +42,7 @@
                 </div>
             </li>
 
-            <!-- Calendário -->
-            <li class="nav-item">
-                <a class="nav-link" href="calendario.php">Calendario</a>
-            </li>
+
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,12 +60,14 @@
                    Ferramentas
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
-                    <a class="nav-link" href="cargos.php">Cargos</a>
+                    <a class="nav-link" href="calendario.php">Calendario</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="nav-link" href="cargos.php">Cargos</a>
                 </div>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link" href="logout.php">Logout</span></a>
+            </li>
           </ul>
 
           <!-- Conexão ao Website -->

@@ -43,19 +43,36 @@
 			$total+=$linha['total'];
 			$total_registos->close();
 		}
+		if ($_POST['equipa']<>"T" && $_POST['equipa']<>"S" && $_POST['equipa']<>"C") {
+			$total_registos=$con->prepare("SELECT count(contribuintes.id_contribuinte) as total FROM `contribuintes` 
+				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
+				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
+				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
+				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
+				AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
+				AND (atletas_escaloes.id_escalao=?)");
+			$total_registos->bind_param("sssi",$procura,$procura,$procura,$_POST['equipa']);
+			$total_registos->execute();
+
+			$t_registos=$total_registos->get_result();
+			$linha=$t_registos->fetch_assoc();
+
+			$total+=$linha['total'];
+			$total_registos->close();
+		}
+
 		$total_num_paginas = ceil($total / $registos_por_pagina);
 		echo $total_num_paginas."«";
-
-
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-			
 		//LIMITAR POR EQUIPA
 			$atletas=$con->prepare("SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
 				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
 				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
+				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
 				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
 				AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				AND (equipas.id_equipa=?)
+				AND (atletas_escaloes.id_escalao=?)
+				ORDER BY equipas.nome
 				LIMIT $offset,$registos_por_pagina");
 			$atletas->bind_param("sssi",$procura,$procura,$procura,$_POST['equipa']);
 		if ($_POST['equipa']=="T") {

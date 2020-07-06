@@ -3,9 +3,79 @@
   require('ligacao.php'); 
   unset($_SESSION['array_atletas']);
   unset($_SESSION['array_treinador']);
+
   if (isset($_POST['insert'])) {
-    if (isset($_POST['treinador']) && isset($_POST['id_atletas'])) {
-      echo "yes";
+    if (isset($_POST['id_treinadores']) && isset($_POST['id_atletas'])) {
+      print_r($_POST);
+        $con -> autocommit(FALSE);
+      //INSERT DA EQUIPA
+        $insert_equipa=$con->prepare("INSERT INTO `equipas`( `nome`, `cor`, `id_escalao`) VALUES (?,?,?)");
+        $insert_equipa->bind_param('ssi',$_POST['nome'],$_POST['cor'],$_POST['escalao']);
+        $insert_equipa->execute();
+        $id_equipa=$insert_equipa->insert_id;
+      
+      //INSERT DOS TREINADORES
+        $insert_treinadores=$con->prepare("INSERT INTO `treinadores_equipas`(`id_treinador`, `id_equipa`) VALUES (?,?)");
+        for ($i=0; $i < count($_POST['id_treinadores']); $i++) { 
+          $insert_treinadores->bind_param('ii',$id_equipa,$_POST['id_treinadores'][$i]);
+          $insert_treinadores->execute();
+        }
+
+      //INSERT DOS ATLETAS
+        $equipa_atual=$con->prepare("UPDATE `atletas_equipas` SET `atual`=0 WHERE `id_atleta`=?");
+        $escalao_atual=$con->prepare("UPDATE `atletas_escaloes` SET `atual`=0 WHERE `id_atleta`=?");
+
+
+        $insert_atletas_equipa=$con->prepare("INSERT INTO `atletas_equipas`(`id_atleta`, `id_equipa`, `atual`) VALUES (?,?,1)");
+        $insert_atletas_escaloes=$con->prepare("INSERT INTO `atletas_escaloes`(`id_atleta`, `id_escalao`, `atual`) VALUES (?,?,1)");
+        for ($i=0; $i < count($_POST['id_atletas']); $i++) { 
+          $equipa_atual->bind_param('i',$_POST['id_atletas'][$i]);
+          $escalao_atual->bind_param('i',$_POST['id_atletas'][$i]);
+
+          $equipa_atual->execute();
+          $escalao_atual->execute();
+
+          $insert_atletas_equipa->bind_param('ii',$_POST['id_atletas'][$i],$id_equipa);
+          $insert_atletas_escaloes->bind_param('ii',$_POST['id_atletas'][$i],$escalao);
+
+          $insert_atletas_equipa->execute();
+          $insert_atletas_escaloes->execute();
+        }
+      //CHECK SE EQUIPAS FICAM VASIAS
+        $count_equipas=$con->prepare("SELECT id_equipa FROM equipas");
+        $count_equipas->execute();
+        $resultado=$count_equipas->get_result();
+
+        $check_equipas=$con->prepare("SELECT count(equipas.id_equipa) as total FROM equipas 
+                                      INNER JOIN  atletas_equipas ON equipas.id_equipa=atletas_equipas.id_equipa 
+                                      WHERE atual=1 AND equipas.id_equipa=?");
+
+        while($linha=$resultado->fetch_assoc()){
+          $check_equipas->bind_param('i',$linha['id_equipa']);
+          $check_equipas->execute();
+          
+          $check=$check_equipas->get_result();
+          $linha_equipa=$check->fetch_assoc();
+          if ($linha_equipa['total'] === 0) {
+            $erro=1;
+          }
+        }
+        if (isset($erro)) {
+          $con->rollback();
+          ?>
+            <script type="text/javascript">
+              alert("Não pode deixar equipas sem atletas!");
+            </script>
+          <?php
+        }else{
+          $con->commit();
+          ?>
+            <script type="text/javascript">
+              alert("Dados inseridos com sucesso!");
+              window.location.href="equipa.php?id_equipa="+<?php echo $id_equipa; ?>
+            </script>
+          <?php
+        }
     }else{
       ?>
         <script type="text/javascript">
@@ -13,7 +83,6 @@
         </script>
       <?php
     }
-    print_r($_POST);
   }
   if (isset($_POST['update'])) {
     # code...
@@ -174,6 +243,25 @@
       )
     }
 
+    function selecionar_treinador(acao,id,nome) {
+      $.post(
+        'selecionar_treinador.php', 
+        {
+          'acao': acao,
+          'id':id
+        }, 
+        function() {
+          tabela_treinadores(num_pagina_treinador,procura_treinador);
+          if (acao=="0") {
+            document.getElementById("container"+id+"").remove();
+          }else{
+            x++;
+            $('#container_treinadores').append('<div id="container'+id+'" class="containers_dinamicos"><input hidden id="id_treinadores'+x+'" name="id_treinadores[]" class="" value="'+id+'"><div><input class="form-control" disabled value="'+nome+'"></div></div>');
+          } 
+        }
+      )
+    }
+
     function toogle_mostrar_atletas(){
       if (document.getElementById("container_atletas").style.display=="none") {
         document.getElementById("container_atletas").style.display="block"
@@ -181,26 +269,50 @@
         document.getElementById("container_atletas").style.display="none"
       }
     }
+
+    function toogle_mostrar_treinadores(){
+      if (document.getElementById("container_treinadores").style.display=="none") {
+        document.getElementById("container_treinadores").style.display="block"
+      }else{
+        document.getElementById("container_treinadores").style.display="none"
+      }
+    }
+
 </script>
 <?php 
   if (isset($_GET['id_equipa'])) {
-    $equipa=$con->prepare("SELECT * FROM `equipas` WHERE id_equipa=?");
-    $equipa->bind_param("i",$_GET['id_equipa']);
-    $equipa->execute();
-    $equipa=$equipa->get_result();
-    $linha=$equipa->fetch_assoc();
+    //Busca a info das equipas
+      $equipa=$con->prepare("SELECT * FROM `equipas` WHERE id_equipa=?");
+      $equipa->bind_param("i",$_GET['id_equipa']);
+      $equipa->execute();
+      $equipa=$equipa->get_result();
+      $linha=$equipa->fetch_assoc();
 
-    $atletas=$con->prepare("SELECT atletas.id_atleta,contribuintes.nome FROM `atletas_equipas` INNER JOIN atletas ON atletas_equipas.id_atleta=atletas.id_atleta INNER JOIN contribuintes ON atletas.id_contribuinte=contribuintes.id_contribuinte WHERE id_equipa=? AND atual=1");
-    $atletas->bind_param("i",$_GET['id_equipa']);
-    $atletas->execute();
-    $atletas=$atletas->get_result();
-    while($linha_atletas=$atletas->fetch_assoc()){
-        ?>
-        <script type="text/javascript">
-          selecionar_atleta(1,<?php echo $linha_atletas['id_atleta']; ?>,"<?php echo $linha_atletas['nome']; ?>")
-        </script>
-        <?php
-    } 
+    //Busca quem dos atletas faz parte desta equipa
+      $atletas=$con->prepare("SELECT atletas.id_atleta,contribuintes.nome FROM `atletas_equipas` INNER JOIN atletas ON atletas_equipas.id_atleta=atletas.id_atleta INNER JOIN contribuintes ON atletas.id_contribuinte=contribuintes.id_contribuinte WHERE id_equipa=? AND atual=1");
+      $atletas->bind_param("i",$_GET['id_equipa']);
+      $atletas->execute();
+      $atletas=$atletas->get_result();
+      while($linha_atletas=$atletas->fetch_assoc()){
+          ?>
+          <script type="text/javascript">
+            selecionar_atleta(1,<?php echo $linha_atletas['id_atleta']; ?>,"<?php echo $linha_atletas['nome']; ?>")
+          </script>
+          <?php
+      } 
+    //Busca o treinador desta equipa
+      $treinadores=$con->prepare("SELECT recursos_humanos.nome,treinadores.id_treinador FROM `recursos_humanos` INNER JOIN treinadores ON recursos_humanos.id_recurso_humano=treinadores.id_treinador INNER JOIN treinadores_equipas ON treinadores.id_treinador=treinadores_equipas.id_treinador WHERE id_equipa=? AND atual=1");
+      $treinadores->bind_param("i",$_GET['id_equipa']);
+      $treinadores->execute();
+      $treinadores=$treinadores->get_result();
+      while($linha_treinadores=$treinadores->fetch_assoc()){
+          ?>
+          <script type="text/javascript">
+            selecionar_treinador(1,<?php echo $linha_treinadores['id_treinador']; ?>,"<?php echo $linha_treinadores['nome']; ?>")
+          </script>
+          <?php
+      } 
+
   }elseif(isset($_POST['insert']) || isset($_POST['update'])){
     $atletas=$con->prepare("SELECT nome FROM contribuintes INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte WHERE id_atleta=?");
     for ($i=0; $i < count($_POST['id_atletas']); $i++) { 
@@ -211,6 +323,18 @@
       ?>
         <script type="text/javascript">
           selecionar_atleta(1,<?php echo $_POST['id_atletas'][$i]; ?>,"<?php echo $linha_atletas['nome']; ?>")
+        </script>
+      <?php
+    }
+    $treinadores=$con->prepare("SELECT nome FROM recursos_humanos INNER JOIN treinadores ON recursos_humanos.id_recurso_humano=treinadores.id_treinador WHERE id_treinador=?");
+    for ($i=0; $i < count($_POST['id_treinadores']); $i++) { 
+      $treinadores->bind_param("i",$_POST['id_treinadores'][$i]);
+      $treinadores->execute();
+      $treinadores=$treinadores->get_result();
+      $linha_treinadores=$treinadores->fetch_assoc();
+      ?>
+        <script type="text/javascript">
+          selecionar_atleta(1,<?php echo $_POST['id_treinadores'][$i]; ?>,"<?php echo $linha_treinadores['nome']; ?>")
         </script>
       <?php
     }
@@ -316,7 +440,7 @@
             </div>
           </div> 
           <div class="form-row">
-            <div class="col-12">
+            <div class="col-md-8 col-sm-8">
               <button type="button" class="btn btn-default" onclick="first_page_treinador();tabela_treinadores(num_pagina_treinador,procura_treinador); ">
               <<
               </button>
@@ -330,8 +454,16 @@
               >>
               </button> 
             </div>
+            <div class="col-md-4 col-sm-4" align="right">
+              <button type="button" onclick="toogle_mostrar_treinadores()" class="btn btn-default">Mostrar/Esconder Atletas selecionados</button>
+            </div>
           </div>
-
+          <div id="container_treinadores">
+            <hr>
+            <div>
+              <label>Treinadores selecionados</label>
+            </div>
+          </div>
           <hr>
           
           <!-- Atletas --> 
@@ -394,7 +526,7 @@
       </div>
       <div class="d-flex justify-content-center" style=" margin-top:25px;">
         <div class="alert alert-primary">
-          <?php if (!isset($_GET['id_colaborador'])) { ?>
+          <?php if (!isset($_GET['id_equipa'])) { ?>
             <input type="submit" class="btn btn-default" name="insert" value="Inserir dados">
           <?php }else{ ?>
             <input type="submit" class="btn btn-default" name="update" value="Atualizar dados">
