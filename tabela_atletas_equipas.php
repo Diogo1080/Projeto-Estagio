@@ -8,118 +8,77 @@
 		$total=0;
 
 	//Busca o total de registos que existem com os valores dados
-		if ($_POST['equipa']=="T" || $_POST['equipa']=="C") {
-			$total_registos=$con->prepare("SELECT count(contribuintes.id_contribuinte) as total FROM `contribuintes` 
+		if ($_POST['equipa']=="T" || $_POST['equipa']=="C" || $_POST['equipa']=="S") {
+			$atletas=$con->prepare("
+				SELECT atletas.id_atleta,contribuintes.nome FROM contribuintes 
 				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte 
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa
-				WHERE (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?) ");
-			$total_registos->bind_param("sss",$procura,$procura,$procura);
-			$total_registos->execute();
-
-			$t_registos=$total_registos->get_result();
-			$linha=$t_registos->fetch_assoc();
-			
-			$total+=$linha['total'];
-			$total_registos->close();
-		}
-		if ($_POST['equipa']=="T" || $_POST['equipa']=="S") {
-			$total_registos=$con->prepare("SELECT count(contribuintes.id_contribuinte) as total FROM `contribuintes` 
-			INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-			WHERE NOT EXISTS(
-			SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-			) AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?) 
-			");
-
-			$total_registos->bind_param("sss",$procura,$procura,$procura);
-			$total_registos->execute();
-
-			$t_registos=$total_registos->get_result();
-			$linha=$t_registos->fetch_assoc();
-
-			$total+=$linha['total'];
-			$total_registos->close();
-		}
-		if ($_POST['equipa']<>"T" && $_POST['equipa']<>"S" && $_POST['equipa']<>"C") {
-			$total_registos=$con->prepare("SELECT count(contribuintes.id_contribuinte) as total FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
 				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				AND (atletas_escaloes.id_escalao=?)");
-			$total_registos->bind_param("sssi",$procura,$procura,$procura,$_POST['equipa']);
-			$total_registos->execute();
+			");
+		}else{
+			$atletas=$con->prepare("
+				SELECT atletas.id_atleta,contribuintes.nome,atletas_escaloes.id_escalao FROM contribuintes 
+				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte 
+				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
+				WHERE atletas_escaloes.id_escalao=?
+			");
+			$atletas->bind_param('i',$_POST['equipa']);
+		}
 
-			$t_registos=$total_registos->get_result();
-			$linha=$t_registos->fetch_assoc();
+		$equipa_atleta=$con->prepare("
+			SELECT atletas_equipas.*,equipas.nome FROM atletas_equipas INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa WHERE atletas_equipas.id_atleta=? ORDER BY atletas_equipas.data_atribuicao DESC limit 1 
+		");
 
-			$total+=$linha['total'];
-			$total_registos->close();
+		$atletas->execute();
+		$resultado=$atletas->get_result();
+		while ($linha=$resultado->fetch_assoc()) {
+
+			$equipa_atleta->bind_param('i',$linha['id_atleta']);
+			$equipa_atleta->execute();
+
+			$resultado_equipa=$equipa_atleta->get_result();
+			$linha_equipa=$resultado_equipa->fetch_assoc();
+			
+			if ($_POST['equipa']=="T"){
+				$total+=1;
+			}elseif ($_POST['equipa']=="S") {
+				if ($equipa_atleta->affected_rows==0 || $linha_equipa['atual']==0) {
+					$total+=1;
+				}
+			}elseif ($_POST['equipa']=="C"){
+				if ($linha_equipa['atual']<>0) {
+					$total+=1;
+				}
+			}else{
+				if ($linha_equipa['atual']<>0) {
+					$total+=1;
+				}
+			}
 		}
 
 		$total_num_paginas = ceil($total / $registos_por_pagina);
 		echo $total_num_paginas."«";
+
 	//Busca consuante a variavel $registos_por_pagina o conteudo dos registos.
-		//LIMITAR POR EQUIPA
-			$atletas=$con->prepare("SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
+		if ($_POST['equipa']=="T" || $_POST['equipa']=="C" || $_POST['equipa']=="S") {
+			$atletas=$con->prepare("
+				SELECT atletas.id_atleta,contribuintes.nome FROM contribuintes 
+				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte 
 				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				AND (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				AND (atletas_escaloes.id_escalao=?)
-				ORDER BY equipas.nome
-				LIMIT $offset,$registos_por_pagina");
-			$atletas->bind_param("sssi",$procura,$procura,$procura,$_POST['equipa']);
-		if ($_POST['equipa']=="T") {
-		//TODOS OS ATLETAS
-			$atletas=$con->prepare("SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				WHERE (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				UNION ALL
-				SELECT null as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				WHERE NOT EXISTS(
-					SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				    INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				    INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-					INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				) AND  (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				LIMIT $offset,$registos_por_pagina");
-			$atletas->bind_param("ssssss",$procura,$procura,$procura,$procura,$procura,$procura);
-		}elseif($_POST['equipa']=="C"){
-		//TODOS OS ATLETAS QUE TÊM EQUIPA
-			$atletas=$con->prepare("SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-				INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				WHERE (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				LIMIT $offset,$registos_por_pagina");
-			$atletas->bind_param("sss",$procura,$procura,$procura);
-		}elseif($_POST['equipa']=="S"){
-		//TODOS OS ATLETAS QUE NÃO TÊM EQUIPA
-			$atletas=$con->prepare("SELECT null as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				WHERE NOT EXISTS(
-					SELECT equipas.nome as nome_equipa,atletas.id_atleta,contribuintes.* FROM `contribuintes` 
-				    INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte
-				    INNER JOIN atletas_equipas ON atletas.id_atleta=atletas_equipas.id_atleta
-					INNER JOIN equipas ON atletas_equipas.id_equipa=equipas.id_equipa 
-				) AND  (contribuintes.nome like ? OR contribuintes.cc like ? OR contribuintes.nif like ?)
-				LIMIT $offset,$registos_por_pagina");
-			$atletas->bind_param("sss",$procura,$procura,$procura);
+				LIMIT $offset,$registos_por_pagina
+			");
+		}else{
+			$atletas=$con->prepare("
+				SELECT atletas.id_atleta,contribuintes.nome,atletas_escaloes.id_escalao FROM contribuintes 
+				INNER JOIN atletas ON contribuintes.id_contribuinte=atletas.id_contribuinte 
+				INNER JOIN atletas_escaloes ON atletas.id_atleta=atletas_escaloes.id_atleta
+				WHERE atletas_escaloes.id_escalao=?
+				LIMIT $offset,$registos_por_pagina
+			");
+			$atletas->bind_param('i',$_POST['equipa']);
 		}
-		
 
 		$atletas->execute();
 		$resultado=$atletas->get_result();
-		$atletas->close();
 
 		echo '
 			<table class="table table-hover table-bordered">
@@ -131,19 +90,26 @@
 						</tr>
 					</thead>
                 ';
-                if ($resultado->num_rows==0) {
-						echo '
-							<tr>
-								<td colspan="100%">Nenhum registo encontrado.</td>
-							</tr>
-						';
-					}else{
-						while ($linha=$resultado->fetch_assoc()) {
-							echo '
-							<tr>
-								<td>'.$linha['nome'].'</td>
-								<td>'.$linha['nome_equipa'].'</td>
-								<td>';
+				if ($total==0) {
+					echo '<td colspan="100%">Nenhum registo encontrado.</td>';
+					exit;
+				}else{
+					while ($linha=$resultado->fetch_assoc()) {
+
+						$equipa_atleta->bind_param('i',$linha['id_atleta']);
+						$equipa_atleta->execute();
+
+						$resultado_equipa=$equipa_atleta->get_result();
+						$linha_equipa=$resultado_equipa->fetch_assoc();
+						echo '<tr>';
+							if ($_POST['equipa']=="T"){
+								echo '<td>'.$linha['nome'].'</td>';
+								if ($linha_equipa['atual']<>0) {
+									echo '<td>'.$linha_equipa['nome'].'</td>';
+								}else{
+									echo '<td>Não têm equipa</td>';
+								}
+								echo '<td>';
 									if (isset($_SESSION['array_atletas'])) {
 										if (in_array($linha['id_atleta'], $_SESSION['array_atletas'])) {
 											echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
@@ -153,14 +119,61 @@
 									}else{
 										echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
 									}
-								echo '</td>
-							</tr>
-							';
-						}
+								echo '</td>';
+							}elseif ($_POST['equipa']=="S") {
+								if ($equipa_atleta->affected_rows==0 || $linha_equipa['atual']==0) {
+									echo '<td>'.$linha['nome'].'</td>';
+									if ($linha_equipa['atual']<>0) {
+										echo '<td>'.$linha_equipa['nome'].'</td>';
+									}else{
+										echo '<td>Não têm equipa</td>';
+									}
+									echo '<td>';
+										if (isset($_SESSION['array_atletas'])) {
+											if (in_array($linha['id_atleta'], $_SESSION['array_atletas'])) {
+												echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}else{
+												echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}
+										}else{
+											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+										}
+									echo '</td>';
+								}
+							}elseif ($_POST['equipa']=="C"){
+								if ($linha_equipa['atual']<>0) {
+									echo '<td>'.$linha['nome'].'</td>';
+									echo '<td>'.$linha_equipa['nome'].'</td>';
+									echo '<td>';
+										if (isset($_SESSION['array_atletas'])) {
+											if (in_array($linha['id_atleta'], $_SESSION['array_atletas'])) {
+												echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}else{
+												echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}
+										}else{
+											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+										}
+									echo '</td>';
+								}
+							}else{
+								if ($linha_equipa['atual']<>0) {
+									echo '<td>'.$linha['nome'].'</td>';
+									echo '<td>'.$linha_equipa['nome'].'</td>';
+									echo '<td>';
+										if (isset($_SESSION['array_atletas'])) {
+											if (in_array($linha['id_atleta'], $_SESSION['array_atletas'])) {
+												echo '<input checked type="checkbox" onclick="selecionar_atleta(\'0\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}else{
+												echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+											}
+										}else{
+											echo '<input type="checkbox" onclick="selecionar_atleta(\'1\',\''.$linha['id_atleta'].'\',\''.$linha['nome'].'\');">';
+										}
+									echo '</td>';
+								}
+							}
+						echo '</tr>';
 					}
-				echo '
-				</tbody>
-			</table>
-				';
-                
+				}              
 ?>
