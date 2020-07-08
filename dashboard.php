@@ -75,41 +75,9 @@
           </div>
         </div>
       </div>
-      <!-- Row 2 -->
-      <div class="row" style="margin-top: 30px">
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title" style="text-align: center;">Quotas Servidas</h5>
-            </div>
-            <div class="card-body">
-              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title" style="text-align: center;"> Total Receitas Geradas</h5>
-            </div>
-            <div class="card-body">
-              <h1 class="card-text" style="text-align: center;color: #007EA7; ">1431</h1>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title" style="text-align: center;">Sócio mais Antigo</h5>
-            </div>
-            <div class="card-body">
-              <h1 class="card-text" style="text-align: center;color: #007EA7; ">Zé Nárcio</h1>
-            </div>
-          </div>
-        </div>
 
         <!-- Tables -->
-        <div class="col-sm-12">
+        <div>
           <div class="card"style="margin-top: 30px">
             <div class="card-header">
               <h3 class="panel-title">Últimos 4 Atletas Inseridos</h3>

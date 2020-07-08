@@ -31,7 +31,6 @@
         $querry -> bind_param("s",$_POST['username']);
         $querry -> execute();
         $resultado=$querry->get_result();
-
         if ($resultado->num_rows <> 0){
           $linha=$resultado->fetch_assoc();
           if (password_verify($_POST['password'],$linha['password'])) {
@@ -69,8 +68,8 @@
     }
     ?>
       <script>
-        window.alert("Nenhum username encontrado!");
-        //window.location.href = "index.php";
+        window.alert("Password ou username incorretos!");
+        window.location.href = "index.php";
       </script>
     <?php
     if (isset($querry)) {
