@@ -6,7 +6,7 @@
       <?php include('navbar_dashboard.php'); ?>
 
       <!-- Tables dos colaboradores -->
-      <div class="col-sm-12">
+  
         <div class="card"style="margin-top: 30px">
           <div class="card-header"> 
             <div class="row">
@@ -44,7 +44,7 @@
             </div>
          </div>
       </div>
-    </div>
+   
   </body>
 </html>
     <script src="//code.jquery.com/jquery.min.js"></script>

@@ -1,6 +1,9 @@
 <?php 
 	//Prepara a ligação
 		require ('ligacao.php');
+		if ($_SESSION['permissao']<>1) {
+			header("location: 'dashboard.php'");
+		}
 		$is_treinador=0;
 		$get_login=0;
 	//Se um cargo estiver selecionado prepara os dados do mesmo
@@ -121,7 +124,7 @@
 						<!--Form secundario-->
 							<div>
 								<label>Nome do cargo:
-									<input name="cargo" value="<?php
+									<input class="form-control" name="cargo" value="<?php
 											if (isset($_GET['id_cargo'])) {
 												echo($linha['cargo']);
 											} elseif (isset($_POST['insert']) || isset($_POST['update'])) {
@@ -165,7 +168,7 @@
 			<div class="card-header">
 				<div>
 					<label>Procura:
-						<input onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
+						<input class="form-control" onkeyup="definir_procura(this.value);tabela_cargos(num_pagina,procura)">
 					</label>
 				</div>
             </div>
