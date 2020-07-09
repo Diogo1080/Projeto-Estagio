@@ -115,7 +115,7 @@
                                                 <select id="treino_select_equipa" name="equipa" onchange="buscar_atletas_treino(this.value,data_final,'')" class="input_calendario form-control" required>
                                                         <option  disabled selected>--Selecione uma equipa--</option>
                                                         <?php 
-                                                            $equipas=$con->prepare("SELECT * FROM equipas");
+                                                            $equipas=$con->prepare("SELECT * FROM equipas WHERE estado=1");
                                                             $equipas->execute();
                                                             $equipas=$equipas->get_result();
                                                             while ($linha=$equipas->fetch_assoc()) {
@@ -179,7 +179,7 @@
                                                 <select id="jogo_select_equipa" name="equipa" class="input_calendario form-control" onchange="buscar_atletas_jogos(this.value,data_final,'')" required>
                                                         <option  disabled selected>--Selecione uma equipa--</option>
                                                         <?php 
-                                                            $equipas=$con->prepare("SELECT * FROM equipas");
+                                                            $equipas=$con->prepare("SELECT * FROM equipas WHERE estado=1");
                                                             $equipas->execute();
                                                             $equipas=$equipas->get_result();
                                                             while ($linha=$equipas->fetch_assoc()) {

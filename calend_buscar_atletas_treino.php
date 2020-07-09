@@ -4,9 +4,19 @@
 		$data_final=explode("(", $_POST['data_final']);
 		$data_final=strtotime($data_final[0]);
 		$hoje=strtotime("now");
-
-		$atletas=$con->prepare("SELECT DISTINCT contribuintes.nome,contribuintes.foto,atletas.id_atleta,equipas.cor FROM equipas INNER JOIN atletas_equipas ON equipas.id_equipa=atletas_equipas.id_equipa INNER JOIN atletas ON atletas_equipas.id_atleta=atletas.id_atleta INNER JOIN contribuintes ON atletas.id_contribuinte=contribuintes.id_contribuinte WHERE equipas.id_equipa=? and atletas_equipas.atual=1");
-		$atletas->bind_param("i",$_POST['id_equipa']);
+		if (!empty($_POST['id_treino'])) {
+			$atletas=$con->prepare("
+				SELECT contribuintes.nome,contribuintes.foto,atletas.id_atleta,equipas.cor FROM equipas
+				INNER JOIN equipa_treinos ON equipas.id_equipa=equipa_treinos.id_equipa
+				INNER JOIN atletas ON equipa_treinos.id_atleta=atletas.id_atleta
+				INNER JOIN contribuintes ON atletas.id_contribuinte=contribuintes.id_contribuinte
+				WHERE equipas.id_equipa=? and equipa_treinos.id_treino=?	
+			");
+			$atletas->bind_param("ii",$_POST['id_equipa'],$_POST['id_treino']);
+		}else{
+			$atletas=$con->prepare("SELECT DISTINCT contribuintes.nome,contribuintes.foto,atletas.id_atleta,equipas.cor FROM equipas INNER JOIN atletas_equipas ON equipas.id_equipa=atletas_equipas.id_equipa INNER JOIN atletas ON atletas_equipas.id_atleta=atletas.id_atleta INNER JOIN contribuintes ON atletas.id_contribuinte=contribuintes.id_contribuinte WHERE equipas.id_equipa=? and atletas_equipas.atual=1");
+			$atletas->bind_param("i",$_POST['id_equipa']);
+		}
 		$atletas->execute();
 		$atletas=$atletas->get_result();
 		echo '

@@ -36,29 +36,41 @@
 		$resultado=$cargos->get_result();
 		echo '
 			<table class="table table-hover table-bordered">
-					<thead>
-						<tr>
-							<th scope="col">Nome</th>
-							<th scope="col">Selecionar</th>
-						</tr>
-					</thead>
+				<thead>
+					<tr>
+						<th scope="col">Nome</th>
+						<th scope="col">Selecionar</th>
+					</tr>
+				</thead>
+				<tbody>
                 ';
                 if ($resultado->num_rows==0) {
+					echo '
+						<tr>
+							<td colspan="100%">Nenhum registo encontrado.</td>
+						</tr>
+					';
+				}else{
+					while ($linha=$resultado->fetch_assoc()) {
 						echo '
-							<tr>
-								<td colspan="100%">Nenhum registo encontrado.</td>
-							</tr>
+						<tr>
+							<td>'.$linha['nome'].'</td>
+							<td>';
+								if (isset($_SESSION['array_treinador'])) {
+									if (in_array($linha['id_recurso_humano'], $_SESSION['array_treinador'])) {
+										echo '<input checked type="checkbox" onclick="selecionar_treinador(\'0\',\''.$linha['id_recurso_humano'].'\',\''.$linha['nome'].'\');">';
+									}else{
+										echo '<input type="checkbox" onclick="selecionar_treinador(\'1\',\''.$linha['id_recurso_humano'].'\',\''.$linha['nome'].'\');">';
+									}
+								}else{
+									echo '<input type="checkbox" onclick="selecionar_treinador(\'1\',\''.$linha['id_recurso_humano'].'\',\''.$linha['nome'].'\');">';
+								}
+								echo '
+							</td>
+						</tr>
 						';
-					}else{
-						while ($linha=$resultado->fetch_assoc()) {
-							echo '
-							<tr>
-								<td>'.$linha['nome'].'</td>
-								<td><input type="radio"></td>
-							</tr>
-							';
-						}
 					}
+				}
 				echo '
 				</tbody>
 			</table>
