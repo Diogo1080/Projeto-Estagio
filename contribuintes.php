@@ -2,6 +2,15 @@
   //Prepara a ligação
     require ('ligacao.php');
 
+    if ($_SESSION['permissao']==2) {
+      if (!isset($_GET['id_contribuinte'])) {
+       ?>
+       <script type="text/javascript">
+          window.location.href="listar_contribuintes.php"       
+        </script>
+       <?php
+      }
+    }
     unset($_SESSION['array_atletas']);
   //Se um contribuinte estiver selecionado prepara os dados do mesmo
   if (isset($_GET['id_contribuinte'])) {
@@ -57,10 +66,10 @@
       if ($_POST['tipo_contribuinte']=="Sócio") {
 
         $hashed_password=NULL;
-        $num_colaborador=NULL;
+        $num_socio=NULL;
 
-        if (isset($_POST['num_colaborador'][1])) {
-          $num_colaborador=$_POST['num_colaborador'][0].$_POST['num_colaborador'][1];
+        if (isset($_POST['num_socio'][1])) {
+          $num_socio=$_POST['num_socio'][0].$_POST['num_socio'][1];
         }
 
         if (isset($_POST['password'])) {
@@ -242,10 +251,10 @@
       if ($_POST['tipo_contribuinte']=="Sócio") {
         
         $hashed_password=NULL;
-        $num_colaborador=NULL;
+        $num_socio=NULL;
         
-        if (isset($_POST['num_colaborador'][1])) {
-          $num_colaborador=$_POST['num_colaborador'][0].$_POST['num_colaborador'][1];
+        if (isset($_POST['num_socio'][1])) {
+          $num_socio=$_POST['num_socio'][0].$_POST['num_socio'][1];
         }
         
         if (isset($_POST['password'])) {
@@ -670,7 +679,7 @@
         </div>
         <div class="form-group">
           <label for="email">E-Mail</label>
-          <input type="email" class="form-control" placeholder="Insira o seu E-Mail" required name="email" minlength="3" maxlength="60" onblur="return emailcheck(this.value)" value="<?php 
+          <input type="email" class="form-control" placeholder="Insira o seu E-Mail" required name="email" minlength="3" maxlength="60" type="email" value="<?php 
             if (isset($_GET['id_contribuinte'])) {
               echo($linha['email']);
             }elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -716,13 +725,14 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text"> 
-                  <input hidden class="form-control  input_socio" name="num_socio[]" value="S">
+                  <input hidden class="form-control" name="num_socio[]" value="S">
                   S
                 </div>
               </div>
               <input class="form-control  input_socio" name="num_socio[]" maxlength="10" onkeypress="return sonumeros(event)" value="<?php 
                 if (isset($_GET['id_contribuinte'])) {
-                  echo($linha['num_socio']);
+                  $num=explode("S",$linha['num_socio']);
+                  echo (end($num));
                 }elseif (isset($_POST['insert']) || isset($_POST['update'])){
                   echo($_POST['num_socio']);
                 } 
@@ -731,10 +741,11 @@
           </div>
           <div class="form-group col-md-6">
             <?php if (isset($is_socio)) {?>
-              <label>Definir nova palavra-passe:</label><input class="form-control input_socio" id="password" type="password" name="password">
+              <label>Definir nova palavra-passe:</label>
             <?php }else{ ?>
-              <label>Palavra-passe:</label><input class="form-control input_socio" id="password" type="password" name="password">
+              <label>Palavra-passe:</label>
             <?php } ?>
+              <input class="form-control input_socio" id="password" type="password" name="password">
           </div>
         </div>
         <!--Valor da quota mensal e metodo de pagamento-->
@@ -1297,7 +1308,7 @@
           <div class="row">
             <div class="col-md-12">
               <label>Email:</label>
-                <input id="email_enc" maxlength="60" class="input_enc required form-control" minlength="3" maxlength="60" name="email_enc" onblur="return emailcheck(this.value)" value="<?php 
+                <input id="email_enc" maxlength="60" class="input_enc required form-control" minlength="3" maxlength="60" name="email_enc" type="email" value="<?php 
                   if (isset($is_atleta)) {
                     echo($linha_enc['email']);
                   }elseif (isset($_POST['insert']) || isset($_POST['update'])){
@@ -1337,11 +1348,12 @@
       <div class="alert alert-primary">
         <div>
           <?php if (isset($_GET['id_contribuinte'])) {?>
-            <input class="btn btn-default" type="submit" name="update" value="Atualizar">
+            <input class="btn btn-default" type="submit" id="btn_atualizar" name="update" value="Atualizar">
           <?php }else{?>
-            <input class="btn btn-default" type="submit" name="insert" value="Inserir">
+            <input class="btn btn-default" type="submit" id="btn_inserir" name="insert" value="Inserir">
+          <?php }if ($_SESSION['permissao']==1){ ?>
+            <button class="btn btn-default" type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
           <?php } ?>
-          <button class="btn btn-default" type="button" onclick="window.location.href ='contribuintes.php'">Limpar</button>
         </div>
       </div>
     </div>
@@ -1668,6 +1680,14 @@
       return (charCode === 32) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 192 && charCode <= 255)
     }
 
+    function letras_numeros(evt){
+      evt = (evt) ? evt : window.event;
+      var charCode=(evt.which) ? evt.which : evt.keyCode;
+      if ((charCode==32) || (charCode==186) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122) || (charCode>=192 && charCode<=255) || (charCode >= 48 && charCode <= 57)) {
+        return true;
+      }
+        return false;
+    }
 
     function moradacheck(evt) {
       let confirmar = letras_numeros(evt)
@@ -1839,4 +1859,25 @@
           <?php
         }
     }
+  
+if ($_SESSION['permissao']==2) {
+    ?>
+      <script type="text/javascript">
+        let todos_inputs=document.getElementsByTagName("input");
+        for (var i = 0; i < todos_inputs.length; i++) {
+          todos_inputs[i].disabled=true
+        }
+        todos_inputs=document.getElementsByTagName("select");
+        for (var i = 0; i < todos_inputs.length; i++) {
+          todos_inputs[i].disabled=true
+        }
+        todos_inputs=document.getElementsByTagName("textarea");
+        for (var i = 0; i < todos_inputs.length; i++) {
+          todos_inputs[i].disabled=true
+        }
+        document.getElementById("btn_atualizar").disabled=true;
+
+      </script>
+    <?php
+  }
   ?>
