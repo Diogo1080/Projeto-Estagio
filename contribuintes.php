@@ -847,6 +847,34 @@
         <h3 class="panel-title">Informações relativas ao atleta</h3>
       </div>
       <div class="card-body">
+                <!-- Stor de PSI chato-->
+        <div class="row">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text"> 
+                <input hidden class="form-control" name="num_socio[]" value="J">
+                J
+              </div>
+            </div>
+            <input class="form-control input_atleta" name="num_socio[]" maxlength="10" onkeypress="return sonumeros(event)" value="<?php 
+              if (isset($_GET['id_contribuinte'])) {
+                $num=explode("J",$linha['num_socio']);
+                echo (end($num));
+              }elseif (isset($_POST['insert']) || isset($_POST['update'])){
+                echo($_POST['num_socio']);
+              } 
+            ?>">
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <?php if (isset($is_atleta)) {?>
+              <label>Definir nova palavra-passe:</label>
+            <?php }else{ ?>
+              <label>Palavra-passe:</label>
+            <?php } ?>
+              <input class="form-control input_atleta" id="password" type="password" name="password">
+          </div>
+        </div>
         <!--Valor da mensalidade e da joia-->
         <div class="row">
           <div class="form-group col-md-6">
@@ -870,6 +898,7 @@
             ?>">
           </div>
         </div>
+
         <!--Se tem enc_edu e se pagou a joia-->
         <div class="row">
           <div class="form-group col-md-6">
